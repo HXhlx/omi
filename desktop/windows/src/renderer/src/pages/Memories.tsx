@@ -8,6 +8,7 @@ import { BrainGraph } from '../components/graph/LazyBrainGraph'
 import { capGraph, DEFAULT_NODE_CAP } from '../lib/graphDisplay'
 import { useMemoryGraph } from '../hooks/useMemoryGraph'
 import { toast } from '../lib/toast'
+import { t } from '../lib/i18n'
 import { fetchAllMemories, deleteMemoriesPaced } from '../lib/memoriesBulk'
 import { isAppIndexMemory } from '../lib/memoryCleanup'
 import {
@@ -203,10 +204,13 @@ export function Memories(): React.JSX.Element {
     setSaving(true)
     try {
       await createMemory(text, { category: 'manual' })
-      toast('Memory created', { tone: 'info' })
+      toast(t('Memory created', '记忆已创建'), { tone: 'info' })
       closeCompose()
     } catch (e) {
-      toast('Could not create memory', { tone: 'error', body: (e as Error).message })
+      toast(t('Could not create memory', '无法创建记忆'), {
+        tone: 'error',
+        body: (e as Error).message
+      })
     } finally {
       setSaving(false)
     }
@@ -220,7 +224,10 @@ export function Memories(): React.JSX.Element {
       // like it reverted. Mirrors onToggleVisibility below.
       setDetailMemory((cur) => (cur && cur.id === id ? { ...cur, content } : cur))
     } catch (e) {
-      toast('Could not update memory', { tone: 'error', body: (e as Error).message })
+      toast(t('Could not update memory', '无法更新记忆'), {
+        tone: 'error',
+        body: (e as Error).message
+      })
       throw e
     }
   }
@@ -237,7 +244,10 @@ export function Memories(): React.JSX.Element {
           : cur
       )
     } catch (e) {
-      toast('Could not change visibility', { tone: 'error', body: (e as Error).message })
+      toast(t('Could not change visibility', '无法更改可见性'), {
+        tone: 'error',
+        body: (e as Error).message
+      })
     } finally {
       setTogglingVis(false)
     }
@@ -255,7 +265,10 @@ export function Memories(): React.JSX.Element {
       await deleteMemory(m.id)
     } catch (e) {
       committedDeleteIds.current.delete(m.id)
-      toast('Could not delete memory', { tone: 'error', body: (e as Error).message })
+      toast(t('Could not delete memory', '无法删除记忆'), {
+        tone: 'error',
+        body: (e as Error).message
+      })
     }
   }
 
@@ -277,7 +290,10 @@ export function Memories(): React.JSX.Element {
       try {
         setAll(await fetchAllMemories())
       } catch (e) {
-        toast('Could not load all memories', { tone: 'error', body: (e as Error).message })
+        toast(t('Could not load all memories', '无法加载全部记忆'), {
+          tone: 'error',
+          body: (e as Error).message
+        })
       } finally {
         setLoadingAll(false)
       }
@@ -360,7 +376,10 @@ export function Memories(): React.JSX.Element {
     if (ids.length === 0 || deleting) return
     if (
       !window.confirm(
-        `Delete ${ids.length} selected memories? The server allows ~60 deletes/hour, so this pauses when the limit is hit (you can stop and resume anytime). This cannot be undone.`
+        t(
+          `Delete ${ids.length} selected memories? The server allows ~60 deletes/hour, so this pauses when the limit is hit (you can stop and resume anytime). This cannot be undone.`,
+          `确定删除选中的 ${ids.length} 条记忆吗？服务器每小时仅允许约 60 次删除，达到上限时会暂停（可随时停止并继续）。此操作无法撤销。`
+        )
       )
     )
       return
@@ -383,10 +402,13 @@ export function Memories(): React.JSX.Element {
       () => stopRef.stop
     )
     setDeleting(false)
-    toast(`Deleted ${res.deleted} of ${ids.length}`, {
+    toast(t(`Deleted ${res.deleted} of ${ids.length}`, `已删除 ${res.deleted}/${ids.length} 条`), {
       tone: res.failed ? 'warn' : 'success',
       body: res.failed
-        ? `${res.failed} failed${res.firstError ? ` — ${res.firstError}` : ''}.`
+        ? t(
+            `${res.failed} failed${res.firstError ? ` — ${res.firstError}` : ''}.`,
+            `${res.failed} 条失败${res.firstError ? ` — ${res.firstError}` : ''}。`
+          )
         : undefined
     })
     await refresh()
@@ -394,40 +416,46 @@ export function Memories(): React.JSX.Element {
 
   const headerCount = manage
     ? loadingAll
-      ? 'Loading all…'
-      : `${manageFiltered.length} shown${selected.size ? ` · ${selected.size} selected` : ''}`
+      ? t('Loading all…', '正在加载全部…')
+      : t(
+          `${manageFiltered.length} shown${selected.size ? ` · ${selected.size} selected` : ''}`,
+          `${manageFiltered.length} 条已显示${selected.size ? ` · 已选 ${selected.size} 条` : ''}`
+        )
     : loading
-      ? 'Loading…'
-      : `${memories.length} memor${memories.length === 1 ? 'y' : 'ies'}`
+      ? t('Loading…', '加载中…')
+      : t(
+          `${memories.length} memor${memories.length === 1 ? 'y' : 'ies'}`,
+          `${memories.length} 条记忆`
+        )
 
   return (
     <div className="flex h-full flex-col">
       <PageHeader
-        title="Memories"
+        title={t('Memories', '记忆')}
         subtitle={headerCount}
         actions={
           manage ? (
             <button onClick={exitManage} className="btn-ghost px-3 py-2" disabled={deleting}>
               <X className="h-4 w-4" />
-              Done
+              {t('Done', '完成')}
             </button>
           ) : (
             <div className="flex items-center gap-2">
               <button
                 onClick={enterManage}
                 className="btn-ghost px-3 py-2"
-                title="Select & delete memories"
+                title={t('Select & delete memories', '选择并删除记忆')}
               >
                 <CheckSquare className="h-4 w-4" />
-                Select
+                {t('Select', '选择')}
               </button>
               <button
                 onClick={() => setComposing((c) => !c)}
                 className="btn-primary px-3 py-2"
-                title="Add a memory"
+                title={t('Add a memory', '新建记忆')}
               >
                 <Plus className="h-4 w-4" />
-                New
+                {t('New', '新建')}
               </button>
             </div>
           )
@@ -457,7 +485,10 @@ export function Memories(): React.JSX.Element {
           <input
             value={manageFilter}
             onChange={(e) => setManageFilter(e.target.value)}
-            placeholder="Filter by text (e.g. local projects include)…"
+            placeholder={t(
+              'Filter by text (e.g. local projects include)…',
+              '按文本筛选（例如本地项目包含的内容）…'
+            )}
             className="input-field max-w-xs flex-1 py-1.5 text-sm"
           />
           <button
@@ -465,33 +496,39 @@ export function Memories(): React.JSX.Element {
             className="btn-ghost px-3 py-1.5 text-sm"
             disabled={deleting}
           >
-            Select file-index junk
+            {t('Select file-index junk', '选中文件索引类杂项')}
           </button>
           <button
             onClick={selectAllFiltered}
             className="btn-ghost px-3 py-1.5 text-sm"
             disabled={deleting}
           >
-            Select all {mq ? 'matching' : ''} ({manageFiltered.length})
+            {t(
+              `Select all ${mq ? 'matching' : ''} (${manageFiltered.length})`,
+              `全选${mq ? '匹配项' : ''}（${manageFiltered.length}）`
+            )}
           </button>
           <button
             onClick={clearSel}
             className="btn-ghost px-3 py-1.5 text-sm"
             disabled={deleting || !selected.size}
           >
-            Clear
+            {t('Clear', '清除')}
           </button>
           <div className="ml-auto flex items-center gap-2">
             {deleting && (
               <>
                 <span className="text-sm text-text-tertiary">
-                  Deleting {tally.deleted}/{selected.size + tally.deleted}…
+                  {t(
+                    `Deleting ${tally.deleted}/${selected.size + tally.deleted}…`,
+                    `正在删除 ${tally.deleted}/${selected.size + tally.deleted}…`
+                  )}
                 </span>
                 <button
                   onClick={() => (stopRef.stop = true)}
                   className="btn-ghost px-3 py-1.5 text-sm"
                 >
-                  Stop
+                  {t('Stop', '停止')}
                 </button>
               </>
             )}
@@ -505,7 +542,7 @@ export function Memories(): React.JSX.Element {
               ) : (
                 <Trash2 className="h-4 w-4" />
               )}
-              Delete selected ({selected.size})
+              {t(`Delete selected (${selected.size})`, `删除所选（${selected.size}）`)}
             </button>
           </div>
         </div>
@@ -517,7 +554,8 @@ export function Memories(): React.JSX.Element {
             cold start) stays quiet — the last-known list is on screen. */}
         {error && memories.length === 0 && (
           <div className="glass-subtle mb-5 px-4 py-3 text-sm text-white/60">
-            Failed to load memories: {error}
+            {t('Failed to load memories: ', '记忆加载失败：')}
+            {error}
           </div>
         )}
 
@@ -543,7 +581,9 @@ export function Memories(): React.JSX.Element {
                     />
                   ))}
                 </div>
-                <p className="text-xs text-white/30">Building your memory map…</p>
+                <p className="text-xs text-white/30">
+                  {t('Building your memory map…', '正在构建你的记忆图谱…')}
+                </p>
               </div>
               <div
                 className={`h-full w-full transition-opacity duration-500 ${graphReady ? 'opacity-100' : 'opacity-0'}`}
@@ -584,8 +624,8 @@ export function Memories(): React.JSX.Element {
               <button
                 onClick={() => navigate('/knowledge-graph')}
                 className="btn-ghost absolute right-3 top-3 z-10 p-2"
-                title="Open the full-screen brain map"
-                aria-label="Open the full-screen brain map"
+                title={t('Open the full-screen brain map', '打开全屏记忆图谱')}
+                aria-label={t('Open the full-screen brain map', '打开全屏记忆图谱')}
               >
                 <Maximize2 className="h-4 w-4" />
               </button>
@@ -609,20 +649,25 @@ export function Memories(): React.JSX.Element {
                   }
                 }}
                 rows={3}
-                placeholder="Something Omi should remember about you…"
+                placeholder={t(
+                  'Something Omi should remember about you…',
+                  '写点你想让 Omi 记住的事…'
+                )}
                 className="input-field resize-none"
               />
               <div className="mt-3 flex items-center justify-end gap-2">
-                <span className="mr-auto text-xs text-white/35">⌘/Ctrl + Enter to save</span>
+                <span className="mr-auto text-xs text-white/35">
+                  {t('⌘/Ctrl + Enter to save', '⌘/Ctrl + Enter 保存')}
+                </span>
                 <button onClick={closeCompose} className="btn-ghost px-3 py-2" disabled={saving}>
-                  Cancel
+                  {t('Cancel', '取消')}
                 </button>
                 <button
                   onClick={save}
                   disabled={saving || !draft.trim()}
                   className="btn-primary px-4 py-2 disabled:opacity-40"
                 >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t('Save', '保存')}
                 </button>
               </div>
             </div>
@@ -633,8 +678,11 @@ export function Memories(): React.JSX.Element {
         {!loading && !error && memories.length === 0 && !composing && (
           <EmptyState
             icon={Brain}
-            title="No memories yet"
-            description="Memories are distilled insights from your conversations. They will show up here as Omi learns about you."
+            title={t('No memories yet', '还没有记忆')}
+            description={t(
+              'Memories are distilled insights from your conversations. They will show up here as Omi learns about you.',
+              '记忆是从你的对话中提炼的要点，随着 Omi 越来越了解你，它们会显示在这里。'
+            )}
           />
         )}
 
@@ -642,11 +690,13 @@ export function Memories(): React.JSX.Element {
         {!manage && !loading && memories.length > 0 && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center pt-12 text-center text-white/55">
             <Search className="mb-3 h-9 w-9 opacity-40" />
-            <p className="text-sm">No results</p>
-            <p className="mt-1 text-xs text-white/40">Try a different search or filter.</p>
+            <p className="text-sm">{t('No results', '没有结果')}</p>
+            <p className="mt-1 text-xs text-white/40">
+              {t('Try a different search or filter.', '换个搜索词或筛选条件试试。')}
+            </p>
             {hasActiveFilters && (
               <button onClick={clearFilters} className="btn-ghost mt-4 px-3 py-1.5 text-sm">
-                Clear filters
+                {t('Clear filters', '清除筛选')}
               </button>
             )}
           </div>
@@ -656,17 +706,16 @@ export function Memories(): React.JSX.Element {
         {!manage && (
           <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-3 lg:grid-cols-2">
             {rendered.map((m) => (
-              <MemoryCard
-                key={m.id}
-                memory={m}
-                onOpen={setDetailMemory}
-              />
+              <MemoryCard key={m.id} memory={m} onOpen={setDetailMemory} />
             ))}
           </ul>
         )}
         {!manage && filtered.length > RENDER_CAP && (
           <p className="mx-auto mt-4 max-w-4xl text-center text-sm text-text-tertiary">
-            Showing first {RENDER_CAP} of {filtered.length}.
+            {t(
+              `Showing first ${RENDER_CAP} of ${filtered.length}.`,
+              `仅显示前 ${RENDER_CAP} 条（共 ${filtered.length} 条）。`
+            )}
           </p>
         )}
 
@@ -710,8 +759,10 @@ export function Memories(): React.JSX.Element {
         )}
         {manage && manageFiltered.length > RENDER_CAP && (
           <p className="mx-auto mt-4 max-w-4xl text-center text-sm text-text-tertiary">
-            Showing first {RENDER_CAP} of {manageFiltered.length}. Selection and delete still apply
-            to all {mq ? 'matching' : ''} {manageFiltered.length}.
+            {t(
+              `Showing first ${RENDER_CAP} of ${manageFiltered.length}. Selection and delete still apply to all ${mq ? 'matching' : ''} ${manageFiltered.length}.`,
+              `仅显示前 ${RENDER_CAP} 条（共 ${manageFiltered.length} 条）。选择和删除仍会作用于全部${mq ? '匹配的' : ''} ${manageFiltered.length} 条。`
+            )}
           </p>
         )}
       </div>

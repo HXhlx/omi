@@ -14,6 +14,7 @@ import {
   ChevronUp
 } from 'lucide-react'
 import { omiApi } from '../lib/apiClient'
+import { t } from '../lib/i18n'
 import { PageHeader } from '../components/layout/PageHeader'
 import { EmptyState } from '../components/ui/EmptyState'
 import { rankSearchResults } from '../lib/appRanking'
@@ -173,7 +174,11 @@ const AppCard = memo(function AppCard({
           ) : (
             <Plus className="h-3 w-3" />
           )}
-          {isSettingUp ? 'Setting up…' : isOn ? 'Installed' : 'Install'}
+          {isSettingUp
+            ? t('Setting up…', '设置中…')
+            : isOn
+              ? t('Installed', '已安装')
+              : t('Install', '安装')}
         </button>
       </div>
     </div>
@@ -463,9 +468,9 @@ export function Apps(): React.JSX.Element {
         (await omiApi.get<AppEntry>(`/v1/apps/${a.id}`)).data.external_integration ?? null
     } catch {
       if (current())
-        toast(`Couldn’t start setting up ${a.name}`, {
+        toast(t(`Couldn’t start setting up ${a.name}`, `无法开始设置 ${a.name}`), {
           tone: 'error',
-          body: 'Try installing again.'
+          body: t('Try installing again.', '请重试安装。')
         })
       return
     }
@@ -496,9 +501,11 @@ export function Apps(): React.JSX.Element {
           try {
             await omiApi.post('/v1/apps/enable', null, { params: { app_id: a.id } })
             setEnabled((s) => new Set(s).add(a.id))
-            toast(`${a.name} is set up`, { tone: 'success' })
+            toast(t(`${a.name} is set up`, `${a.name} 设置完成`), { tone: 'success' })
           } catch {
-            toast(`Couldn’t finish setting up ${a.name}`, { tone: 'error' })
+            toast(t(`Couldn’t finish setting up ${a.name}`, `无法完成 ${a.name} 的设置`), {
+              tone: 'error'
+            })
           }
         })()
       },
@@ -527,7 +534,10 @@ export function Apps(): React.JSX.Element {
         } catch (e) {
           console.error('Disable app failed:', e)
           setEnabled((s) => new Set(s).add(a.id))
-          toast(`Couldn’t uninstall ${a.name}`, { tone: 'error', body: userSafeDetail(e) })
+          toast(t(`Couldn’t uninstall ${a.name}`, `无法卸载 ${a.name}`), {
+            tone: 'error',
+            body: userSafeDetail(e)
+          })
         } finally {
           setBusy((s) => {
             const next = new Set(s)
@@ -557,13 +567,16 @@ export function Apps(): React.JSX.Element {
           // macOS swallows this silently; surface it and point to the detail sheet's
           // purchase flow instead of a bare "Couldn't install".
           console.error('Enable paid app failed:', e)
-          toast(`${a.name} is a paid app`, {
+          toast(t(`${a.name} is a paid app`, `${a.name} 是付费应用`), {
             tone: 'error',
-            body: 'Open it to purchase before installing.'
+            body: t('Open it to purchase before installing.', '请打开详情购买后再安装。')
           })
         } else {
           console.error('Enable app failed:', e)
-          toast(`Couldn’t install ${a.name}`, { tone: 'error', body: userSafeDetail(e) })
+          toast(t(`Couldn’t install ${a.name}`, `无法安装 ${a.name}`), {
+            tone: 'error',
+            body: userSafeDetail(e)
+          })
         }
       } finally {
         setBusy((s) => {
@@ -657,9 +670,14 @@ export function Apps(): React.JSX.Element {
   return (
     <div className="flex h-full flex-col">
       <PageHeader
-        title="Apps"
+        title={t('Apps', '应用')}
         subtitle={
-          loading ? 'Loading…' : `${allApps.length} available · ${installedApps.length} installed`
+          loading
+            ? t('Loading…', '加载中…')
+            : t(
+                `${allApps.length} available · ${installedApps.length} installed`,
+                `${allApps.length} 个可用 · ${installedApps.length} 个已安装`
+              )
         }
         actions={
           <div className="flex items-center gap-2">
@@ -672,7 +690,7 @@ export function Apps(): React.JSX.Element {
                     : 'text-white/55 hover:bg-white/5 hover:text-white/80'
                 }`}
               >
-                Marketplace
+                {t('Marketplace', '市场')}
               </button>
               <button
                 onClick={() => setTab('installed')}
@@ -682,14 +700,14 @@ export function Apps(): React.JSX.Element {
                     : 'text-white/55 hover:bg-white/5 hover:text-white/80'
                 }`}
               >
-                Installed
+                {t('Installed', '已安装')}
               </button>
             </div>
             <button
               onClick={onRefresh}
               disabled={refreshing || loading}
               className="btn-ghost px-3 py-2 disabled:opacity-50"
-              title="Refresh"
+              title={t('Refresh', '刷新')}
             >
               <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -723,9 +741,14 @@ export function Apps(): React.JSX.Element {
               <AlertTriangle className="h-5 w-5 text-white/60" />
             </div>
             <div className="space-y-1">
-              <div className="font-display font-semibold text-white/90">Couldn’t load apps</div>
+              <div className="font-display font-semibold text-white/90">
+                {t('Couldn’t load apps', '无法加载应用')}
+              </div>
               <p className="text-sm text-white/55">
-                Something went wrong reaching the marketplace. Check your connection and try again.
+                {t(
+                  'Something went wrong reaching the marketplace. Check your connection and try again.',
+                  '访问市场时出现问题。请检查网络连接后重试。'
+                )}
               </p>
             </div>
             <button
@@ -738,7 +761,7 @@ export function Apps(): React.JSX.Element {
               ) : (
                 <RefreshCw className="h-4 w-4" />
               )}
-              Retry
+              {t('Retry', '重试')}
             </button>
           </div>
         )}
@@ -750,7 +773,7 @@ export function Apps(): React.JSX.Element {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search apps…"
+                  placeholder={t('Search apps…', '搜索应用…')}
                   className="flex-1 border-0 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-0"
                 />
                 {query && (
@@ -758,7 +781,7 @@ export function Apps(): React.JSX.Element {
                     onClick={() => setQuery('')}
                     className="text-xs text-white/45 hover:text-white"
                   >
-                    Clear
+                    {t('Clear', '清除')}
                   </button>
                 )}
               </div>
@@ -771,10 +794,10 @@ export function Apps(): React.JSX.Element {
                       ? 'text-white'
                       : 'text-white/55 hover:text-white/80'
                   }`}
-                  title="Filter by category"
+                  title={t('Filter by category', '按分类筛选')}
                 >
                   <SlidersHorizontal className="h-4 w-4" />
-                  <span className="hidden sm:inline">Filter</span>
+                  <span className="hidden sm:inline">{t('Filter', '筛选')}</span>
                   {selectedCats.size > 0 && (
                     <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-white/20 px-1.5 text-[11px] font-semibold text-white">
                       {selectedCats.size}
@@ -786,19 +809,21 @@ export function Apps(): React.JSX.Element {
                   <div className="surface-card absolute right-0 z-30 mt-2 max-h-80 w-60 overflow-y-auto p-2 shadow-xl">
                     <div className="flex items-center justify-between px-2 py-1.5">
                       <span className="text-xs font-semibold uppercase tracking-wide text-white/45">
-                        Categories
+                        {t('Categories', '分类')}
                       </span>
                       {selectedCats.size > 0 && (
                         <button
                           onClick={() => setSelectedCats(new Set())}
                           className="text-[11px] text-white/45 hover:text-white"
                         >
-                          Clear
+                          {t('Clear', '清除')}
                         </button>
                       )}
                     </div>
                     {allCategories.length === 0 ? (
-                      <div className="px-2 py-2 text-xs text-white/45">No categories</div>
+                      <div className="px-2 py-2 text-xs text-white/45">
+                        {t('No categories', '暂无分类')}
+                      </div>
                     ) : (
                       allCategories.map((cat) => {
                         const checked = selectedCats.has(cat)
@@ -845,13 +870,16 @@ export function Apps(): React.JSX.Element {
             {showSearchSpinner ? (
               <div className="flex items-center justify-center gap-2 py-10 text-sm text-white/45">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Searching…
+                {t('Searching…', '搜索中…')}
               </div>
             ) : view.kind === 'grid' ? (
               <>
                 {searchFallback && isSearching && tab === 'all' && (
                   <div className="glass-subtle px-4 py-2.5 text-xs text-white/55">
-                    Showing local results — search is temporarily unavailable.
+                    {t(
+                      'Showing local results — search is temporarily unavailable.',
+                      '显示本地结果 — 搜索服务暂时不可用。'
+                    )}
                   </div>
                 )}
                 {view.apps.length === 0 ? (
@@ -859,17 +887,20 @@ export function Apps(): React.JSX.Element {
                     icon={LayoutGrid}
                     title={
                       isSearching
-                        ? 'No apps match'
+                        ? t('No apps match', '没有匹配的应用')
                         : tab === 'installed'
-                          ? 'No apps installed'
-                          : 'No apps available'
+                          ? t('No apps installed', '尚未安装应用')
+                          : t('No apps available', '暂无可用应用')
                     }
                     description={
                       isSearching
-                        ? 'Try a different search.'
+                        ? t('Try a different search.', '换个关键词试试。')
                         : tab === 'installed'
-                          ? 'Browse the Marketplace tab to find apps to install.'
-                          : 'Try again later.'
+                          ? t(
+                              'Browse the Marketplace tab to find apps to install.',
+                              '前往“市场”标签页查找可安装的应用。'
+                            )
+                          : t('Try again later.', '稍后再试。')
                     }
                   />
                 ) : (
@@ -884,8 +915,10 @@ export function Apps(): React.JSX.Element {
                     />
                     {view.apps.length > SEARCH_LIMIT && (
                       <p className="mt-3 text-center text-xs text-white/45">
-                        Showing the first {SEARCH_LIMIT} of {view.apps.length}. Narrow with search
-                        or filters.
+                        {t(
+                          `Showing the first ${SEARCH_LIMIT} of ${view.apps.length}. Narrow with search or filters.`,
+                          `仅显示前 ${SEARCH_LIMIT} 个（共 ${view.apps.length} 个）。请使用搜索或筛选缩小范围。`
+                        )}
                       </p>
                     )}
                   </>
@@ -894,8 +927,8 @@ export function Apps(): React.JSX.Element {
             ) : sections.length === 0 ? (
               <EmptyState
                 icon={LayoutGrid}
-                title="No apps available"
-                description="Try again later."
+                title={t('No apps available', '暂无可用应用')}
+                description={t('Try again later.', '稍后再试。')}
               />
             ) : (
               sections.map((section) => {
@@ -911,12 +944,12 @@ export function Apps(): React.JSX.Element {
                         >
                           {isExpanded ? (
                             <>
-                              Show less
+                              {t('Show less', '收起')}
                               <ChevronUp className="h-3.5 w-3.5" />
                             </>
                           ) : (
                             <>
-                              See more
+                              {t('See more', '查看更多')}
                               <ChevronDown className="h-3.5 w-3.5" />
                             </>
                           )}
@@ -933,8 +966,10 @@ export function Apps(): React.JSX.Element {
                     />
                     {isExpanded && section.truncated && (
                       <p className="text-xs text-white/45">
-                        Showing {section.apps.length} of {section.total}. Use search to find the
-                        rest.
+                        {t(
+                          `Showing ${section.apps.length} of ${section.total}. Use search to find the rest.`,
+                          `显示 ${section.apps.length} 个（共 ${section.total} 个）。其余请通过搜索查找。`
+                        )}
                       </p>
                     )}
                   </div>

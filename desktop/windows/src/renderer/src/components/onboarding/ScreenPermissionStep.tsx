@@ -1,5 +1,6 @@
 import { Monitor } from 'lucide-react'
 import { PermissionStep } from './PermissionStep'
+import { t } from '../../lib/i18n'
 
 type ScreenPermissionStepProps = {
   stepIndex: number
@@ -31,7 +32,10 @@ export function ScreenPermissionStep({
       }
     } catch {
       throw new Error(
-        "Couldn't turn on screen capture. You can enable it any time in Settings → Rewind."
+        t(
+          "Couldn't turn on screen capture. You can enable it any time in Settings → Rewind.",
+          '无法开启屏幕捕获。你可以随时在 设置 → Rewind 中开启。'
+        )
       )
     }
   }
@@ -66,22 +70,25 @@ export function ScreenPermissionStep({
       stepIndex={stepIndex}
       totalSteps={totalSteps}
       aside={aside}
-      eyebrow="SCREEN"
-      title="Let Omi read your screen"
-      subtitle="Omi keeps a private, local timeline of what's on your screen. It stays on this device, and you can turn it off any time in Settings."
+      eyebrow={t('SCREEN', '屏幕')}
+      title={t('Let Omi read your screen', '让 Omi 读取你的屏幕')}
+      subtitle={t(
+        "Omi keeps a private, local timeline of what's on your screen. It stays on this device, and you can turn it off any time in Settings.",
+        'Omi 会为你屏幕上的内容保留一条私密的本机时间线。数据只保存在这台设备上，你可以随时在设置中关闭。'
+      )}
       icon={<Monitor className="h-5 w-5 text-white/60" />}
-      cardLabel="Screen capture"
+      cardLabel={t('Screen capture', '屏幕捕获')}
       statusText={{
-        idle: 'Off',
-        waiting: 'Turning on',
-        granted: 'On',
-        denied: "Couldn't turn on"
+        idle: t('Off', '关闭'),
+        waiting: t('Turning on', '正在开启'),
+        granted: t('On', '已开启'),
+        denied: t("Couldn't turn on", '无法开启')
       }}
       buttonLabel={{
-        idle: 'Turn on',
-        waiting: 'Turning on',
-        granted: 'On',
-        denied: 'Try again'
+        idle: t('Turn on', '开启'),
+        waiting: t('Turning on', '正在开启'),
+        granted: t('On', '已开启'),
+        denied: t('Try again', '重试')
       }}
       onActivate={enableCapture}
       checkGranted={isCaptureOn}

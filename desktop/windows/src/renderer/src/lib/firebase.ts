@@ -2,6 +2,9 @@ import { initializeApp } from 'firebase/app'
 import {
   initializeAuth,
   getAuth,
+  connectAuthEmulator,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signInWithCustomToken,
   signOut,
   updateProfile,
@@ -42,6 +45,36 @@ export const auth = (() => {
     return getAuth(app)
   }
 })()
+
+// LOCAL ADAPT (omi_local_changes pattern): point the Firebase JS SDK at the local
+// auth emulator instead of the prod identitytoolkit endpoints. Must run before any
+// auth network call, hence synchronously at module init. VITE_FIREBASE_PROJECT_ID
+// must then match the harness (demo-omi-local) so ID tokens carry the audience the
+// local backend validates. See desktop/windows/.env and OMI_LOCAL_ADAPT.md.
+const EMULATOR_HOST = import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_HOST as string | undefined
+const EMULATOR_PORT = (import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_PORT as string | undefined) ?? '9199'
+if (EMULATOR_HOST) {
+  connectAuthEmulator(auth, `http://${EMULATOR_HOST}:${EMULATOR_PORT}`, { disableWarnings: true })
+}
+
+/**
+ * LOCAL ADAPT: direct email/password sign-in against the auth emulator. The
+ * upstream sign-in path (system-browser OAuth → backend /v1/auth/token →
+ * signInWithCustomToken) cannot run against the offline harness, so Login offers
+ * this when the emulator is configured. First sign-in auto-creates the user.
+ */
+export async function emulatorSignIn(email: string, password: string): Promise<User> {
+  try {
+    return (await signInWithEmailAndPassword(auth, email, password)).user
+  } catch (e) {
+    const code = (e as { code?: string })?.code
+    if (code === 'auth/user-not-found' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') {
+      // Emulator has no such user yet — create it, then reuse the resulting session.
+      return (await createUserWithEmailAndPassword(auth, email, password)).user
+    }
+    throw e
+  }
+}
 
 // Belt-and-suspenders: once auth init has settled, sweep any lingering plaintext
 // `firebase:authUser:*` key that Firebase's own migration didn't clear (e.g. a

@@ -66,6 +66,13 @@ function byokSttHeaders(base: Record<string, string>): Record<string, string> {
  * `client_conversation_id` so a reconnect resumes the SAME server-side conversation
  * (see ListenStartArgs). Ignored for the transcription-only endpoints.
  */
+// LOCAL ADAPT: derive the WS base from the configured API base so the local
+// harness serves the listen endpoints; upstream default keeps prod. The main
+// process has no Chromium network restrictions, so this works for both the
+// LAN host directly and the local ssh tunnels (TCP-level forwarding).
+const LISTEN_API_BASE = String(import.meta.env.VITE_OMI_API_BASE || '') || 'https://api.omi.me'
+const LISTEN_WS_BASE = LISTEN_API_BASE.replace(/^http/i, 'ws').replace(/\/+$/, '')
+
 export function buildListenEndpoint(
   mode: ListenMode,
   language: string,
@@ -74,7 +81,7 @@ export function buildListenEndpoint(
   const lang = encodeURIComponent(language || 'en')
   if (mode === 'ptt' || mode === 'transcribe') {
     return (
-      'wss://api.omi.me/v2/voice-message/transcribe-stream' +
+      LISTEN_WS_BASE + '/v2/voice-message/transcribe-stream' +
       `?language=${lang}` +
       '&sample_rate=16000' +
       '&codec=linear16' +
@@ -82,7 +89,7 @@ export function buildListenEndpoint(
     )
   }
   return (
-    'wss://api.omi.me/v4/listen' +
+    LISTEN_WS_BASE + '/v4/listen' +
     `?language=${lang}` +
     '&sample_rate=16000' +
     '&codec=pcm16' +
@@ -185,9 +192,18 @@ const ownersWithDestroyHook = new Set<number>()
 // Base headers every v4/listen WS carries: auth plus the platform/device
 // identity the backend's platform normalization reads (X-App-Platform,
 // X-Device-Id-Hash). BYOK STT headers are layered on top at the call site.
+// LOCAL ADAPT (omi_local_changes pattern): the offline harness runs Firebase
+// auth in emulator mode, where the backend never initializes a Firebase admin
+// app — verify_token then only accepts the ADMIN_KEY impersonation form the
+// harness's own tooling uses ("<ADMIN_KEY><uid>"). VITE_OMI_ADMIN_KEY carries
+// that harness value; unset keeps the upstream Bearer token untouched.
+const ADMIN_KEY = String(import.meta.env.VITE_OMI_ADMIN_KEY || '')
 export function buildListenHeaders(token: string, deviceIdHash: string): Record<string, string> {
+  const auth = ADMIN_KEY
+    ? `Bearer ${ADMIN_KEY}${decodeUidFromIdToken(token)}`
+    : `Bearer ${token}`
   return {
-    Authorization: `Bearer ${token}`,
+    Authorization: auth,
     'X-App-Platform': 'windows',
     'X-Device-Id-Hash': deviceIdHash
   }

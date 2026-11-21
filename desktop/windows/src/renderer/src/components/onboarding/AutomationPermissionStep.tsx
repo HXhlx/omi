@@ -1,6 +1,7 @@
 import { Zap } from 'lucide-react'
 import { getPreferences, setPreferences } from '../../lib/preferences'
 import { PermissionStep } from './PermissionStep'
+import { t } from '../../lib/i18n'
 
 type AutomationPermissionStepProps = {
   stepIndex: number
@@ -40,22 +41,22 @@ export function AutomationPermissionStep({
       stepIndex={stepIndex}
       totalSteps={totalSteps}
       aside={aside}
-      eyebrow="PERMISSION"
-      title="Let Omi act when asked"
-      subtitle="Automation lets Omi take actions for you"
+      eyebrow={t('PERMISSION', '权限')}
+      title={t('Let Omi act when asked', '按你的要求执行操作')}
+      subtitle={t('Automation lets Omi take actions for you', '自动化让 Omi 替你执行操作')}
       icon={<Zap className="h-5 w-5 text-white/60" />}
-      cardLabel="Automation"
+      cardLabel={t('Automation', '自动化')}
       statusText={{
-        idle: 'Not enabled yet',
-        waiting: 'Enabling',
-        granted: 'Enabled',
-        denied: "Couldn't enable"
+        idle: t('Not enabled yet', '尚未启用'),
+        waiting: t('Enabling', '正在启用'),
+        granted: t('Enabled', '已启用'),
+        denied: t("Couldn't enable", '无法启用')
       }}
       buttonLabel={{
-        idle: 'Enable',
-        waiting: 'Enabling',
-        granted: 'Enabled',
-        denied: 'Try again'
+        idle: t('Enable', '启用'),
+        waiting: t('Enabling', '正在启用'),
+        granted: t('Enabled', '已启用'),
+        denied: t('Try again', '重试')
       }}
       onActivate={enableAutomation}
       checkGranted={isConsented}

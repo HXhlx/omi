@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { StepScaffold } from './StepScaffold'
+import { t } from '../../lib/i18n'
 import macsImg from '../../assets/macs.png'
 
 type AskDemoStepProps = {
@@ -37,7 +38,10 @@ export function AskDemoStep({
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      title={'Type in the floating bar “Which computer should I buy?”'}
+      title={t(
+        'Type in the floating bar “Which computer should I buy?”',
+        '在悬浮栏输入“我该买哪台电脑？”'
+      )}
       align="center"
       widthClassName="max-w-[820px]"
       onContinue={onContinue}
@@ -46,7 +50,7 @@ export function AskDemoStep({
       <div className="mt-4 flex min-h-[260px] w-full items-center justify-center">
         <img
           src={macsImg}
-          alt="Omi's answer: a comparison of Mac models"
+          alt={t("Omi's answer: a comparison of Mac models", 'Omi 的回答：Mac 机型对比')}
           onError={(e) => console.error('[AskDemoStep] macs.png failed to load', e)}
           className={
             'w-full rounded-2xl shadow-2xl ring-1 ring-white/10 transition-all duration-500 ease-out ' +

@@ -1,13 +1,17 @@
 import { NavLink } from 'react-router-dom'
 import { cn } from '../../lib/utils'
+import { t } from '../../lib/i18n'
 
 // Segmented switcher that lives in the header of both the Tasks and Goals
 // pages. Goals no longer has its own sidebar item — it's reached from the Tasks
 // tab via this toggle. Both pages stay mounted in MainViews, so switching here
 // is just a route change (instant, state preserved).
+//
+// LOCAL ADAPT: `label` is display-only (routing uses `to`), so it's wrapped in
+// t() at definition; the `to` paths stay untouched.
 const tabs = [
-  { label: 'Tasks', to: '/tasks' },
-  { label: 'Goals', to: '/goals' }
+  { label: t('Tasks', '任务'), to: '/tasks' },
+  { label: t('Goals', '目标'), to: '/goals' }
 ] as const
 
 export function TasksGoalsToggle(): React.JSX.Element {
@@ -20,7 +24,9 @@ export function TasksGoalsToggle(): React.JSX.Element {
           className={({ isActive }) =>
             cn(
               'rounded-xl px-4 py-1.5 font-display text-base font-bold tracking-tight transition-all duration-200',
-              isActive ? 'bg-white/15 text-white' : 'text-white/45 hover:bg-white/5 hover:text-white/80'
+              isActive
+                ? 'bg-white/15 text-white'
+                : 'text-white/45 hover:bg-white/5 hover:text-white/80'
             )
           }
         >

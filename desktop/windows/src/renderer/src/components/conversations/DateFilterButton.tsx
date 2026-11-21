@@ -6,6 +6,8 @@ import {
   type DateRange,
   NO_DATE_RANGE
 } from '../../lib/conversations/filtering'
+// LOCAL ADAPT: filter button label renders in Chinese on this machine (see lib/i18n.ts).
+import { t } from '../../lib/i18n'
 
 // ms → 'yyyy-mm-dd' (local) for a native <input type="date">.
 function toInputValue(ms: number | null): string {
@@ -56,7 +58,7 @@ export function DateFilterButton({
         title="Filter by date"
       >
         <CalendarDays className="h-4 w-4" />
-        <span className="hidden sm:inline">Date</span>
+        <span className="hidden sm:inline">{t('Date', '日期')}</span>
         {active && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
       </button>
 

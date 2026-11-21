@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { StepScaffold } from './StepScaffold'
+import { t } from '../../lib/i18n'
 import { getPreferences } from '../../lib/preferences'
 import { DEFAULT_OVERLAY_ACCELERATOR, acceleratorToTokens } from '../../lib/overlayShortcut'
 
@@ -112,18 +113,24 @@ export function VoiceIntroStep({
   const canContinue = captured || stuck
 
   const problem = micBlocked
-    ? 'Windows is blocking Omi’s microphone, so voice can’t work yet. You can fix this later in Settings → Privacy.'
+    ? t(
+        'Windows is blocking Omi’s microphone, so voice can’t work yet. You can fix this later in Settings → Privacy.',
+        'Windows 正在阻止 Omi 使用麦克风，语音暂时无法工作。你可以稍后在 设置 → 隐私 中解决。'
+      )
     : failure
 
   const subtitle = captured
-    ? 'That’s it — Omi heard you.'
-    : `Hold ${hotkeyTokens.join(' + ')}, ask a question, then let go.`
+    ? t('That’s it — Omi heard you.', '就是这样 —— Omi 听到你了。')
+    : t(
+        `Hold ${hotkeyTokens.join(' + ')}, ask a question, then let go.`,
+        `按住 ${hotkeyTokens.join(' + ')}，问一个问题，然后松开。`
+      )
 
   return (
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      title="Talk to Omi"
+      title={t('Talk to Omi', '和 Omi 对话')}
       subtitle={subtitle}
       subtitleClassName="text-white"
       align="center"
@@ -132,7 +139,7 @@ export function VoiceIntroStep({
     >
       <div className="mt-2 flex w-full max-w-[420px] flex-col items-center gap-4 rounded-2xl border border-white/5 bg-white/[0.03] px-6 py-9">
         <div className="flex items-center gap-2">
-          <span className="mr-1 text-sm font-medium text-white/50">Hold</span>
+          <span className="mr-1 text-sm font-medium text-white/50">{t('Hold', '按住')}</span>
           {hotkeyTokens.map((t, i) => (
             <kbd
               key={`${t}-${i}`}
@@ -150,7 +157,8 @@ export function VoiceIntroStep({
           ))}
         </div>
         <p className="text-sm text-white/55">
-          Try asking: <span className="text-white/80">“What’s on my screen?”</span>
+          {t('Try asking:', '试试问：')}{' '}
+          <span className="text-white/80">{t('“What’s on my screen?”', '“我屏幕上有什么？”')}</span>
         </p>
       </div>
 
@@ -160,12 +168,17 @@ export function VoiceIntroStep({
         <p className="mt-4 max-w-[420px] text-sm text-amber-400">{problem}</p>
       ) : nudge && !captured ? (
         <p className="mt-4 max-w-[420px] text-sm text-white/55">
-          Keep the keys held down while you speak — a quick press just opens Omi. Let go when you’re
-          done.
+          {t(
+            'Keep the keys held down while you speak — a quick press just opens Omi. Let go when you’re done.',
+            '说话时请一直按住按键 —— 快速按一下只会打开 Omi。说完后松开即可。'
+          )}
         </p>
       ) : waited && !captured ? (
         <p className="mt-4 max-w-[420px] text-sm text-white/55">
-          Can’t get it to work? Continue — you can try this any time from the bar.
+          {t(
+            'Can’t get it to work? Continue — you can try this any time from the bar.',
+            '还是不行？点“继续” —— 以后随时可以在悬浮栏里再试。'
+          )}
         </p>
       ) : null}
     </StepScaffold>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Check, ListChecks } from 'lucide-react'
+import { t } from '../../lib/i18n'
 
 type AutoCreatedTasksStepProps = {
   /** Complete onboarding and jump straight to the Tasks tab. */
@@ -15,6 +16,17 @@ const SAMPLE_TASKS = [
   { title: 'Task 2', subtitle: 'Mentioned in Slack' },
   { title: 'Task 3', subtitle: 'Getting started' }
 ]
+
+// Render-only zh labels. SAMPLE_TASKS stays English: each `title` doubles as the
+// list's React key.
+const TASK_TEXT_ZH: Record<string, string> = {
+  'Task 1': '任务 1',
+  'Task 2': '任务 2',
+  'Task 3': '任务 3',
+  'From today’s meeting': '来自今天的会议',
+  'Mentioned in Slack': '在 Slack 中提到',
+  'Getting started': '开始上手'
+}
 
 function TaskRow({
   title,
@@ -47,9 +59,11 @@ function TaskRow({
             (done ? 'text-white/35 line-through' : 'text-white/90')
           }
         >
-          {title}
+          {t(title, TASK_TEXT_ZH[title] ?? title)}
         </span>
-        <span className="text-xs text-white/40">{subtitle}</span>
+        <span className="text-xs text-white/40">
+          {t(subtitle, TASK_TEXT_ZH[subtitle] ?? subtitle)}
+        </span>
       </div>
     </button>
   )
@@ -80,10 +94,14 @@ export function AutoCreatedTasksStep({ onFinish }: AutoCreatedTasksStepProps): R
         </div>
       </div>
 
-      <h1 className="font-display text-3xl font-semibold text-white/95">Auto-created Tasks</h1>
+      <h1 className="font-display text-3xl font-semibold text-white/95">
+        {t('Auto-created Tasks', '自动创建的任务')}
+      </h1>
       <p className="mt-3 text-sm leading-relaxed text-white/50">
-        omi listens to your conversations and automatically creates tasks, action items, and
-        follow-ups for you.
+        {t(
+          'omi listens to your conversations and automatically creates tasks, action items, and follow-ups for you.',
+          'Omi 会聆听你的对话，自动为你创建任务、行动项和跟进事项。'
+        )}
       </p>
 
       <div className="mt-7 flex w-full flex-col gap-2">
@@ -108,7 +126,7 @@ export function AutoCreatedTasksStep({ onFinish }: AutoCreatedTasksStepProps): R
         disabled={finishing}
         className="mt-8 rounded-xl bg-white px-8 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Take me to my tasks
+        {t('Take me to my tasks', '进入我的任务')}
       </button>
     </div>
   )

@@ -8,6 +8,7 @@ import {
 import { clampOnboardingStep } from '../lib/onboardingProgress'
 import { syncLanguage, setDisplayName } from '../lib/userProfile'
 import { resolveLanguageCode, languageLabel } from '../lib/languages'
+import { omiApi } from '../lib/apiClient'
 import { trackHowDidYouHear } from '../lib/analytics'
 import { toast } from '../lib/toast'
 import { NameStep } from '../components/onboarding/NameStep'
@@ -26,6 +27,7 @@ import { DataSourcesStep } from '../components/onboarding/DataSourcesStep'
 import { GoalStep } from '../components/onboarding/GoalStep'
 import { AutoCreatedTasksStep } from '../components/onboarding/AutoCreatedTasksStep'
 import { createGoal } from '../lib/goals'
+import { t } from '../lib/i18n'
 // Import BrainGraph DIRECTLY (not via LazyBrainGraph) for onboarding — matches
 // the f42497b version that rendered reliably. The lazy wrapper's Suspense +
 // ErrorBoundary was silently swallowing the onboarding map to a blank pane. The
@@ -79,7 +81,7 @@ export function Onboarding(): React.JSX.Element {
     void addUserNode(name)
     // Best-effort: also set the Firebase displayName (no backend name endpoint).
     void setDisplayName(name).catch(() => {
-      toast('Could not sync your name', { tone: 'warn' })
+      toast(t('Could not sync your name', '无法同步你的名字'), { tone: 'warn' })
     })
     next()
   }
@@ -91,8 +93,25 @@ export function Onboarding(): React.JSX.Element {
     setPreferences({ language: code })
     void addLanguageNode(code, languageLabel(code))
     void syncLanguage(code).catch(() => {
-      toast('Saved locally — language sync will retry later', { tone: 'warn' })
+      toast(
+        t(
+          'Saved locally — language sync will retry later',
+          '已保存到本地 —— 语言同步稍后会自动重试'
+        ),
+        { tone: 'warn' }
+      )
     })
+    // LOCAL ADAPT (omi_local_changes pattern): the backend's language PATCH
+    // resets single_language_mode to `not supports_live_multilingual_mode(code)`
+    // — for zh that is False, so the live session requests language=multi and
+    // the keyless parakeet chain (no 'multi' capability) dies with 1011. The
+    // local FunASR chain is single-language, so re-assert the flag after the
+    // sync. See OMI_LOCAL_ADAPT.md.
+    if (code === 'zh') {
+      void omiApi
+        .patch('/v1/users/transcription-preferences', { single_language_mode: true })
+        .catch(() => {})
+    }
     next()
   }
 
@@ -111,7 +130,10 @@ export function Onboarding(): React.JSX.Element {
     // Best-effort sync to the Omi goals backend — never block onboarding on the
     // network or delay the transition into Chat.
     void createGoal(goal).catch(() => {
-      toast('Saved locally — goal sync will retry later', { tone: 'warn' })
+      toast(
+        t('Saved locally — goal sync will retry later', '已保存到本地 —— 目标同步稍后会自动重试'),
+        { tone: 'warn' }
+      )
     })
     next()
   }

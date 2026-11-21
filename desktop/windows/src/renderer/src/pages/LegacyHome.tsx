@@ -8,6 +8,7 @@ import { QuickGoalsWidget } from '../components/home/QuickGoalsWidget'
 import { RevealMarkdown } from '../components/chat/RevealMarkdown'
 import { cn } from '../lib/utils'
 import { keepLastPositive } from '../lib/measure'
+import { t } from '../lib/i18n'
 import omiMark from '../assets/omi-mark.png'
 import { BrandImage } from '../components/ui/BrandImage'
 import { VoiceSessionSurface } from '../components/voice/VoiceSessionSurface'
@@ -17,7 +18,7 @@ function firstName(u: User | null): string {
   const display = u?.displayName?.trim().split(/\s+/)[0]
   if (display) return display
   const emailLocal = u?.email?.split('@')[0]
-  return emailLocal || 'there'
+  return emailLocal || t('there', '朋友')
 }
 
 // Bubbles dissolve across the top ~190px of the thread (only once it overflows),
@@ -53,12 +54,16 @@ function ChatBar(props: {
         onKeyDown={(e) => {
           if (e.key === 'Enter') props.onSend()
         }}
-        placeholder="Ask Omi…"
+        placeholder={t('Ask Omi…', '问 Omi…')}
         className="flex-1 border-0 bg-transparent py-2 pr-2 text-[15px] text-white placeholder:text-white/35 focus:outline-none focus:ring-0"
       />
       <button
         onClick={props.onToggleVoice}
-        aria-label={props.voiceOpen ? 'Hide voice session' : 'Talk with Omi'}
+        aria-label={
+          props.voiceOpen
+            ? t('Hide voice session', '隐藏语音会话')
+            : t('Talk with Omi', '和 Omi 说话')
+        }
         className={cn(
           'shrink-0 rounded-full p-2.5 transition-colors duration-150',
           props.voiceOpen
@@ -73,7 +78,7 @@ function ChatBar(props: {
       <button
         disabled={!canSend}
         onClick={props.onSend}
-        aria-label="Send"
+        aria-label={t('Send', '发送')}
         className={cn(
           'shrink-0 rounded-full p-2.5 transition-all duration-150',
           canSend
@@ -506,7 +511,10 @@ export function LegacyHome(): React.JSX.Element {
                             startRevealed={!(isLast && chat.sending)}
                           />
                         ) : chat.sending && isLast ? (
-                          <span className="typing-dots" aria-label="Omi is replying">
+                          <span
+                            className="typing-dots"
+                            aria-label={t('Omi is replying', 'Omi 正在回复')}
+                          >
                             <span />
                             <span />
                             <span />
@@ -518,7 +526,8 @@ export function LegacyHome(): React.JSX.Element {
                 })
               ) : !started ? (
                 <h1 className="fade-in-slow pb-2 text-center font-display text-4xl font-semibold tracking-tight text-white">
-                  Hi, {firstName(user)}
+                  {t('Hi, ', '你好，')}
+                  {firstName(user)}
                 </h1>
               ) : null}
             </div>
@@ -527,12 +536,12 @@ export function LegacyHome(): React.JSX.Element {
         {scrollMode === 'freeScrolling' && started ? (
           <button
             type="button"
-            aria-label="Jump to latest message"
+            aria-label={t('Jump to latest message', '跳到最新消息')}
             onClick={() => resumeFollowing(true)}
             className="absolute bottom-4 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-line-strong bg-[color:var(--bg-raised)] px-3.5 py-2 text-sm font-medium text-white shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition-colors hover:bg-[color:var(--bg-tertiary)]"
           >
             <ArrowDown className="h-4 w-4" />
-            Latest
+            {t('Latest', '最新')}
           </button>
         ) : null}
       </div>

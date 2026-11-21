@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { StepScaffold } from './StepScaffold'
 import { OrbitScanner } from './OrbitScanner'
+import { t } from '../../lib/i18n'
 import { runAppIndexing } from '../../lib/appMemories'
 import { rankApps } from '../../lib/appSelection'
 import { addAppNodes } from '../../lib/onboardingGraph'
@@ -48,9 +49,9 @@ export function BuildProfileStep({
       stepIndex={stepIndex}
       totalSteps={totalSteps}
       align="left"
-      eyebrow="DISCOVERY"
-      title="Start building your profile"
-      subtitle="Omi scans projects and recent files"
+      eyebrow={t('DISCOVERY', '发现')}
+      title={t('Start building your profile', '开始构建你的画像')}
+      subtitle={t('Omi scans projects and recent files', 'Omi 会扫描项目与最近文件')}
       onContinue={phase === 'done' ? onContinue : undefined}
       onSkip={onSkip}
     >
@@ -58,11 +59,18 @@ export function BuildProfileStep({
         <OrbitScanner />
         <div className="flex flex-col items-center gap-1 text-center">
           <p className="text-sm font-medium text-white/85">
-            {phase === 'scanning' ? 'Scanning your projects and apps' : 'Your workspace is mapped'}
+            {phase === 'scanning'
+              ? t('Scanning your projects and apps', '正在扫描你的项目与应用')
+              : t('Your workspace is mapped', '你的工作区已完成建图')}
           </p>
           {/* Placeholder keeps the line's height before the count is known. */}
           <p className="text-xs text-white/40">
-            {fileCount == null ? ' ' : `${fileCount.toLocaleString()} files indexed`}
+            {fileCount == null
+              ? ' '
+              : t(
+                  `${fileCount.toLocaleString()} files indexed`,
+                  `已索引 ${fileCount.toLocaleString()} 个文件`
+                )}
           </p>
         </div>
       </div>

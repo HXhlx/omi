@@ -9,6 +9,11 @@
          script-src apis.google/gstatic) were removed in the Phase 8 sweep.
          cdn.jsdelivr.net stays: @ricky0123/vad-web fetches its worklet/wasm
          from there. -->
+    <!-- LOCAL ADAPT (omi_local_changes pattern): connect-src also allows the
+         local harness via ssh tunnels (auth emulator :9199, backend :8100).
+         See desktop/windows/.env and OMI_LOCAL_ADAPT.md. Keep this comment
+         OUTSIDE the meta content attribute — an HTML comment inside a CSP
+         value makes the whole directive invalid. -->
     <meta
       http-equiv="Content-Security-Policy"
       content="
@@ -28,6 +33,10 @@
           https://api.omi.me
           wss://api.omi.me
           https://desktop-backend-hhibjajaja-uc.a.run.app
+          http://127.0.0.1:8100
+          http://127.0.0.1:9199
+          http://localhost:8100
+          http://localhost:9199
           https://api.openai.com
           wss://api.openai.com
           https://generativelanguage.googleapis.com

@@ -7,6 +7,9 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { TasksGoalsToggle } from '../components/layout/TasksGoalsToggle'
 import { EmptyState } from '../components/ui/EmptyState'
 import { toast } from '../lib/toast'
+// Aliased as `tr`: the per-task params below (toggleItem, updateItem, renderRow, …)
+// are named `t` and would shadow the i18n helper.
+import { t as tr } from '../lib/i18n'
 import { bucketOf, formatDue, startOfDay, startOfDayOffset, type Bucket } from '../lib/taskBuckets'
 import type { ActionItemRecord } from '../../../shared/types'
 import type { Conversation as CloudConversation } from '../lib/omiApi.generated'
@@ -43,7 +46,7 @@ async function fetchConvMeta(): Promise<Record<string, ConvMeta>> {
   if (Array.isArray(res.data)) {
     for (const c of res.data) {
       map[c.id] = {
-        title: c.structured?.title || 'Untitled',
+        title: c.structured?.title || tr('Untitled', '无标题'),
         emoji: c.structured?.emoji ?? undefined
       }
     }
@@ -78,10 +81,10 @@ function isOverdue(t: ActionItemRecord): boolean {
 
 const BUCKET_ORDER: Bucket[] = ['today', 'tomorrow', 'later', 'nodate']
 const BUCKET_LABEL: Record<Bucket, string> = {
-  today: 'Today',
-  tomorrow: 'Tomorrow',
-  later: 'Later',
-  nodate: 'No due date'
+  today: tr('Today', '今天'),
+  tomorrow: tr('Tomorrow', '明天'),
+  later: tr('Later', '稍后'),
+  nodate: tr('No due date', '无截止日期')
 }
 
 // Move the keyboard selection across the flat, rendered task order. Clamps at the
@@ -218,7 +221,7 @@ export function Tasks(): React.JSX.Element {
     try {
       await window.omi.tasksToggle({ backendId: t.backendId, completed: !t.completed })
     } catch (e) {
-      toast('Could not update task', { tone: 'error', body: apiError(e) })
+      toast(tr('Could not update task', '无法更新任务'), { tone: 'error', body: apiError(e) })
     } finally {
       markBusy(t.id, false)
     }
@@ -233,7 +236,7 @@ export function Tasks(): React.JSX.Element {
     try {
       await window.omi.tasksUpdate({ backendId: t.backendId, fields })
     } catch (e) {
-      toast('Could not update task', { tone: 'error', body: apiError(e) })
+      toast(tr('Could not update task', '无法更新任务'), { tone: 'error', body: apiError(e) })
     } finally {
       markBusy(t.id, false)
     }
@@ -245,7 +248,7 @@ export function Tasks(): React.JSX.Element {
     try {
       await window.omi.tasksDelete({ backendId: t.backendId })
     } catch (e) {
-      toast('Could not delete task', { tone: 'error', body: apiError(e) })
+      toast(tr('Could not delete task', '无法删除任务'), { tone: 'error', body: apiError(e) })
     } finally {
       markBusy(t.id, false)
     }
@@ -263,7 +266,7 @@ export function Tasks(): React.JSX.Element {
       setDraft('')
       setDraftDue('')
     } catch (e) {
-      toast('Could not create task', { tone: 'error', body: apiError(e) })
+      toast(tr('Could not create task', '无法创建任务'), { tone: 'error', body: apiError(e) })
     } finally {
       setSaving(false)
     }
@@ -520,7 +523,9 @@ export function Tasks(): React.JSX.Element {
         <button
           onClick={() => void toggleItem(t)}
           disabled={isBusy}
-          aria-label={t.completed ? 'Mark as not done' : 'Mark as done'}
+          aria-label={
+            t.completed ? tr('Mark as not done', '标记为未完成') : tr('Mark as done', '标记为完成')
+          }
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all duration-200 ${
             t.completed
               ? 'border-white/30 bg-white/15 text-white'
@@ -549,7 +554,7 @@ export function Tasks(): React.JSX.Element {
                 if (isBusy) return
                 startEdit(t)
               }}
-              title="Click to edit"
+              title={tr('Click to edit', '点击编辑')}
               className={`block w-full text-left text-sm leading-relaxed ${
                 t.completed ? 'text-white/40 line-through' : 'text-white/90'
               }`}
@@ -581,7 +586,7 @@ export function Tasks(): React.JSX.Element {
                       setDueEditingId(null)
                     }}
                     className="text-white/40 hover:text-white/70"
-                    title="Clear due date"
+                    title={tr('Clear due date', '清除截止日期')}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -599,10 +604,10 @@ export function Tasks(): React.JSX.Element {
                       : 'text-white/65'
                     : 'text-white/35'
                 }`}
-                title="Set due date"
+                title={tr('Set due date', '设置截止日期')}
               >
                 <Calendar className="h-3 w-3" />
-                {t.dueAt != null ? formatDue(t.dueAt) : 'Set date'}
+                {t.dueAt != null ? formatDue(t.dueAt) : tr('Set date', '设置日期')}
               </button>
             )}
 
@@ -622,8 +627,8 @@ export function Tasks(): React.JSX.Element {
           onClick={() => void deleteItem(t)}
           disabled={isBusy}
           className="mt-0.5 shrink-0 rounded-md p-1 text-white/30 opacity-0 transition-all hover:bg-white/5 hover:text-rose-300/80 group-hover:opacity-100 disabled:opacity-0"
-          title="Delete task"
-          aria-label="Delete task"
+          title={tr('Delete task', '删除任务')}
+          aria-label={tr('Delete task', '删除任务')}
         >
           <Trash2 className="h-4 w-4" />
         </button>
@@ -634,9 +639,16 @@ export function Tasks(): React.JSX.Element {
   return (
     <div className="flex h-full flex-col">
       <PageHeader
-        title="Tasks"
+        title={tr('Tasks', '任务')}
         titleSlot={<TasksGoalsToggle />}
-        subtitle={loading ? 'Loading…' : `${openCount} open · ${doneCount} done`}
+        subtitle={
+          loading
+            ? tr('Loading…', '加载中…')
+            : tr(
+                `${openCount} open · ${doneCount} done`,
+                `${openCount} 个进行中 · ${doneCount} 个已完成`
+              )
+        }
         actions={
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-black/20 p-1">
@@ -650,23 +662,25 @@ export function Tasks(): React.JSX.Element {
                       : 'text-white/55 hover:bg-white/5 hover:text-white/80'
                   }`}
                 >
-                  {f}
+                  {/* `f` is the filter key used by `changeFilter`/comparisons — the
+                      label render is the only place it gets localized. */}
+                  {tr(f, f === 'open' ? '进行中' : f === 'done' ? '已完成' : '全部')}
                 </button>
               ))}
             </div>
             <button
               onClick={() => setComposing((c) => !c)}
               className="btn-primary px-3 py-2"
-              title="Add a task"
+              title={tr('Add a task', '新建任务')}
             >
               <Plus className="h-4 w-4" />
-              New
+              {tr('New', '新建')}
             </button>
             <button
               onClick={onRefresh}
               disabled={refreshing || loading}
               className="btn-ghost px-3 py-2 disabled:opacity-50"
-              title="Refresh"
+              title={tr('Refresh', '刷新')}
             >
               <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -691,7 +705,7 @@ export function Tasks(): React.JSX.Element {
                     setDraftDue('')
                   }
                 }}
-                placeholder="What needs to get done?"
+                placeholder={tr('What needs to get done?', '需要完成什么？')}
                 className="input-field"
               />
               <div className="mt-3 flex items-center gap-2">
@@ -713,14 +727,18 @@ export function Tasks(): React.JSX.Element {
                   className="btn-ghost ml-auto px-3 py-2"
                   disabled={saving}
                 >
-                  Cancel
+                  {tr('Cancel', '取消')}
                 </button>
                 <button
                   onClick={saveNew}
                   disabled={saving || !draft.trim()}
                   className="btn-primary px-4 py-2 disabled:opacity-40"
                 >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Add task'}
+                  {saving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    tr('Add task', '添加任务')
+                  )}
                 </button>
               </div>
             </div>
@@ -743,7 +761,7 @@ export function Tasks(): React.JSX.Element {
 
         {error && (
           <div className="surface-panel mb-5 px-4 py-3 text-sm text-white/60">
-            <p className="text-white/80">Couldn’t load your tasks.</p>
+            <p className="text-white/80">{tr('Couldn’t load your tasks.', '无法加载你的任务。')}</p>
             <div className="mt-2 flex items-center gap-3">
               <button
                 onClick={() => {
@@ -754,7 +772,7 @@ export function Tasks(): React.JSX.Element {
                 className="btn-ghost px-3 py-1.5 text-xs"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                Try again
+                {tr('Try again', '重试')}
               </button>
               <span className="text-xs text-white/35">{error}</span>
             </div>
@@ -764,15 +782,18 @@ export function Tasks(): React.JSX.Element {
         {!loading && !error && items.length === 0 && !composing && (
           <EmptyState
             icon={ListChecks}
-            title="No tasks yet"
-            description="Action items from your conversations show up here, alongside any tasks you add. Click New to create one."
+            title={tr('No tasks yet', '还没有任务')}
+            description={tr(
+              'Action items from your conversations show up here, alongside any tasks you add. Click New to create one.',
+              '来自对话的行动项会显示在这里，你新建的任务也会出现在其中。点击“新建”即可创建。'
+            )}
           />
         )}
 
         {!loading && items.length > 0 && visible.length === 0 && (
           <div className="flex flex-col items-center justify-center pt-16 text-center text-white/55">
             <Check className="mb-3 h-10 w-10 opacity-40" />
-            <p className="text-sm">All caught up.</p>
+            <p className="text-sm">{tr('All caught up.', '都已处理完毕。')}</p>
           </div>
         )}
 
@@ -790,7 +811,7 @@ export function Tasks(): React.JSX.Element {
             {doneItems.length > 0 && (
               <section>
                 <h2 className="mb-2 flex items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-white/40">
-                  Completed
+                  {tr('Completed', '已完成')}
                   <span className="text-white/25">{doneItems.length}</span>
                 </h2>
                 <ul className="space-y-2">{doneItems.map(renderRow)}</ul>

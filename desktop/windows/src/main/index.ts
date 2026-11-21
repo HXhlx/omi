@@ -710,12 +710,45 @@ app.whenReady().then(async () => {
     // Static analysis suggests it may not actually need CORS help (a same-shape
     // JSON POST that PostHog answers with permissive CORS), but including it is
     // harmless and avoids a surprise block if PostHog tightens its headers.
-    'https://us.i.posthog.com/*'
+    'https://us.i.posthog.com/*',
+    // LOCAL ADAPT (omi_local_changes pattern): local harness backend reached via
+    // ssh tunnel (127.0.0.1:8100) and the harness desktop-backend (:8110). Like
+    // api.omi.me they don't advertise the renderer's localhost origin as
+    // CORS-allowed, so they need the same header-injection treatment. See
+    // desktop/windows/.env and OMI_LOCAL_ADAPT.md.
+    'http://127.0.0.1:8100/*',
+    'http://localhost:8100/*',
+    'http://127.0.0.1:8110/*',
+    'http://localhost:8110/*'
   ]
+  // LOCAL ADAPT: in emulator mode the backend never initializes a Firebase
+  // admin app, so verify_token only accepts the ADMIN_KEY impersonation form
+  // the harness's own tooling uses ("<ADMIN_KEY><uid>"). Rewrite Bearer
+  // Firebase tokens on allowlisted local requests into that form, decoding the
+  // uid from the unverified JWT payload (the backend does the same decode for
+  // its own uid-from-token sites). See omiListen.ts for the WS-side equivalent.
+  const ADMIN_KEY = String(import.meta.env.VITE_OMI_ADMIN_KEY || '')
+  const uidFromBearer = (authorization: string | undefined): string | null => {
+    const match = /^Bearer\s+(\S+)$/i.exec(authorization ?? '')
+    if (!match) return null
+    const parts = match[1].split('.')
+    if (parts.length !== 3) return null
+    try {
+      const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'))
+      const uid = payload?.sub ?? payload?.user_id
+      return typeof uid === 'string' && uid ? uid : null
+    } catch {
+      return null
+    }
+  }
   session.defaultSession.webRequest.onBeforeSendHeaders({ urls: apiUrls }, (details, cb) => {
     const headers = { ...details.requestHeaders }
     delete headers.Origin
     delete headers.origin
+    if (ADMIN_KEY) {
+      const uid = uidFromBearer(headers.Authorization)
+      if (uid) headers.Authorization = `Bearer ${ADMIN_KEY}${uid}`
+    }
     cb({ requestHeaders: headers })
   })
   session.defaultSession.webRequest.onHeadersReceived({ urls: apiUrls }, (details, cb) => {

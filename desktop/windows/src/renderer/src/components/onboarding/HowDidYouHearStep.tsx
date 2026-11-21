@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { StepScaffold } from './StepScaffold'
+import { t } from '../../lib/i18n'
 
 type HowDidYouHearStepProps = {
   stepIndex: number
@@ -26,6 +27,24 @@ const SOURCES = [
   'Social media'
 ]
 
+// Render-only zh labels. SOURCES itself stays English: those exact strings are
+// what `onContinue(source)` reports to PostHog, what `selected === source`
+// compares, and the React keys.
+const SOURCE_ZH: Record<string, string> = {
+  Other: '其他',
+  Colleague: '同事',
+  'Product Hunt': 'Product Hunt',
+  Article: '文章',
+  Friend: '朋友',
+  Event: '活动',
+  'AI chat': 'AI 聊天',
+  YouTube: 'YouTube',
+  'Search engine': '搜索引擎',
+  Newsletter: '邮件通讯',
+  Podcast: '播客',
+  'Social media': '社交媒体'
+}
+
 export function HowDidYouHearStep({
   stepIndex,
   totalSteps,
@@ -46,8 +65,8 @@ export function HowDidYouHearStep({
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      eyebrow="QUICK QUESTION"
-      title="How did you hear about Omi?"
+      eyebrow={t('QUICK QUESTION', '小问题')}
+      title={t('How did you hear about Omi?', '你从哪里听说 Omi？')}
       align="left"
       onBack={onBack}
       aside={aside}
@@ -65,7 +84,7 @@ export function HowDidYouHearStep({
                 : 'bg-white/[0.06] text-white/80 hover:bg-white/[0.1]')
             }
           >
-            {source}
+            {t(source, SOURCE_ZH[source] ?? source)}
           </button>
         ))}
       </div>

@@ -3,6 +3,8 @@ import type { ConversationFolder } from '../../../../shared/types'
 import type { FolderFilter } from '../../lib/conversations/filtering'
 import { DEFAULT_FOLDER_COLOR } from './folderColors'
 import { macPurple } from '../../lib/macPalette'
+// LOCAL ADAPT: fixed chips render in Chinese on this machine (see lib/i18n.ts).
+import { t } from '../../lib/i18n'
 
 // Horizontal folder strip: fixed "All" + "Starred" chips, one chip per folder,
 // then a "+" create button. Selected chip = textPrimary@0.12 fill + @0.3 stroke
@@ -51,14 +53,14 @@ export function FolderTabsStrip({
         onClick={() => onSelect({ kind: 'all' })}
         className={chipClass(selected.kind === 'all')}
       >
-        All
+        {t('All', '全部')}
       </button>
       <button
         onClick={() => onSelect({ kind: 'starred' })}
         className={chipClass(selected.kind === 'starred')}
       >
         <Star className="h-3.5 w-3.5" />
-        Starred
+        {t('Starred', '星标')}
       </button>
 
       {folders.map((f) => {

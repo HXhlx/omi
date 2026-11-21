@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { StepScaffold } from './StepScaffold'
+import { t } from '../../lib/i18n'
 import { getPreferences, setPreferences } from '../../lib/preferences'
 import { DEFAULT_OVERLAY_ACCELERATOR, acceleratorToTokens } from '../../lib/overlayShortcut'
 import { useChordRecorder } from '../../hooks/useChordRecorder'
@@ -88,8 +89,11 @@ export function ShortcutSetupStep({
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      title={'Let’s set your “Ask a question” shortcut'}
-      subtitle="Press this key combination. Do buttons light up?"
+      title={t('Let’s set your “Ask a question” shortcut', '来设置你的“提问”快捷键')}
+      subtitle={t(
+        'Press this key combination. Do buttons light up?',
+        '按下这个组合键，按钮亮了吗？'
+      )}
       subtitleClassName="text-white"
       align="center"
       // Continue only appears once the floating bar has actually been summoned
@@ -102,7 +106,8 @@ export function ShortcutSetupStep({
       <div className="mt-2 flex w-full max-w-[420px] flex-col items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-6 py-8">
         {recorder.recording ? (
           <div className="flex h-[52px] items-center text-sm text-white/60">
-            Recording… press your keys <span className="ml-2 text-white/35">(Esc to cancel)</span>
+            {t('Recording… press your keys', '正在录制… 请按下你的按键')}{' '}
+            <span className="ml-2 text-white/35">{t('(Esc to cancel)', '（按 Esc 取消）')}</span>
           </div>
         ) : (
           <div className="flex items-center gap-2">
@@ -124,13 +129,15 @@ export function ShortcutSetupStep({
         <p className={'text-xs ' + (error ? 'text-amber-400' : 'text-white/40')}>
           {/* No success line — a successful test just reveals Continue. The
               non-breaking space when worked keeps the box from shifting height. */}
-          {error ?? (worked ? ' ' : 'Press to test')}
+          {error ?? (worked ? ' ' : t('Press to test', '按下以测试'))}
         </p>
       </div>
 
       {/* Choose a different shortcut */}
       <div className="mt-6 flex flex-col items-center gap-2">
-        <p className="text-sm leading-relaxed text-white">Choose a different shortcut</p>
+        <p className="text-sm leading-relaxed text-white">
+          {t('Choose a different shortcut', '选择其他快捷键')}
+        </p>
         <button
           type="button"
           onClick={startCustom}
@@ -142,7 +149,7 @@ export function ShortcutSetupStep({
               : 'bg-white/[0.06] text-white/80 hover:bg-white/[0.1]')
           }
         >
-          {recorder.recording ? 'Recording…' : 'Custom'}
+          {recorder.recording ? t('Recording…', '录制中…') : t('Custom', '自定义')}
         </button>
       </div>
     </StepScaffold>

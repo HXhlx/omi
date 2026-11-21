@@ -1,3 +1,5 @@
+import { t } from '../../lib/i18n'
+
 // The body of a single onboarding step: a column holding a progress bar, an
 // optional eyebrow, title, body, Back, and primary Continue button. Steps render
 // their own body as children. The page frame (omi logo, background, and the
@@ -36,7 +38,7 @@ export function StepScaffold({
   subtitle,
   subtitleClassName,
   widthClassName = 'max-w-[400px]',
-  continueLabel = 'Continue',
+  continueLabel = t('Continue', '继续'),
   continueDisabled = false,
   onContinue,
   onBack,
@@ -77,7 +79,7 @@ export function StepScaffold({
             onClick={onSkip}
             className="text-xs text-white/40 transition-colors hover:text-white/70"
           >
-            Skip
+            {t('Skip', '跳过')}
           </button>
         )}
       </div>
@@ -113,7 +115,7 @@ export function StepScaffold({
               onClick={onBack}
               className="rounded-xl bg-white/[0.06] px-6 py-3 font-medium text-white/80 transition-colors hover:bg-white/[0.1]"
             >
-              Back
+              {t('Back', '返回')}
             </button>
           )}
           {onContinue && (

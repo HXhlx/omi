@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { StepScaffold } from './StepScaffold'
+import { t } from '../../lib/i18n'
 import { getPreferences } from '../../lib/preferences'
 import { persistBackgroundConsent } from '../../lib/backgroundConsent'
 import { BackgroundConsentControls } from '../consent/BackgroundConsentControls'
@@ -36,15 +37,17 @@ export function BackgroundPrivacyStep({
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      eyebrow="BACKGROUND & PRIVACY"
-      title="How Omi runs on your PC"
+      eyebrow={t('BACKGROUND & PRIVACY', '后台与隐私')}
+      title={t('How Omi runs on your PC', 'Omi 在你的电脑上如何运行')}
       widthClassName="max-w-[440px]"
       onContinue={handleContinue}
       onBack={onBack}
     >
       <p className="text-center text-sm leading-relaxed text-white">
-        Omi works best as a quiet companion running in the background. You’re in control — change
-        any of this now or later in Settings.
+        {t(
+          'Omi works best as a quiet companion running in the background. You’re in control — change any of this now or later in Settings.',
+          'Omi 最适合作为安静的后台常驻伙伴。一切由你掌控 —— 现在或稍后都可以在设置中更改。'
+        )}
       </p>
       <div className="mt-6 w-full">
         <BackgroundConsentControls

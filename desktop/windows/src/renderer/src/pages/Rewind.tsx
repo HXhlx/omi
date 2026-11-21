@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Search, Play, Pause, X, ChevronLeft, List, Clock } from 'lucide-react'
 import { useRewind } from '../hooks/useRewind'
 import { useIsVisible } from '../hooks/useIsVisible'
+import { t } from '../lib/i18n'
 import type { RewindSearchGroup } from '../../../shared/types'
 import { RewindPlayer } from '../components/rewind/RewindPlayer'
 import { RewindTimelineBar } from '../components/rewind/RewindTimelineBar'
@@ -91,7 +92,7 @@ export function Rewind(): React.JSX.Element {
   return (
     <div ref={pageRef} data-testid="rewind-page" className="flex h-full min-h-0 flex-col gap-3 p-4">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="shrink-0 text-lg font-semibold text-white">Rewind</h1>
+        <h1 className="shrink-0 text-lg font-semibold text-white">{t('Rewind', '回顾')}</h1>
         <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
           <div className="relative min-w-0 max-w-xs flex-1">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
@@ -99,14 +100,14 @@ export function Rewind(): React.JSX.Element {
               ref={inputRef}
               value={query}
               onChange={(e) => changeQuery(e.target.value)}
-              placeholder="Search what was on screen…"
+              placeholder={t('Search what was on screen…', '搜索屏幕上出现过的内容…')}
               className="w-full rounded-control border border-line bg-white/[0.07] py-1.5 pl-8 pr-8 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-line-strong"
             />
             {searching && (
               <button
                 onClick={clearSearch}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 transition-colors hover:text-white"
-                title="Clear search (Esc)"
+                title={t('Clear search (Esc)', '清除搜索（Esc）')}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -118,10 +119,10 @@ export function Rewind(): React.JSX.Element {
             <button
               onClick={() => r.setPlaying(!r.playing)}
               className={CTRL}
-              title={r.playing ? 'Pause' : 'Play'}
+              title={r.playing ? t('Pause', '暂停') : t('Play', '播放')}
             >
               {r.playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              {r.playing ? 'Pause' : 'Play'}
+              {r.playing ? t('Pause', '暂停') : t('Play', '播放')}
             </button>
           )}
         </div>
@@ -150,7 +151,7 @@ export function Rewind(): React.JSX.Element {
             className="inline-flex w-fit items-center gap-1 text-sm text-white/55 transition-colors hover:text-white"
           >
             <ChevronLeft className="h-4 w-4" />
-            Back to results
+            {t('Back to results', '返回结果')}
           </button>
           <RewindPlayer frames={group.frames} cursorTs={r.cursorTs} highlightQuery={query} />
           <RewindTimelineBar
@@ -191,13 +192,13 @@ function ViewModeToggle({
       <button
         onClick={onList}
         className={`${seg} ${!drilldown ? 'bg-white/[0.12] text-white' : 'text-white/55 hover:text-white'}`}
-        title="Results list"
+        title={t('Results list', '结果列表')}
       >
         <List className="h-4 w-4" />
       </button>
       <span
         className={`${seg} ${drilldown ? 'bg-white/[0.12] text-white' : 'text-white/30'}`}
-        title="Timeline (open a result to drill in)"
+        title={t('Timeline (open a result to drill in)', '时间线（打开一条结果可进入）')}
       >
         <Clock className="h-4 w-4" />
       </span>

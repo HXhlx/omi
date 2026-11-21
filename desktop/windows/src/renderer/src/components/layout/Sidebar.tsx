@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Monitor, Mic, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { auth, onAuthStateChanged } from '../../lib/firebase'
+import { t } from '../../lib/i18n'
 import { getPreferences, onPreferencesChange, setPreferences } from '../../lib/preferences'
 import { cn } from '../../lib/utils'
 import { Orb } from '../orb/Orb'
@@ -47,7 +48,7 @@ export function Sidebar(): React.JSX.Element {
   const email = user?.email
   // Prefer the Google account's full name (stable "First Last"), then the
   // onboarding-entered name, then the email.
-  const displayName = user?.displayName?.trim() || prefName?.trim() || email || 'Account'
+  const displayName = user?.displayName?.trim() || prefName?.trim() || email || t('Account', '账户')
   const photoURL = user?.photoURL
   const initial =
     (user?.displayName?.trim() || prefName?.trim() || email)?.[0]?.toUpperCase() ?? '?'
@@ -101,7 +102,7 @@ export function Sidebar(): React.JSX.Element {
   ): React.JSX.Element => (
     <button
       onClick={onClick}
-      title={collapsed ? `${text}${on ? ' · on' : ''}` : undefined}
+      title={collapsed ? `${text}${on ? t(' · on', ' · 已开启') : ''}` : undefined}
       aria-pressed={on}
       className={cn(
         'flex w-full items-center rounded-xl px-2.5 py-2 text-sm transition-colors duration-150',
@@ -179,8 +180,12 @@ export function Sidebar(): React.JSX.Element {
         </div>
         <button
           onClick={() => setCollapsed((c) => !c)}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={
+            collapsed ? t('Expand sidebar', '展开侧边栏') : t('Collapse sidebar', '收起侧边栏')
+          }
+          aria-label={
+            collapsed ? t('Expand sidebar', '展开侧边栏') : t('Collapse sidebar', '收起侧边栏')
+          }
           className={cn(
             'shrink-0 rounded-lg p-1.5 text-white/40 transition-colors hover:text-white/80',
             HOVER
@@ -234,8 +239,8 @@ export function Sidebar(): React.JSX.Element {
 
       {/* Quick capture toggles, sitting just above the account row. */}
       <div className="flex flex-col gap-1">
-        {toggleRow('Screen recording', Monitor, screenOn, toggleScreen)}
-        {toggleRow('Microphone', Mic, micOn, toggleMic)}
+        {toggleRow(t('Screen recording', '屏幕录制'), Monitor, screenOn, toggleScreen)}
+        {toggleRow(t('Microphone', '麦克风'), Mic, micOn, toggleMic)}
       </div>
 
       <div className="my-2 h-px w-full bg-white/[0.07]" />

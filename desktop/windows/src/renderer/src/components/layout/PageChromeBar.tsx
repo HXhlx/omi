@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { House } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { HOME_PATH } from '../../routes/manifest'
 
 // The chrome every non-Home page wears: one small "Home" pill, top-left. A port of
@@ -25,8 +26,8 @@ export function PageChromeBar(): React.JSX.Element {
       <button
         type="button"
         onClick={() => navigate(HOME_PATH)}
-        title="Home"
-        aria-label="Home"
+        title={t('Home', '首页')}
+        aria-label={t('Home', '首页')}
         className={
           'glass-subtle focus-ring group inline-flex select-none items-center gap-[7px] rounded-full ' +
           'border border-[var(--glass-border)] px-[11px] py-[7px] text-[12px] font-semibold ' +
@@ -35,7 +36,7 @@ export function PageChromeBar(): React.JSX.Element {
         }
       >
         <House className="h-3 w-3 shrink-0" strokeWidth={2.25} />
-        Home
+        {t('Home', '首页')}
       </button>
     </div>
   )

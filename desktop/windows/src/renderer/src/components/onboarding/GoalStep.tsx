@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { StepScaffold } from './StepScaffold'
+import { t } from '../../lib/i18n'
 import { generateGoal } from '../../lib/goals'
 
 type GoalStepProps = {
@@ -21,6 +22,14 @@ const SUGGESTED = [
   'Be more productive and focused every day',
   'Make meaningful progress on my projects'
 ]
+
+// Render-only zh labels. The SUGGESTED strings stay English because the chosen
+// text is what gets committed (setPreferences/createGoal) and what `picked ===`
+// compares and the cards use as their React key.
+const GOAL_ZH: Record<string, string> = {
+  'Be more productive and focused every day': '每天更高效、更专注',
+  'Make meaningful progress on my projects': '在项目上取得实质性进展'
+}
 
 // A goal card: rounded panel matching the permission-step cards. `selected`
 // flips it to the solid-white highlight just before advancing.
@@ -102,9 +111,12 @@ export function GoalStep({
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      eyebrow="GOAL"
-      title="Pick one goal."
-      subtitle="Selecting a correct and detailed goal is very important - Omi will optimize all advice to achieve that goal. Make sure your goal contains a number to measure progress."
+      eyebrow={t('GOAL', '目标')}
+      title={t('Pick one goal.', '选一个目标。')}
+      subtitle={t(
+        'Selecting a correct and detailed goal is very important - Omi will optimize all advice to achieve that goal. Make sure your goal contains a number to measure progress.',
+        '选择一个准确且具体的目标非常重要 —— Omi 会围绕该目标优化所有建议。请确保目标中包含一个可用于衡量进度的数字。'
+      )}
       align="left"
       aside={aside}
       onSkip={onSkip}
@@ -115,14 +127,14 @@ export function GoalStep({
             {SUGGESTED.map((goal) => (
               <GoalCard
                 key={goal}
-                label={goal}
+                label={t(goal, GOAL_ZH[goal] ?? goal)}
                 selected={picked === goal}
                 onClick={() => pickSuggested(goal)}
               />
             ))}
           </div>
           <GoalCard
-            label="Type my own"
+            label={t('Type my own', '自己输入')}
             selected={false}
             onClick={() => {
               setDraft('')
@@ -142,7 +154,7 @@ export function GoalStep({
             }
           >
             <Sparkles className="h-4 w-4" />
-            {generating ? 'Generating…' : 'Let AI generate it'}
+            {generating ? t('Generating…', '生成中…') : t('Let AI generate it', '让 AI 生成')}
           </button>
         </div>
       ) : (
@@ -152,7 +164,10 @@ export function GoalStep({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             rows={3}
-            placeholder="e.g. Ship 2 product features every week"
+            placeholder={t(
+              'e.g. Ship 2 product features every week',
+              '例如：每周交付 2 个产品功能'
+            )}
             className="w-full resize-none rounded-xl bg-white/[0.06] px-5 py-4 text-sm text-white/90 placeholder:text-white/30 focus:bg-white/[0.1] focus:outline-none"
           />
           <div className="flex items-center gap-3">
@@ -161,7 +176,7 @@ export function GoalStep({
               onClick={() => setMode('choose')}
               className="rounded-xl bg-white/[0.06] px-5 py-3 text-sm font-medium text-white/70 transition-colors hover:bg-white/[0.1]"
             >
-              Back
+              {t('Back', '返回')}
             </button>
             <button
               type="button"
@@ -169,7 +184,7 @@ export function GoalStep({
               disabled={!draft.trim()}
               className="rounded-xl bg-white px-8 py-3 text-sm font-medium text-black transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Continue
+              {t('Continue', '继续')}
             </button>
           </div>
         </div>

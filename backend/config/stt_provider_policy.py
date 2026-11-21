@@ -168,7 +168,11 @@ PARAKEET_MODEL_BY_SURFACE: Final[Mapping[STTServingSurface, str]] = {
     STTServingSurface.PRERECORDED: 'nvidia/parakeet-tdt-0.6b-v3',
 }
 PARAKEET_SUPPORTED_LANGUAGES_BY_MODEL: Final[Mapping[str, frozenset[str]]] = {
-    'nvidia/parakeet-rnnt-1.1b': frozenset({'en'}),
+    # LOCAL ADAPT: the harness serves live zh behind the Parakeet contract
+    # (local faster-whisper / Fun-ASR behind HOSTED_PARAKEET_API_URL), so the
+    # live/PTT surface must advertise zh or non-en sessions fall to Modulate
+    # and die without a key. Mirrors the tdt map below.
+    'nvidia/parakeet-rnnt-1.1b': frozenset({'en', 'zh'}),
     'nvidia/parakeet-tdt-0.6b-v3': frozenset(
         {
             'multi',

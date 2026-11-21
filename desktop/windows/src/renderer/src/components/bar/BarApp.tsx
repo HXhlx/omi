@@ -17,6 +17,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { auth } from '../../lib/firebase'
+import { t } from '../../lib/i18n'
 import { getPreferences, onPreferencesChange } from '../../lib/preferences'
 import { usePushToTalk } from '../../hooks/usePushToTalk'
 import { useVoicePlaneSupervisor } from '../../hooks/useVoicePlaneSupervisor'
@@ -71,12 +72,14 @@ const HUB_ORB_IDLE: VoiceHubBarState = {
 function SignedOutContent(): React.JSX.Element {
   return (
     <div className="flex flex-col items-center gap-3 px-6 pb-5 pt-6 text-center text-neutral-100">
-      <div className="text-sm text-neutral-300">Sign in to Omi to chat.</div>
+      <div className="text-sm text-neutral-300">
+        {t('Sign in to Omi to chat.', '登录 Omi 后即可对话。')}
+      </div>
       <button
         onClick={() => window.omiOverlay.focusMain()}
         className="rounded-xl bg-neutral-200 px-4 py-2 text-sm font-medium text-neutral-900"
       >
-        Open Omi to sign in
+        {t('Open Omi to sign in', '打开 Omi 登录')}
       </button>
     </div>
   )
@@ -635,7 +638,7 @@ export function BarApp(): React.JSX.Element {
           <div
             className={`bar-content ${!expanded ? 'bar-content-active' : ''}`}
             role="button"
-            aria-label="Open Omi"
+            aria-label={t('Open Omi', '打开 Omi')}
             tabIndex={-1}
             onClick={() => window.omiBar.expand()}
           >
@@ -658,7 +661,9 @@ export function BarApp(): React.JSX.Element {
               </div>
               <div className="bar-zoom">
                 {!ready ? (
-                  <div className="px-4 pb-4 pt-2 text-sm text-neutral-400">Loading…</div>
+                  <div className="px-4 pb-4 pt-2 text-sm text-neutral-400">
+                    {t('Loading…', '加载中…')}
+                  </div>
                 ) : !user ? (
                   <SignedOutContent />
                 ) : view === 'agent' && activePill ? (

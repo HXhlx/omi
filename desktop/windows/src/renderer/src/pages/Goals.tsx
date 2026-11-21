@@ -18,6 +18,7 @@ import { TasksGoalsToggle } from '../components/layout/TasksGoalsToggle'
 import { EmptyState } from '../components/ui/EmptyState'
 import { GenerateGoalsButton } from '../components/ui/GenerateGoalsButton'
 import { toast } from '../lib/toast'
+import { t } from '../lib/i18n'
 import { goalEmoji } from '../lib/goalEmoji'
 import { isCompleted, progressColor, progressLabel, progressPct } from '../lib/goalVisuals'
 import { GoalCelebration } from '../components/goals/GoalCelebration'
@@ -165,7 +166,7 @@ export function Goals(): React.JSX.Element {
       // Don't persist the restore under a different account if the user switched
       // while the request was in flight (see fetchAll's account-switch guard).
       if (getCacheUid() === originUid) writeCache(prev)
-      toast('Could not update goal', { tone: 'error', body: apiError(e) })
+      toast(t('Could not update goal', '无法更新目标'), { tone: 'error', body: apiError(e) })
     } finally {
       markBusy(id, false)
     }
@@ -190,7 +191,7 @@ export function Goals(): React.JSX.Element {
     } catch (e) {
       setGoals(prev)
       if (getCacheUid() === originUid) writeCache(prev)
-      toast('Could not update progress', { tone: 'error', body: apiError(e) })
+      toast(t('Could not update progress', '无法更新进度'), { tone: 'error', body: apiError(e) })
     } finally {
       markBusy(g.id, false)
     }
@@ -203,9 +204,12 @@ export function Goals(): React.JSX.Element {
   const toggleComplete = async (g: Goal): Promise<void> => {
     const target = g.target_value ?? 0
     if (target <= 0) {
-      toast('Set a target first', {
+      toast(t('Set a target first', '请先设置目标值'), {
         tone: 'info',
-        body: 'Goals complete when their progress reaches the target.'
+        body: t(
+          'Goals complete when their progress reaches the target.',
+          '当进度达到目标值时，目标即视为完成。'
+        )
       })
       return
     }
@@ -223,7 +227,7 @@ export function Goals(): React.JSX.Element {
     } catch (e) {
       setGoals(prev)
       if (getCacheUid() === originUid) writeCache(prev)
-      toast('Could not delete goal', { tone: 'error', body: apiError(e) })
+      toast(t('Could not delete goal', '无法删除目标'), { tone: 'error', body: apiError(e) })
     }
   }
 
@@ -250,7 +254,7 @@ export function Goals(): React.JSX.Element {
       setDraftTarget('')
       setDraftUnit('')
     } catch (e) {
-      toast('Could not create goal', { tone: 'error', body: apiError(e) })
+      toast(t('Could not create goal', '无法创建目标'), { tone: 'error', body: apiError(e) })
     } finally {
       setSaving(false)
     }
@@ -265,7 +269,10 @@ export function Goals(): React.JSX.Element {
     try {
       const res = await window.omi?.goalsGenerateCandidate?.()
       if (!res) {
-        toast('Could not suggest a goal', { tone: 'error', body: 'Try again in a moment.' })
+        toast(t('Could not suggest a goal', '无法生成目标建议'), {
+          tone: 'error',
+          body: t('Try again in a moment.', '请稍后重试。')
+        })
         return
       }
       if (res.status === 'candidate') {
@@ -273,17 +280,23 @@ export function Goals(): React.JSX.Element {
         return
       }
       if (res.reason === 'insufficient_context') {
-        toast('Not enough context yet', {
+        toast(t('Not enough context yet', '上下文还不够'), {
           tone: 'info',
-          body: 'Omi needs a few memories, conversations, or tasks before it can suggest a goal.'
+          body: t(
+            'Omi needs a few memories, conversations, or tasks before it can suggest a goal.',
+            'Omi 需要先积累一些记忆、对话或任务，才能给出目标建议。'
+          )
         })
       } else if (res.reason === 'no_session') {
-        toast('Sign in to suggest a goal', { tone: 'info' })
+        toast(t('Sign in to suggest a goal', '登录后才能生成目标建议'), { tone: 'info' })
       } else {
-        toast('Could not suggest a goal', { tone: 'error', body: 'Try again in a moment.' })
+        toast(t('Could not suggest a goal', '无法生成目标建议'), {
+          tone: 'error',
+          body: t('Try again in a moment.', '请稍后重试。')
+        })
       }
     } catch (e) {
-      toast('Could not suggest a goal', { tone: 'error', body: apiError(e) })
+      toast(t('Could not suggest a goal', '无法生成目标建议'), { tone: 'error', body: apiError(e) })
     } finally {
       setGenerating(false)
     }
@@ -300,12 +313,15 @@ export function Goals(): React.JSX.Element {
         setCandidate(null)
         setFilter('active')
         await load()
-        toast('Goal added ✨', { tone: 'success', body: res.title })
+        toast(t('Goal added ✨', '目标已添加 ✨'), { tone: 'success', body: res.title })
       } else {
-        toast('Could not add goal', { tone: 'error', body: 'Try again in a moment.' })
+        toast(t('Could not add goal', '无法添加目标'), {
+          tone: 'error',
+          body: t('Try again in a moment.', '请稍后重试。')
+        })
       }
     } catch (e) {
-      toast('Could not add goal', { tone: 'error', body: apiError(e) })
+      toast(t('Could not add goal', '无法添加目标'), { tone: 'error', body: apiError(e) })
     } finally {
       setAccepting(false)
     }
@@ -364,7 +380,9 @@ export function Goals(): React.JSX.Element {
           <button
             onClick={() => void toggleComplete(g)}
             disabled={isBusy}
-            aria-label={done ? 'Reopen goal' : 'Mark as complete'}
+            aria-label={
+              done ? t('Reopen goal', '重新打开目标') : t('Mark as complete', '标记为完成')
+            }
             className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all duration-200 ${
               done
                 ? 'border-white/30 bg-white/15 text-white'
@@ -403,7 +421,7 @@ export function Goals(): React.JSX.Element {
                   setEditDraft(g.title)
                   setEditingId(g.id)
                 }}
-                title="Click to edit"
+                title={t('Click to edit', '点击编辑')}
                 className={`block w-full text-left text-sm font-medium leading-relaxed ${
                   done ? 'text-white/40 line-through' : 'text-white/90'
                 }`}
@@ -442,7 +460,7 @@ export function Goals(): React.JSX.Element {
                       setProgressId(g.id)
                     }}
                     className="rounded-md px-1.5 py-0.5 transition-colors hover:bg-white/5 hover:text-white/70"
-                    title="Update progress"
+                    title={t('Update progress', '更新进度')}
                   >
                     {progressLabel(g)}
                   </button>
@@ -459,8 +477,8 @@ export function Goals(): React.JSX.Element {
               <button
                 onClick={() => setInsightGoal(g)}
                 className="rounded-md p-1 text-white/30 transition-colors hover:bg-white/5 hover:text-white/70"
-                title="Get goal insight"
-                aria-label="Get goal insight"
+                title={t('Get goal insight', '获取目标洞察')}
+                aria-label={t('Get goal insight', '获取目标洞察')}
               >
                 <Lightbulb className="h-4 w-4" />
               </button>
@@ -468,8 +486,8 @@ export function Goals(): React.JSX.Element {
             <button
               onClick={() => void deleteGoal(g.id)}
               className="rounded-md p-1 text-white/30 transition-colors hover:bg-white/5 hover:text-rose-300/80"
-              title="Delete goal"
-              aria-label="Delete goal"
+              title={t('Delete goal', '删除目标')}
+              aria-label={t('Delete goal', '删除目标')}
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -484,9 +502,16 @@ export function Goals(): React.JSX.Element {
   return (
     <div className="flex h-full flex-col">
       <PageHeader
-        title="Goals"
+        title={t('Goals', '目标')}
         titleSlot={<TasksGoalsToggle />}
-        subtitle={loading ? 'Loading…' : `${activeCount} active · ${doneCount} completed`}
+        subtitle={
+          loading
+            ? t('Loading…', '加载中…')
+            : t(
+                `${activeCount} active · ${doneCount} completed`,
+                `${activeCount} 个进行中 · ${doneCount} 个已完成`
+              )
+        }
         actions={
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-black/20 p-1">
@@ -500,24 +525,30 @@ export function Goals(): React.JSX.Element {
                       : 'text-white/55 hover:bg-white/5 hover:text-white/80'
                   }`}
                 >
-                  {f}
+                  {/* `f` is the filter key used by `setFilter`/comparisons — the label
+                      render is the only place it gets localized. */}
+                  {t(f, f === 'active' ? '进行中' : f === 'completed' ? '已完成' : '全部')}
                 </button>
               ))}
             </div>
-            <GenerateGoalsButton onClick={generateGoal} loading={generating} label="Suggest" />
+            <GenerateGoalsButton
+              onClick={generateGoal}
+              loading={generating}
+              label={t('Suggest', '生成建议')}
+            />
             <button
               onClick={() => setComposing((c) => !c)}
               className="btn-primary px-3 py-2"
-              title="Add a goal"
+              title={t('Add a goal', '新建目标')}
             >
               <Plus className="h-4 w-4" />
-              New
+              {t('New', '新建')}
             </button>
             <button
               onClick={onRefresh}
               disabled={refreshing || loading}
               className="btn-ghost px-3 py-2 disabled:opacity-50"
-              title="Refresh"
+              title={t('Refresh', '刷新')}
             >
               <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -534,7 +565,7 @@ export function Goals(): React.JSX.Element {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] font-semibold uppercase tracking-wide text-white/40">
-                    Suggested goal
+                    {t('Suggested goal', '建议的目标')}
                   </p>
                   <p className="mt-1 text-sm font-medium text-white/90">
                     {candidate.suggestion.title}
@@ -542,7 +573,8 @@ export function Goals(): React.JSX.Element {
                   {candidate.suggestion.target > 0 && (
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-white/45">
                       <Target className="h-3.5 w-3.5" />
-                      Target {candidate.suggestion.target}
+                      {t('Target ', '目标值 ')}
+                      {candidate.suggestion.target}
                     </p>
                   )}
                   {candidate.suggestion.reasoning && (
@@ -561,24 +593,24 @@ export function Goals(): React.JSX.Element {
                       ) : (
                         <Plus className="h-4 w-4" />
                       )}
-                      Add this goal
+                      {t('Add this goal', '添加这个目标')}
                     </button>
                     <button
                       onClick={generateGoal}
                       disabled={generating || accepting}
                       className="btn-ghost px-3 py-2 disabled:opacity-50"
-                      title="Suggest another"
+                      title={t('Suggest another', '再生成一个建议')}
                     >
                       <RefreshCw className={`h-4 w-4 ${generating ? 'animate-spin' : ''}`} />
-                      Another
+                      {t('Another', '换一个')}
                     </button>
                   </div>
                 </div>
                 <button
                   onClick={() => setCandidate(null)}
                   className="shrink-0 rounded-md p-1 text-white/30 transition-colors hover:bg-white/5 hover:text-white/70"
-                  title="Dismiss"
-                  aria-label="Dismiss suggestion"
+                  title={t('Dismiss', '关闭')}
+                  aria-label={t('Dismiss suggestion', '忽略该建议')}
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -604,7 +636,7 @@ export function Goals(): React.JSX.Element {
                     setDraftUnit('')
                   }
                 }}
-                placeholder="What do you want to achieve?"
+                placeholder={t('What do you want to achieve?', '你想达成什么？')}
                 className="input-field"
               />
               <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -615,14 +647,14 @@ export function Goals(): React.JSX.Element {
                     min={0}
                     value={draftTarget}
                     onChange={(e) => setDraftTarget(e.target.value)}
-                    placeholder="Target (1)"
+                    placeholder={t('Target (1)', '目标值（默认 1）')}
                     className="w-28 rounded-md border border-white/20 bg-black/30 px-2 py-1 text-xs text-white [color-scheme:dark] focus:border-white/50 focus:outline-none"
                   />
                 </label>
                 <input
                   value={draftUnit}
                   onChange={(e) => setDraftUnit(e.target.value)}
-                  placeholder="Unit (e.g. books)"
+                  placeholder={t('Unit (e.g. books)', '单位（例如：本）')}
                   className="w-36 rounded-md border border-white/20 bg-black/30 px-2 py-1 text-xs text-white focus:border-white/50 focus:outline-none"
                 />
                 <button
@@ -635,14 +667,18 @@ export function Goals(): React.JSX.Element {
                   className="btn-ghost ml-auto px-3 py-2"
                   disabled={saving}
                 >
-                  Cancel
+                  {t('Cancel', '取消')}
                 </button>
                 <button
                   onClick={saveNew}
                   disabled={saving || !draftTitle.trim()}
                   className="btn-primary px-4 py-2 disabled:opacity-40"
                 >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Add goal'}
+                  {saving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    t('Add goal', '添加目标')
+                  )}
                 </button>
               </div>
             </div>
@@ -670,7 +706,7 @@ export function Goals(): React.JSX.Element {
             list is on screen and the next successful fetch updates it. */}
         {error && goals.length === 0 && (
           <div className="glass-subtle mb-5 px-4 py-3 text-sm text-white/60">
-            <p className="text-white/80">Couldn’t load your goals.</p>
+            <p className="text-white/80">{t('Couldn’t load your goals.', '无法加载你的目标。')}</p>
             <div className="mt-2 flex items-center gap-3">
               <button
                 onClick={() => {
@@ -680,7 +716,7 @@ export function Goals(): React.JSX.Element {
                 className="btn-ghost px-3 py-1.5 text-xs"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                Try again
+                {t('Try again', '重试')}
               </button>
               <span className="text-xs text-white/35">{error}</span>
             </div>
@@ -690,15 +726,18 @@ export function Goals(): React.JSX.Element {
         {!loading && !error && goals.length === 0 && !composing && (
           <EmptyState
             icon={Target}
-            title="No goals yet"
-            description="Set a goal to track progress over time. Click New to create one."
+            title={t('No goals yet', '还没有目标')}
+            description={t(
+              'Set a goal to track progress over time. Click New to create one.',
+              '设定一个目标，持续追踪进度。点击“新建”即可创建。'
+            )}
           />
         )}
 
         {!loading && goals.length > 0 && visibleCount === 0 && (
           <div className="flex flex-col items-center justify-center pt-16 text-center text-white/55">
             <Trophy className="mb-3 h-10 w-10 opacity-40" />
-            <p className="text-sm">Nothing here yet.</p>
+            <p className="text-sm">{t('Nothing here yet.', '这里还没有内容。')}</p>
           </div>
         )}
 
@@ -707,7 +746,7 @@ export function Goals(): React.JSX.Element {
             {activeGoals.length > 0 && (
               <section>
                 <h2 className="mb-2 flex items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-white/40">
-                  Active
+                  {t('Active', '进行中')}
                   <span className="text-white/25">{activeGoals.length}</span>
                 </h2>
                 <ul className="space-y-2">{activeGoals.map(renderCard)}</ul>
@@ -716,7 +755,7 @@ export function Goals(): React.JSX.Element {
             {completedGoals.length > 0 && (
               <section>
                 <h2 className="mb-2 flex items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-white/40">
-                  Completed
+                  {t('Completed', '已完成')}
                   <span className="text-white/25">{completedGoals.length}</span>
                 </h2>
                 <ul className="space-y-2">{completedGoals.map(renderCard)}</ul>
