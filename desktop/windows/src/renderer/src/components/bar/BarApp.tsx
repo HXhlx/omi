@@ -227,9 +227,20 @@ export function BarApp(): React.JSX.Element {
   // idle and the orb/pill read exactly the local `ptt.*` state as today.
   const hubOrbRef = useRef<VoiceHubBarState>(HUB_ORB_IDLE)
   const [hubOrb, setHubOrb] = useState<VoiceHubBarState>(HUB_ORB_IDLE)
+  // Mirrors the local machine's `captureEnded` (which calls onCaptureEnd →
+  // notifyVoiceCaptured) for the DELEGATED hub path: the main-owned turn's mic
+  // window ends when isListening flips true→false. Without this, the onboarding
+  // voice intro step — which unlocks Continue on `overlay:voiceCaptured` — never
+  // sees a capture when pttHubEnabled is on, because the hub delegate never runs
+  // the local job machine that emits captureEnded. Fires even for a silent or
+  // failed capture, matching the local path's teaching-gesture semantics.
+  const hubListeningRef = useRef(false)
   useEffect(
     () =>
       window.omiBar.onVoiceHubState((s) => {
+        const wasListening = hubListeningRef.current
+        hubListeningRef.current = s.isListening
+        if (wasListening && !s.isListening) window.omiOverlay.notifyVoiceCaptured()
         hubOrbRef.current = s
         setHubOrb(s)
       }),
