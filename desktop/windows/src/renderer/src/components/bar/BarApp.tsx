@@ -574,6 +574,30 @@ export function BarApp(): React.JSX.Element {
     continuousListening,
     agentsActive
   })
+  // i18n at the render boundary (barDisplay stays English for upstream tests),
+  // PLUS a distinct label for the AMBIENT phase: with continuousRecording on the
+  // pill showed a permanent English "Listening", which users read as "the tap I
+  // just made started voice recording" (the flight ring proved taps produced no
+  // voice turns — the label was the always-on lane, not the gesture). 常驻聆听
+  // names the ambient lane explicitly so it can't be mistaken for a PTT capture.
+  const pillAmbient =
+    !recordingNow &&
+    !thinkingNow &&
+    barChat.status !== 'speaking' &&
+    !agentsActive &&
+    continuousListening
+  const pillTextZh = pillAmbient
+    ? t('Listening', '常驻聆听')
+    : t(
+        pillText,
+        pillText === 'Listening'
+          ? '聆听中'
+          : pillText === 'Thinking'
+            ? '思考中'
+            : pillText === 'Speaking'
+              ? '回答中'
+              : 'Omi'
+      )
   // The orb's live level, by lane: the user's mic while capturing (hub-projected
   // or local analyser), the reply's own played audio while Omi speaks (fresh
   // playback tap only — stale ⇒ null ⇒ pose-only choreography), else none.
@@ -657,7 +681,7 @@ export function BarApp(): React.JSX.Element {
               {/* Slot reserving the pill orb's footprint; the real orb is the ONE
                   persistent mount below, overlaid here so the label stays put. */}
               <div className="h-[26px] w-[26px] shrink-0" aria-hidden />
-              <span className="bar-pill-label">{pillText}</span>
+              <span className="bar-pill-label">{pillTextZh}</span>
             </div>
           </div>
 
