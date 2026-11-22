@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { StepScaffold } from './StepScaffold'
 import { t } from '../../lib/i18n'
 import { getPreferences } from '../../lib/preferences'
 import { DEFAULT_OVERLAY_ACCELERATOR, acceleratorToTokens } from '../../lib/overlayShortcut'
+import { Ctx } from '../../state/appState'
 
 type VoiceIntroStepProps = {
   stepIndex: number
@@ -57,6 +58,41 @@ export function VoiceIntroStep({
   const [micBlocked, setMicBlocked] = useState(false)
   const [waited, setWaited] = useState(false)
   const nudgeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Echo the transcript of the just-completed voice turn. The hub driver sends
+  // the final text into the ONE chat engine (chat.send fromVoice), whose reply
+  // plays audibly — but during onboarding NO chat UI is mounted, so the words
+  // the app heard were invisible: the step only flipped to "heard you" and the
+  // transcript went nowhere the user could see (flight ring showed
+  // transcribe_ok {chars:8} while the screen showed nothing). Read the newest
+  // user message appended after mount from the chat engine. Nullable context:
+  // this step renders only on the onboarding route (provider present); upstream
+  // tests that mount it bare get null and simply never see a transcript.
+  const chat = useContext(Ctx)?.chat
+  const [transcript, setTranscript] = useState<string | null>(null)
+  const historyBaselineRef = useRef<number | null>(null)
+  const historyLen = chat?.history.length ?? 0
+  useEffect(() => {
+    if (!chat) {
+      historyBaselineRef.current = null
+      return
+    }
+    if (historyBaselineRef.current === null) {
+      historyBaselineRef.current = historyLen
+      return
+    }
+    if (historyLen > historyBaselineRef.current) {
+      for (let i = historyLen - 1; i >= historyBaselineRef.current; i--) {
+        const msg = chat.history[i]
+        if (msg.role === 'user' && msg.content.trim()) {
+          setTranscript(msg.content.trim())
+          break
+        }
+      }
+      historyBaselineRef.current = historyLen
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- historyLen is the trigger; chat identity is stable
+  }, [historyLen, !!chat])
 
   const hotkeyTokens = acceleratorToTokens(
     getPreferences().overlayShortcut ?? DEFAULT_OVERLAY_ACCELERATOR
@@ -161,6 +197,17 @@ export function VoiceIntroStep({
           <span className="text-white/80">{t('“What’s on my screen?”', '“我屏幕上有什么？”')}</span>
         </p>
       </div>
+
+      {/* The real words the app heard, once the turn committed — the whole point
+          of this step is proving the gesture carries YOUR voice somewhere. The
+          spoken reply plays audibly (fromVoice ⇒ TTS); this is its visible
+          counterpart, since no chat UI exists during onboarding. */}
+      {transcript ? (
+        <p className="mt-4 max-w-[420px] text-sm text-white/85">
+          {t('Omi heard:', 'Omi 听到：')}
+          <span className="text-white">「{transcript}」</span>
+        </p>
+      ) : null}
 
       {/* One line of state, in priority order: what broke → why nothing happened
           → the way out. Never an empty screen with a missing button. */}
