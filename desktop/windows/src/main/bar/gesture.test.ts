@@ -254,8 +254,8 @@ describe('SummonGesture with key-state sampling', () => {
     expect(MAX_HOLD_MS).toBe(5 * 60 * 1000)
   })
 
-  it('HOLD_THRESHOLD_MS is 220ms (macOS PushToTalkManager.tapToLockMaxHoldDuration parity)', () => {
-    expect(HOLD_THRESHOLD_MS).toBe(220)
+  it('HOLD_THRESHOLD_MS is 350ms so a normal Windows short press is a tap', () => {
+    expect(HOLD_THRESHOLD_MS).toBe(350)
   })
 })
 
@@ -276,11 +276,11 @@ describe('SummonGesture with a blind/unreliable key sampler (the discarded-hold 
     }
     // The blind UP samples must not have ended the gesture (the old bug ended
     // it 30ms in and re-started one per repeat fire).
-    expect(w.events).toEqual(['start'])
+    expect(w.events).toEqual(['start', 'holdStart'])
     expect(w.g.isActive).toBe(true)
     // Key released → repeats stop → the gap classifies by last-fire time.
     w.advance(REPEAT_GAP_MS + 10)
-    expect(w.events).toEqual(['start', 'end:hold'])
+    expect(w.events).toEqual(['start', 'holdStart', 'end:hold'])
     expect(w.g.isActive).toBe(false)
   })
 
@@ -305,9 +305,9 @@ describe('SummonGesture with a blind/unreliable key sampler (the discarded-hold 
     let down = true
     const w = world({ keyDown: () => down })
     w.g.fire()
-    w.advance(180) // sighted, still under the 220ms threshold
+    w.advance(300) // sighted, still under the 350ms threshold
     down = false
-    // First UP sample at 210ms starts the confirm run; the end fires one poll
+    // First UP sample at 300ms starts the confirm run; the end fires one poll
     // later but the duration is measured at the first UP sample → tap.
     w.advance(90)
     expect(w.events).toEqual(['start', 'end:tap'])
@@ -337,9 +337,9 @@ describe('SummonGesture with a blind/unreliable key sampler (the discarded-hold 
       w.advance(30)
       w.g.fire()
     }
-    expect(w.events).toEqual(['start'])
+    expect(w.events).toEqual(['start', 'holdStart'])
     w.advance(60) // the next poll crosses the cap
-    expect(w.events).toEqual(['start', 'cap', 'end:hold'])
+    expect(w.events).toEqual(['start', 'holdStart', 'cap', 'end:hold'])
     expect(w.g.isActive).toBe(false)
   })
 })

@@ -7,13 +7,11 @@
  *  a deliberate hold still feels instant. */
 export const HOLD_THRESHOLD_MS = 350
 
-/** Tap/hold boundary for the SUMMON-HOTKEY path (beginHold/endHold — macOS
- *  parity: PushToTalkManager.tapToLockMaxHoldDuration = 0.22s is the proven
- *  release-time boundary between a tap and a hold). The hotkey never types, so
- *  the typing-safety margin above doesn't apply; 350ms here left a 220–350ms
- *  band Mac records but Windows silently dropped. Equals TAP_TO_LOCK_MAX_MS, so
- *  every hotkey tap is lock-eligible exactly like Mac. */
-export const HOTKEY_HOLD_THRESHOLD_MS = 220
+/** Tap/hold boundary for the SUMMON-HOTKEY path (beginHold/endHold). Windows
+ *  short presses regularly run 200–300ms, so the Mac 220ms boundary felt like
+ *  "tap opens listening". A quick press only summons the bar; listening starts
+ *  above 350ms. Equals TAP_TO_LOCK_MAX_MS, so every tap is lock-eligible. */
+export const HOTKEY_HOLD_THRESHOLD_MS = 350
 
 /** After release, keep the capture alive this long so the final ScriptProcessor
  *  window (4096 samples @16kHz ≈ 256ms) lands in the buffer — otherwise the last
@@ -82,11 +80,10 @@ export const MIC_IDLE_RELEASE_MS = 15000
  *  open the whole time the user is merely typing. */
 export const MIC_TAP_RELEASE_MS = 2000
 
-/** A press released within this window counts as a TAP for tap-to-lock (macOS
- *  PushToTalkManager.tapToLockMaxHoldDuration). Equals HOTKEY_HOLD_THRESHOLD_MS:
- *  on the hotkey path every sub-threshold tap is lock-eligible, exactly like Mac
- *  (any press ≥ this records instead). */
-export const TAP_TO_LOCK_MAX_MS = 220
+/** A press released within this window counts as a TAP for tap-to-lock. Equals
+ *  HOTKEY_HOLD_THRESHOLD_MS: every sub-threshold tap is lock-eligible; a press
+ *  at or above this records instead. */
+export const TAP_TO_LOCK_MAX_MS = 350
 
 /** After a lock-tap, the second tap must land within this window to latch locked
  *  listening (macOS PushToTalkManager.doubleTapThreshold). Also the lifetime of the

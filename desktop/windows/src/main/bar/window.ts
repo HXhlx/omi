@@ -86,6 +86,7 @@ let barInteractive = false
 let activeDisplayId: number | null = null
 let pendingShow: { mode: BarMode; reveal: BarReveal; bounds: Rect } | null = null
 let pendingPttDown = false
+let pendingPttConfirm = false
 let hideFallback: ReturnType<typeof setTimeout> | null = null
 // Per-reveal paint-ack handshake (see presentBar/commitReveal): the bar window
 // is ARMED (renderer told to reveal) but stays parked until the renderer acks
@@ -819,11 +820,14 @@ function pttTrace(msg: string): void {
   console.log(`[ptt-diag] ${msg}`)
 }
 
-function sendPtt(phase: 'down' | 'up'): void {
+function sendPtt(phase: 'down' | 'confirm' | 'up'): void {
   if (!barReady) {
-    // A cold first summon: queue the down, drop a release that beat the mount.
-    pttTrace(`ptt ${phase} NOT sent (bar not ready); pendingDown=${phase === 'down'}`)
-    pendingPttDown = phase === 'down'
+    // A cold first summon: queue press/hold so a slow mount still gets both.
+    // A release that beat the mount drops the queued press entirely.
+    pttTrace(`ptt ${phase} NOT sent (bar not ready)`)
+    if (phase === 'down') pendingPttDown = true
+    else if (phase === 'confirm') pendingPttConfirm = true
+    else pendingPttDown = pendingPttConfirm = false
     return
   }
   pttTrace(`ptt ${phase} -> renderer`)
@@ -845,10 +849,9 @@ function onGestureStart(): void {
   // renderer's busy-derived keepAlive arms. Cleared in onGestureEnd.
   gestureActiveHold = true
   if (samplerAvailable) {
-    // Tap-vs-hold resolves at release; reveal the PILL now (a tap peeks, never
-    // auto-opens the chat — Chris's rule), and arm the PTT path (the renderer's
-    // own hold threshold decides recording; a hold keeps the pill up + drives
-    // the orb). Click the pill to expand into the chat surface.
+    // Tap-vs-hold resolves in main. A tap peeks the pill (native OMI: never
+    // auto-opens the chat; click the pill to expand). Only a confirmed HOLD
+    // opens listening.
     pttTrace(`gesture START (sampler) presented=${gestureStartedVisible}`)
     recordVoiceFlight('main', 'gesture', { phase: 'down', presented: gestureStartedVisible })
     if (!gestureStartedVisible) showBar('peek', 'summon')
@@ -859,6 +862,12 @@ function onGestureStart(): void {
     if (gestureStartedVisible) hideBar()
     else showBar('peek', 'summon')
   }
+}
+
+function onGestureHoldStart(): void {
+  if (!samplerAvailable) return
+  pttTrace('gesture HOLD confirmed -> renderer')
+  sendPtt('confirm')
 }
 
 function onGestureEnd(kind: GestureKind): void {
@@ -905,6 +914,7 @@ export function setSummonGestureAccelerator(accelerator: string): void {
   gesture = new SummonGesture(
     {
       onStart: onGestureStart,
+      onHoldStart: onGestureHoldStart,
       onEnd: onGestureEnd,
       // The poll kept reading the key DOWN past the ~5-min cap — the physical
       // key-up was almost certainly missed (GetAsyncKeyState stale-down). onEnd
@@ -955,6 +965,10 @@ export function registerBarIpc(sendToMain: (channel: string, ...args: unknown[])
     if (pendingPttDown) {
       pendingPttDown = false
       send('bar:ptt', 'down')
+    }
+    if (pendingPttConfirm) {
+      pendingPttConfirm = false
+      send('bar:ptt', 'confirm')
     }
   })
   // Paint ack for a per-reveal token — show the HWND now (see commitReveal).
@@ -1056,6 +1070,7 @@ export function destroyBar(): void {
   gesture = null
   gestureActiveHold = false
   barHiding = false
+  pendingPttDown = pendingPttConfirm = false
   stopPeekWatch()
   cancelPendingReveal()
   if (hideFallback) clearTimeout(hideFallback)

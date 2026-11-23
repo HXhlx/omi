@@ -115,10 +115,11 @@ export type PushToTalk = {
   /** Wire to the input's onKeyUp. True = consumed. */
   onKeyUp: (e: React.KeyboardEvent) => boolean
   /** Programmatic gesture entry points for main-process-driven holds (the bar's
-   *  summon-hotkey hold). Semantically identical to Space key-down/key-up: the
-   *  hook's own threshold timer still decides tap vs hold, the warm mic
-   *  backfills from beginHold, and a sub-threshold begin→end pair is a no-op. */
-  beginHold: () => void
+   *  summon-hotkey hold). With `deferStart`, beginHold only warms and arms the
+   *  press; main calls confirmHold once the physical hold is proven. Without it
+   *  (E2E/tests), the hook keeps its local threshold timer. */
+  beginHold: (deferStart?: boolean) => void
+  confirmHold: () => void
   endHold: () => void
   /** Abort the active capture without sending (Esc / focus loss / unmount). */
   cancel: () => void
@@ -205,6 +206,9 @@ export function usePushToTalk(opts: Options): PushToTalk {
   // A hold is being driven by the MAIN window's warm-hub driver (A5 PR-6b) instead
   // of a local Job. Always false unless a hold-start actually delegated (flag on).
   const hubActiveRef = useRef(false)
+  /** Main armed a press but has not proven a hold yet. A tap clears this without
+   *  ever opening capture — including when the OS key sampler is blind. */
+  const pendingConfirmRef = useRef(false)
 
   const optsRef = useRef(opts)
   // eslint-disable-next-line react-hooks/refs -- intentional latest-ref (once-registered listeners read the newest callbacks)
@@ -218,10 +222,10 @@ export function usePushToTalk(opts: Options): PushToTalk {
   const isHolding = (): boolean =>
     jobRef.current?.state.phase === 'holding' || hubActiveRef.current
 
-  // Acquire the mic NOW (macOS parity: capture starts at key-down, not at the
-  // hold threshold), prefetch the auth token alongside the mic spin-up, and
-  // (re-)arm the idle release. If the timer fires mid-capture, releasePttMic
-  // defers internally until the capture detaches.
+  // Warm the mic at key-down so a confirmed hold can backfill the threshold,
+  // prefetch the auth token alongside the mic spin-up, and (re-)arm the idle
+  // release. If the timer fires mid-capture, releasePttMic defers internally
+  // until the capture detaches.
   const armMicIdleRelease = (ms: number): void => {
     if (micIdleTimerRef.current) clearTimeout(micIdleTimerRef.current)
     micIdleTimerRef.current = setTimeout(() => releasePttMic(), ms)
@@ -573,6 +577,7 @@ export function usePushToTalk(opts: Options): PushToTalk {
       clearTimeout(holdTimerRef.current)
       holdTimerRef.current = null
     }
+    pendingConfirmRef.current = false
     // A delegated hub hold must not outlive the cancel — tell the main driver to
     // drop its turn (no-op when nothing was delegated, i.e. flag off).
     if (hubActiveRef.current) {
@@ -598,8 +603,8 @@ export function usePushToTalk(opts: Options): PushToTalk {
 
   /** Key-down: warm the mic, snapshot the draft, arm the threshold timer.
    *  The threshold differs by entry path: the textarea Space keeps the
-   *  typing-safe HOLD_THRESHOLD_MS; the summon hotkey (beginHold) uses Mac's
-   *  220ms boundary (HOTKEY_HOLD_THRESHOLD_MS) — see constants.ts. */
+   *  typing-safe HOLD_THRESHOLD_MS; the summon hotkey (beginHold) uses the
+   *  Windows-friendly 350ms boundary (HOTKEY_HOLD_THRESHOLD_MS). */
   const gestureDown = (snapshot: string, thresholdMs: number = HOLD_THRESHOLD_MS): void => {
     keyDownAtRef.current = Date.now()
     touchMic()
@@ -640,7 +645,7 @@ export function usePushToTalk(opts: Options): PushToTalk {
    *  like a physical Space hold; a quick double-tap latches hands-free listening,
    *  and a tap while locked finalizes it (macOS PushToTalkManager tap-to-lock).
    *  Tap-to-lock lives on THIS path only — the textarea Space keeps typing. */
-  const beginHold = (): void => {
+  const beginHold = (deferStart = false): void => {
     const prevLock = lockStateRef.current.phase
     if (prevLock === 'pendingLock' || prevLock === 'locked') {
       // Anchor a possible locked capture's backfill + warm the mic, then let the
@@ -653,13 +658,36 @@ export function usePushToTalk(opts: Options): PushToTalk {
       dispatchLock({ type: 'PRESS_DOWN', gapMs })
       if (prevLock === 'locked' || lockStateRef.current.phase === 'locked') return
     }
-    if (isHolding() || holdTimerRef.current !== null) return
+    if (isHolding() || holdTimerRef.current !== null || pendingConfirmRef.current) return
+    if (deferStart) {
+      keyDownAtRef.current = Date.now()
+      touchMic()
+      snapshotRef.current = optsRef.current.getDraft()
+      pendingConfirmRef.current = true
+      return
+    }
     gestureDown(optsRef.current.getDraft(), HOTKEY_HOLD_THRESHOLD_MS)
+  }
+  const confirmHold = (): void => {
+    if (!pendingConfirmRef.current) return
+    pendingConfirmRef.current = false
+    startHold()
   }
   const endHold = (): void => {
     // A locked capture never ends on key-up — the next tap finalizes it.
     if (lockStateRef.current.phase === 'locked') return
     const holdMs = keyDownAtRef.current > 0 ? Date.now() - keyDownAtRef.current : 0
+    if (pendingConfirmRef.current) {
+      pendingConfirmRef.current = false
+      armMicIdleRelease(MIC_TAP_RELEASE_MS)
+      lastTapUpRef.current = Date.now()
+      dispatchLock({
+        type: 'TAP_RELEASED',
+        holdMs,
+        doubleTapForLock: getPreferences().doubleTapForLock !== false
+      })
+      return
+    }
     if (gestureUp() === 'tap') {
       lastTapUpRef.current = Date.now()
       dispatchLock({
@@ -735,7 +763,7 @@ export function usePushToTalk(opts: Options): PushToTalk {
     const bridge = (window as { omiOverlay?: typeof window.omiOverlay }).omiOverlay
     if (!bridge) return
     const onHiddenOrBlurred = (): void => {
-      if (lockStateRef.current.phase !== 'idle') cancel()
+      if (pendingConfirmRef.current || lockStateRef.current.phase !== 'idle') cancel()
       releasePttMic()
     }
     const unActive = bridge.onActiveChange((active) => {
@@ -754,6 +782,7 @@ export function usePushToTalk(opts: Options): PushToTalk {
   useEffect(() => {
     return () => {
       if (holdTimerRef.current !== null) clearTimeout(holdTimerRef.current)
+      pendingConfirmRef.current = false
       if (hintTimerRef.current) clearTimeout(hintTimerRef.current)
       if (errorTimerRef.current) clearTimeout(errorTimerRef.current)
       if (micIdleTimerRef.current) clearTimeout(micIdleTimerRef.current)
@@ -786,6 +815,7 @@ export function usePushToTalk(opts: Options): PushToTalk {
     onKeyDown,
     onKeyUp,
     beginHold,
+    confirmHold,
     endHold,
     cancel
   }

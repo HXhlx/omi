@@ -836,12 +836,11 @@ describe('hub tool loop (PR-C)', () => {
 })
 
 // ---- hub release gate (the 2026-07-18 short-press wedge) --------------------
-// A 220–350 ms press (recordable only since the Mac-parity 220 ms threshold) on
-// the HUB lane used to commit a near-empty turn to the provider — which may never
-// answer — and a release that beat the capture spin-up committed literally zero
-// audio. The hub lane now mirrors the cascade release gate exactly: such turns
-// ALWAYS finalize deterministically at release, ownership is freed, and the warm
-// socket is kept for the next press.
+// A short press on the HUB lane used to commit a near-empty turn to the provider
+// — which may never answer — and a release that beat the capture spin-up
+// committed literally zero audio. The hub lane now mirrors the cascade release
+// gate exactly: such turns ALWAYS finalize deterministically at release,
+// ownership is freed, and the warm socket is kept for the next press.
 
 describe('hub release gate (short/empty hub-owned captures)', () => {
   it('a too-short hub press never commits: tooShort terminal, socket kept, hint, next press fresh', async () => {

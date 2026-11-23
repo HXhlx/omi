@@ -57,11 +57,10 @@ export type SummonGestureOptions = {
   clearTimer?: (h: unknown) => void
 }
 
-/** Tap/hold boundary — macOS parity: PushToTalkManager.tapToLockMaxHoldDuration
- *  (0.22s) is the release-time boundary between a tap and a genuine hold on the
- *  proven implementation. Was 350ms, which left a 220–350ms band Mac records
- *  but Windows silently dropped. */
-export const HOLD_THRESHOLD_MS = 220
+/** Tap/hold boundary. Windows short presses regularly run 200–300ms, so the
+ *  Mac-parity 220ms boundary opened listening during what users meant as a tap.
+ *  A quick press only summons the bar; listening starts above 350ms. */
+export const HOLD_THRESHOLD_MS = 350
 export const POLL_MS = 30
 /** Must exceed the slowest Windows keyboard initial repeat delay (~1s). */
 export const REPEAT_GAP_MS = 1200
@@ -128,7 +127,22 @@ export class SummonGesture {
       // (no sampler, or a sampler that hasn't yet observed the key down) each
       // fire extends the deadline — the repeats are the proof the key is held.
       this.lastFireAt = this.now()
-      if (!this.sample || !this.keyObservedDown) this.armGapTimer()
+      if (!this.sample || !this.keyObservedDown) {
+        this.armGapTimer()
+        // A blind sampler never sees the physical DOWN, so the poll cannot
+        // promote a real hold. An auto-repeat arriving after the threshold is
+        // the first trustworthy proof that this is a hold, not a tap.
+        // shortcut: auto-repeat-disabled keyboards cannot confirm a blind hold;
+        // upgrade to a low-level keyboard hook if that case matters.
+        if (
+          this.sample &&
+          !this.holdFired &&
+          this.now() - this.startAt >= this.holdThresholdMs
+        ) {
+          this.holdFired = true
+          this.cb.onHoldStart?.()
+        }
+      }
       return
     }
     this.active = true

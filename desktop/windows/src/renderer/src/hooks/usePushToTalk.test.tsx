@@ -742,23 +742,31 @@ describe('tap-to-lock latch (hotkey path)', () => {
   })
 })
 
-// The hotkey path classifies at Mac's 220ms boundary (PushToTalkManager.
-// tapToLockMaxHoldDuration), NOT the textarea's typing-safe 350ms. Regression
-// for the 220–350ms dead band: those presses recorded on Mac but were silently
-// dropped on Windows.
-describe('hotkey hold threshold (Mac 220ms parity)', () => {
-  it('constants: the hotkey boundary is 220ms and the textarea keeps 350ms', () => {
-    expect(HOTKEY_HOLD_THRESHOLD_MS).toBe(220)
+// The hotkey path uses the same 350ms boundary as the typing-safe path. The
+// earlier Mac-parity 220ms boundary made Windows short presses open listening.
+describe('hotkey hold threshold (350ms short-press guard)', () => {
+  it('constants: both boundaries are 350ms', () => {
+    expect(HOTKEY_HOLD_THRESHOLD_MS).toBe(350)
     expect(HOLD_THRESHOLD_MS).toBe(350)
   })
 
-  it('a 250ms hotkey press RECORDS (was silently dropped in the 220–350ms band)', async () => {
+  it('a deferred short press with a delayed blind release never starts capture', async () => {
     const { result } = setup()
-    act(() => result.current.beginHold())
-    await advance(250)
-    expect(result.current.recording).toBe(true) // capture began at 220ms
-    // Backfill covers the whole threshold — no speech lost (fake timers → precise).
-    expect(h.state.captureOpts[0].backfillMs).toBe(HOTKEY_HOLD_THRESHOLD_MS)
+    act(() => result.current.beginHold(true))
+    await advance(1200)
+    expect(result.current.recording).toBe(false)
+    act(() => result.current.endHold())
+    await advance(0)
+    expect(h.startPttCapture).not.toHaveBeenCalled()
+  })
+
+  it('a confirmed deferred hold starts immediately with press-time backfill', async () => {
+    const { result } = setup()
+    act(() => result.current.beginHold(true))
+    await advance(400)
+    act(() => result.current.confirmHold())
+    expect(result.current.recording).toBe(true)
+    expect(h.state.captureOpts[0].backfillMs).toBe(400)
     act(() => result.current.endHold())
     await advance(0)
     expect(h.startPttCapture).toHaveBeenCalledOnce()

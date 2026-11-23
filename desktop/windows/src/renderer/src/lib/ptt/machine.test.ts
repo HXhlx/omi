@@ -345,8 +345,8 @@ describe('reduceLock (tap-to-lock latch)', () => {
     expect(kinds(step.effects)).toEqual(['armWindow'])
   })
 
-  it('a tap at/over the tap-to-lock ceiling (0.25s) does NOT open the window', () => {
-    const step = tap(250)
+  it('a tap at/over the tap-to-lock ceiling (0.35s) does NOT open the window', () => {
+    const step = tap(350)
     expect(step.state.phase).toBe('idle')
     expect(step.effects).toEqual([])
   })
