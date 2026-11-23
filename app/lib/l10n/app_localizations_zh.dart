@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sessionExpiredSignInAgain => '会话已过期，请重新登录。';
 
   @override
-  String get appTitle => 'Omi';
+  String get appTitle => '小蜗';
 
   @override
   String get conversationTab => '对话';
@@ -131,7 +131,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get editPerson => '编辑人员';
 
   @override
-  String get createPersonHint => '创建一个新人员并训练 Omi 识别他们的声音！';
+  String get createPersonHint => '创建一个新人员并训练小蜗识别他们的声音！';
 
   @override
   String get speechProfile => '语音档案';
@@ -169,7 +169,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get couldNotAccessFile => '无法打开所选文件';
 
   @override
-  String get askOmi => '询问Omi';
+  String get askOmi => '询问小蜗';
 
   @override
   String get done => '完成';
@@ -269,7 +269,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noMessagesYet => '还没有消息！\n为什么不开始一段对话呢？';
 
   @override
-  String get deletingMessages => '正在从 Omi 的内存中删除您的消息…';
+  String get deletingMessages => '正在从小蜗的内存中删除您的消息…';
 
   @override
   String get messageCopied => '✨ 消息已复制到剪贴板';
@@ -299,7 +299,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get maxFilesLimit => '您一次只能上传 4 个文件';
 
   @override
-  String get chatWithOmi => '与 Omi 聊天';
+  String get chatWithOmi => '与小蜗聊天';
 
   @override
   String get apps => '应用';
@@ -326,7 +326,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unableToFetchApps => '无法加载应用 :(\n\n请检查您的网络连接。';
 
   @override
-  String get aboutOmi => '关于 Omi';
+  String get aboutOmi => '关于小蜗';
 
   @override
   String get privacyPolicy => '隐私政策';
@@ -425,7 +425,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autoSyncDescription => '设备连接时自动同步离线录音';
 
   @override
-  String get omiButtonActions => 'Omi 按钮操作';
+  String get omiButtonActions => '小蜗按钮操作';
 
   @override
   String get deviceSettings => '设备设置';
@@ -443,7 +443,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get developerSettings => '开发者设置';
 
   @override
-  String get getOmiForMac => '获取 Omi Mac 版';
+  String get getOmiForMac => '获取小蜗 Mac 版';
 
   @override
   String get referralProgram => '推荐计划';
@@ -524,7 +524,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unpairAndForget => '取消配对并遗忘设备';
 
   @override
-  String get deviceDisconnectedMessage => '您的 Omi 已断开连接 😔';
+  String get deviceDisconnectedMessage => '您的小蜗已断开连接 😔';
 
   @override
   String get deviceUnpairedMessage => '设备已取消配对。转到设置 > 蓝牙并忘记设备以完成取消配对。';
@@ -539,7 +539,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceNotConnected => '设备未连接';
 
   @override
-  String get connectDeviceMessage => '连接您的 Omi 设备以访问设置和自定义。';
+  String get connectDeviceMessage => '连接您的小蜗设备以访问设置和自定义。';
 
   @override
   String get deviceInfoSection => '设备信息';
@@ -638,7 +638,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get conversationTimeout => '对话超时';
 
   @override
-  String get conversationTimeoutConfig => 'Omi 在静音多久后结束对话';
+  String get conversationTimeoutConfig => '小蜗在静音多久后结束对话';
 
   @override
   String get importData => '导入数据';
@@ -662,7 +662,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get docs => '文档';
 
   @override
-  String get yourOmiInsights => '您的 Omi 见解';
+  String get yourOmiInsights => '您的小蜗见解';
 
   @override
   String get today => '今天';
@@ -680,13 +680,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noActivityYet => '暂无活动';
 
   @override
-  String get startConversationToSeeInsights => '与 Omi 开始一段对话\n以在此查看您的见解。';
+  String get startConversationToSeeInsights => '与小蜗开始一段对话\n以在此查看您的见解。';
 
   @override
   String get listening => '聆听';
 
   @override
-  String get listeningSubtitle => 'Omi 主动聆听的总时长。';
+  String get listeningSubtitle => '小蜗主动聆听的总时长。';
 
   @override
   String get understanding => '理解';
@@ -701,7 +701,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remembering => '记忆';
 
   @override
-  String get unlimitedPlan => 'Omi Pro';
+  String get unlimitedPlan => '小蜗 Pro';
 
   @override
   String get managePlan => '管理套餐';
@@ -723,7 +723,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get upgrade => '升级';
 
   @override
-  String get upgradeToUnlimited => '升级至Omi Pro';
+  String get upgradeToUnlimited => '升级至小蜗 Pro';
 
   @override
   String basicPlanDesc(int limit) {
@@ -731,19 +731,19 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get shareStatsMessage => '分享我的 Omi 统计数据！(omi.me - 我的全天候 AI 助手)';
+  String get shareStatsMessage => '分享我的小蜗统计数据！(omi.me - 我的全天候 AI 助手)';
 
   @override
-  String get sharePeriodToday => '今天 Omi：';
+  String get sharePeriodToday => '今天小蜗：';
 
   @override
-  String get sharePeriodMonth => '本月 Omi：';
+  String get sharePeriodMonth => '本月小蜗：';
 
   @override
-  String get sharePeriodYear => '今年 Omi：';
+  String get sharePeriodYear => '今年小蜗：';
 
   @override
-  String get sharePeriodAllTime => '迄今为止 Omi：';
+  String get sharePeriodAllTime => '迄今为止小蜗：';
 
   @override
   String shareStatsListened(String minutes) {
@@ -775,7 +775,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noLogFilesFound => '未找到日志文件。';
 
   @override
-  String get omiDebugLog => 'Omi 调试日志';
+  String get omiDebugLog => '小蜗调试日志';
 
   @override
   String get logShared => '日志已分享';
@@ -799,7 +799,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exportDataDesc => '将对话导出为 JSON 文件';
 
   @override
-  String get exportedConversations => 'Omi 导出的对话';
+  String get exportedConversations => '小蜗导出的对话';
 
   @override
   String get exportShared => '导出已分享';
@@ -965,7 +965,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addWordsDesc => '姓名、术语或不常见的词';
 
   @override
-  String get vocabularyHint => 'Omi, Callie, OpenAI';
+  String get vocabularyHint => '小蜗, Callie, OpenAI';
 
   @override
   String get connect => '连接';
@@ -1009,7 +1009,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String authAccessMessage(String appName) {
-    return '您需要授权 Omi 访问您的 $appName 数据。';
+    return '您需要授权小蜗访问您的 $appName 数据。';
   }
 
   @override
@@ -1097,7 +1097,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get editName => '编辑姓名';
 
   @override
-  String get howShouldOmiCallYou => 'Omi 应该怎么称呼您？';
+  String get howShouldOmiCallYou => '小蜗应该怎么称呼您？';
 
   @override
   String get enterYourName => '输入您的姓名';
@@ -1221,7 +1221,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tellUsPrimaryLanguage => '告诉我们您的主要语言';
 
   @override
-  String get languageForTranscription => 'Omi 将此语言用于转录、摘要和回忆。';
+  String get languageForTranscription => '小蜗将此语言用于转录、摘要和回忆。';
 
   @override
   String get singleLanguageModeInfo => '单一语言模式已开启。';
@@ -1365,7 +1365,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String authorizeOmiForTasks(String appName) {
-    return '您需要授权 Omi 在您的 $appName 帐户中创建任务。这将打开您的浏览器进行身份验证。';
+    return '您需要授权小蜗在您的 $appName 帐户中创建任务。这将打开您的浏览器进行身份验证。';
   }
 
   @override
@@ -1400,13 +1400,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bringYourOwn => '自带';
 
   @override
-  String get payYourSttProvider => '在 Omi 中免费。你直接向转录服务商付费。';
+  String get payYourSttProvider => '在小蜗中免费。你直接向转录服务商付费。';
 
   @override
   String get freeMinutesMonth => '包含 300 免费分钟/月。';
 
   @override
-  String get omiUnlimited => 'Omi 无限版';
+  String get omiUnlimited => '小蜗无限版';
 
   @override
   String get hostRequired => '需要主机';
@@ -1524,11 +1524,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String deviceUsesCodec(String device, String reason) {
-    return '$device 使用此服务商无法读取的格式录制（$reason），因此将改用 Omi 的转录。';
+    return '$device 使用此服务商无法读取的格式录制（$reason），因此将改用小蜗的转录。';
   }
 
   @override
-  String get omiTranscription => 'Omi 转录';
+  String get omiTranscription => '小蜗转录';
 
   @override
   String get instantSpeakerLabels => '即时说话人标签';
@@ -1661,7 +1661,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enableBluetooth => '启用蓝牙';
 
   @override
-  String get bluetoothNeeded => 'Omi 需要蓝牙来连接您的穿戴设备。';
+  String get bluetoothNeeded => '小蜗需要蓝牙来连接您的穿戴设备。';
 
   @override
   String get contactSupport => '联系支持？';
@@ -1676,19 +1676,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backgroundActivity => '后台活动';
 
   @override
-  String get backgroundActivityDesc => '以便在屏幕关闭或切换应用时，Omi 仍能继续录制。';
+  String get backgroundActivityDesc => '以便在屏幕关闭或切换应用时，小蜗仍能继续录制。';
 
   @override
   String get locationAccess => '位置权限';
 
   @override
-  String get locationAccessDesc => '以便 Omi 记录你的对话发生在哪里。';
+  String get locationAccessDesc => '以便小蜗记录你的对话发生在哪里。';
 
   @override
   String get notifications => '通知';
 
   @override
-  String get notificationsDesc => '以便 Omi 向你发送对话摘要、任务提醒和应用回复。';
+  String get notificationsDesc => '以便小蜗向你发送对话摘要、任务提醒和应用回复。';
 
   @override
   String get locationServiceDisabled => '位置服务已禁用';
@@ -1703,13 +1703,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backgroundLocationDeniedDesc => '请在设置中允许“始终”';
 
   @override
-  String get lovingOmi => '喜欢 Omi 吗？';
+  String get lovingOmi => '喜欢小蜗吗？';
 
   @override
   String get maybeLater => '以后再说';
 
   @override
-  String get speechProfileIntro => 'Omi需要学习您的目标和声音。您稍后可以修改它。';
+  String get speechProfileIntro => '小蜗需要学习您的目标和声音。您稍后可以修改它。';
 
   @override
   String get getStarted => '开始';
@@ -1760,7 +1760,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tryAgain => '重试';
 
   @override
-  String get connectOmiOmiGlass => '连接 Omi / OmiGlass';
+  String get connectOmiOmiGlass => '连接小蜗 / OmiGlass';
 
   @override
   String get continueWithoutDevice => '无设备继续';
@@ -1793,10 +1793,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get termsOfUse => '使用条款';
 
   @override
-  String get omiYourAiCompanion => 'Omi – 您的 AI 助手';
+  String get omiYourAiCompanion => '小蜗 – 您的 AI 助手';
 
   @override
-  String get captureEveryMoment => 'Omi 会记录您的对话，\n并为您生成摘要和待办事项。';
+  String get captureEveryMoment => '小蜗会记录您的对话，\n并为您生成摘要和待办事项。';
 
   @override
   String get appleWatchSetup => 'Apple Watch 设置';
@@ -1842,7 +1842,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectPrimaryLanguage => '选择主要语言';
 
   @override
-  String get languageBenefits => 'Omi 将此语言用于转录、摘要和回忆。';
+  String get languageBenefits => '小蜗将此语言用于转录、摘要和回忆。';
 
   @override
   String get whatsYourPrimaryLanguage => '您的主要语言是什么？';
@@ -1982,7 +1982,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addFirstMemory => '添加您的第一条记忆';
 
   @override
-  String get clearMemoryTitle => '清除 Omi 记忆？';
+  String get clearMemoryTitle => '清除小蜗记忆？';
 
   @override
   String get clearMemoryMessage => '您的所有记忆都将被删除。此操作无法撤销。';
@@ -2146,7 +2146,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get translationNotice => '翻译通知';
 
   @override
-  String get translationNoticeMessage => 'Omi 将对话翻译成您的主要语言。您可以随时在设置→个人资料中更新。';
+  String get translationNoticeMessage => '小蜗将对话翻译成您的主要语言。您可以随时在设置→个人资料中更新。';
 
   @override
   String get pleaseCheckInternetConnection => '请检查您的互联网连接并重试';
@@ -2328,7 +2328,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get privacyPolicyTitle => '隐私政策';
 
   @override
-  String get omiSttProvider => 'Omi';
+  String get omiSttProvider => '小蜗';
 
   @override
   String labelCopied(String label) {
@@ -2342,7 +2342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createKeyToGetStarted => '创建密钥以开始';
 
   @override
-  String get setWhenConversationsAutoEnd => 'Omi 在静音多久后结束对话';
+  String get setWhenConversationsAutoEnd => '小蜗在静音多久后结束对话';
 
   @override
   String get importDataFromOtherSources => '从其他来源导入数据';
@@ -2455,7 +2455,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get checksForAudioFiles => '检查SD卡上的音频文件';
 
   @override
-  String get omiSyncsAudioFiles => 'Omi然后将音频文件与服务器同步';
+  String get omiSyncsAudioFiles => '小蜗然后将音频文件与服务器同步';
 
   @override
   String get serverProcessesAudio => '服务器处理音频文件并创建回忆';
@@ -2464,7 +2464,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get youreAllSet => '一切就绪！';
 
   @override
-  String get startUsingOmi => '开始使用Omi';
+  String get startUsingOmi => '开始使用小蜗';
 
   @override
   String get back => '返回';
@@ -2546,7 +2546,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get showAll => '显示全部 →';
 
   @override
-  String get noTasksForToday => '今天没有任务。\n向Omi询问更多任务或手动创建。';
+  String get noTasksForToday => '今天没有任务。\n向小蜗询问更多任务或手动创建。';
 
   @override
   String get dailyScore => '每日评分';
@@ -2690,7 +2690,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createNewApp => '创建新应用';
 
   @override
-  String get buildSubmitCustomOmiApp => '构建并提交您的自定义 Omi 应用';
+  String get buildSubmitCustomOmiApp => '构建并提交您的自定义小蜗应用';
 
   @override
   String get submittingYourApp => '正在提交您的应用…';
@@ -2735,7 +2735,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makeMyAppPublic => '公开我的应用';
 
   @override
-  String get submitAppTermsAgreement => '提交此应用即表示我同意 Omi AI 的服务条款和隐私政策';
+  String get submitAppTermsAgreement => '提交此应用即表示我同意小蜗 AI 的服务条款和隐私政策';
 
   @override
   String get submitApp => '提交应用';
@@ -2777,7 +2777,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataAccessNotice => '数据访问通知';
 
   @override
-  String get dataAccessWarning => '此应用将访问您的数据。Omi AI 不对此应用如何使用、修改或删除您的数据负责';
+  String get dataAccessWarning => '此应用将访问您的数据。小蜗 AI 不对此应用如何使用、修改或删除您的数据负责';
 
   @override
   String get installApp => '安装应用';
@@ -3111,10 +3111,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pro => '专业版';
 
   @override
-  String get upgradeToPro => '升级至Omi Pro';
+  String get upgradeToPro => '升级至小蜗 Pro';
 
   @override
-  String get getOmiDevice => '获取 Omi 设备';
+  String get getOmiDevice => '获取小蜗设备';
 
   @override
   String get loadingMemories => '加载回忆中…';
@@ -3168,7 +3168,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makeAllMemoriesPublic => '将所有记忆设为公开';
 
   @override
-  String get permanentlyRemoveAllMemories => '从 Omi 永久删除所有记忆';
+  String get permanentlyRemoveAllMemories => '从小蜗永久删除所有记忆';
 
   @override
   String get allMemoriesAreNowPrivate => '所有记忆现已私密';
@@ -3177,7 +3177,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get allMemoriesAreNowPublic => '所有记忆现已公开';
 
   @override
-  String get clearOmisMemory => '清除 Omi 的记忆';
+  String get clearOmisMemory => '清除小蜗的记忆';
 
   @override
   String clearMemoryConfirmation(int count) {
@@ -3185,10 +3185,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get omisMemoryCleared => 'Omi 关于您的记忆已被清除';
+  String get omisMemoryCleared => '小蜗关于您的记忆已被清除';
 
   @override
-  String get welcomeToOmi => '欢迎来到 Omi';
+  String get welcomeToOmi => '欢迎来到小蜗';
 
   @override
   String get continueWithApple => '使用 Apple 继续';
@@ -3248,7 +3248,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nameMustBeAtLeast2Characters => '姓名必须至少包含2个字符';
 
   @override
-  String get tellUsHowYouWouldLikeToBeAddressed => '告诉我们您希望如何称呼您。这有助于个性化您的 Omi 体验。';
+  String get tellUsHowYouWouldLikeToBeAddressed => '告诉我们您希望如何称呼您。这有助于个性化您的小蜗体验。';
 
   @override
   String charactersCount(int count) {
@@ -3262,7 +3262,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get recordAudioConversations => '录制音频对话';
 
   @override
-  String get microphoneAccessDescription => 'Omi 需要麦克风访问权限来录制您的对话并提供转录。';
+  String get microphoneAccessDescription => '小蜗需要麦克风访问权限来录制您的对话并提供转录。';
 
   @override
   String get screenRecording => '屏幕录制';
@@ -3271,7 +3271,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get captureSystemAudioFromMeetings => '从会议中捕获系统音频';
 
   @override
-  String get screenRecordingDescription => 'Omi 需要屏幕录制权限来从基于浏览器的会议中捕获系统音频。';
+  String get screenRecordingDescription => '小蜗需要屏幕录制权限来从基于浏览器的会议中捕获系统音频。';
 
   @override
   String get accessibility => '辅助功能';
@@ -3280,7 +3280,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get detectBrowserBasedMeetings => '检测基于浏览器的会议';
 
   @override
-  String get accessibilityDescription => 'Omi 需要辅助功能权限来检测您何时在浏览器中加入 Zoom、Meet 或 Teams 会议。';
+  String get accessibilityDescription => '小蜗需要辅助功能权限来检测您何时在浏览器中加入 Zoom、Meet 或 Teams 会议。';
 
   @override
   String get pleaseWait => '请稍候…';
@@ -3313,10 +3313,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voiceAndPeople => '语音与人物';
 
   @override
-  String get teachOmiYourVoice => '教 Omi 您的声音';
+  String get teachOmiYourVoice => '教小蜗您的声音';
 
   @override
-  String get tellOmiWhoSaidIt => '告诉 Omi 谁说的 🗣️';
+  String get tellOmiWhoSaidIt => '告诉小蜗谁说的 🗣️';
 
   @override
   String get payment => '付款';
@@ -3328,7 +3328,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get preferences => '偏好设置';
 
   @override
-  String get helpImproveOmiBySharing => '通过分享匿名分析数据帮助改进 Omi';
+  String get helpImproveOmiBySharing => '通过分享匿名分析数据帮助改进小蜗';
 
   @override
   String get deleteAccount => '删除账户';
@@ -3352,7 +3352,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get conversationsExportStarted => '对话导出已开始。这可能需要几秒钟，请稍候。';
 
   @override
-  String get mcpDescription => '将Omi与其他应用程序连接以读取、搜索和管理您的记忆和对话。创建密钥以开始。';
+  String get mcpDescription => '将小蜗与其他应用程序连接以读取、搜索和管理您的记忆和对话。创建密钥以开始。';
 
   @override
   String get apiKeys => 'API密钥';
@@ -3387,7 +3387,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get triggersWhenDaySummaryGenerated => '生成每日摘要时触发。';
 
   @override
-  String get tryLatestExperimentalFeatures => '尝试Omi团队的最新实验性功能。';
+  String get tryLatestExperimentalFeatures => '尝试小蜗团队的最新实验性功能。';
 
   @override
   String get transcriptionServiceDiagnosticStatus => '转录服务诊断状态';
@@ -3457,7 +3457,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get letOmiChooseAutomatically => '让 Omi 自动选择最佳应用';
+  String get letOmiChooseAutomatically => '让小蜗自动选择最佳应用';
 
   @override
   String get deleteConversationConfirmation => '删除此对话？此操作无法撤销。';
@@ -3584,7 +3584,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get translatedByOmi => '由 Omi 翻译';
+  String get translatedByOmi => '由小蜗翻译';
 
   @override
   String get backToConversations => '返回对话';
@@ -3645,7 +3645,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get customVocabularyHeader => '自定义词汇';
 
   @override
-  String get addWordsDescription => '添加 Omi 在转录期间应识别的词汇。';
+  String get addWordsDescription => '添加小蜗在转录期间应识别的词汇。';
 
   @override
   String get enterWordsHint => '输入词汇（逗号分隔）';
@@ -3714,7 +3714,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteKnowledgeGraphQuestion => '删除知识图谱？';
 
   @override
-  String get connectOmiWithAI => '将 Omi 连接到 AI 助手';
+  String get connectOmiWithAI => '将小蜗连接到 AI 助手';
 
   @override
   String get noAPIKeys => '没有 API 密钥。创建一个以开始使用。';
@@ -3747,7 +3747,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get holdOnPreparingForm => '请稍候，我们正在为您准备表单';
 
   @override
-  String get bySubmittingYouAgreeToOmi => '提交即表示您同意Omi ';
+  String get bySubmittingYouAgreeToOmi => '提交即表示您同意小蜗 ';
 
   @override
   String get termsAndPrivacyPolicy => '条款与隐私政策';
@@ -3900,7 +3900,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get issueActivatingApp => '激活此应用时出现问题。请重试。';
 
   @override
-  String get dataAccessNoticeDescription => '此应用将访问您的数据。Omi AI不对此应用如何使用、修改或删除您的数据负责';
+  String get dataAccessNoticeDescription => '此应用将访问您的数据。小蜗 AI不对此应用如何使用、修改或删除您的数据负责';
 
   @override
   String get copyUrl => '复制链接';
@@ -3985,13 +3985,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get omiApiKeys => 'Omi API密钥';
+  String get omiApiKeys => '小蜗 API密钥';
 
   @override
-  String get apiKeysDescription => 'API密钥用于在您的应用程序与Omi服务器通信时进行身份验证。它们允许您的应用程序创建记忆并安全地访问其他Omi服务。';
+  String get apiKeysDescription => 'API密钥用于在您的应用程序与小蜗服务器通信时进行身份验证。它们允许您的应用程序创建记忆并安全地访问其他小蜗服务。';
 
   @override
-  String get aboutOmiApiKeys => '关于Omi API密钥';
+  String get aboutOmiApiKeys => '关于小蜗 API密钥';
 
   @override
   String get yourNewKey => '您的新密钥:';
@@ -4209,13 +4209,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get omiTraining => 'Omi 培训';
+  String get omiTraining => '小蜗培训';
 
   @override
   String get trainingDataProgram => '训练数据计划';
 
   @override
-  String get getOmiUnlimitedFree => '通过贡献数据来训练AI模型，免费获得Omi Pro。';
+  String get getOmiUnlimitedFree => '通过贡献数据来训练AI模型，免费获得小蜗 Pro。';
 
   @override
   String get trainingDataBullets => '• 你的数据有助于改进 AI 模型\n• 仅共享非敏感数据';
@@ -4334,7 +4334,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unlimitedConversations => '无限对话';
 
   @override
-  String get askOmiAnything => '向Omi询问关于您生活的任何事情';
+  String get askOmiAnything => '向小蜗询问关于您生活的任何事情';
 
   @override
   String get unlockOmiInfiniteMemory => '无限回忆';
@@ -4484,7 +4484,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get minutes => '分钟';
 
   @override
-  String get omiHas => 'Omi 拥有：';
+  String get omiHas => '小蜗拥有：';
 
   @override
   String get premiumMinutesUsed => '高级分钟已用完。';
@@ -4842,7 +4842,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enableApps => '启用应用';
 
   @override
-  String get omiAppName => 'Omi';
+  String get omiAppName => '小蜗';
 
   @override
   String get showMore => '显示更多 ↓';
@@ -4866,16 +4866,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get checkingAppleWatch => '正在检查 Apple Watch…';
 
   @override
-  String get installOmiOnAppleWatch => '在您的 Apple Watch 上\n安装 Omi';
+  String get installOmiOnAppleWatch => '在您的 Apple Watch 上\n安装小蜗';
 
   @override
-  String get installOmiOnAppleWatchDescription => '要将 Apple Watch 与 Omi 配合使用，您需要先在手表上安装 Omi 应用。';
+  String get installOmiOnAppleWatchDescription => '要将 Apple Watch 与小蜗配合使用，您需要先在手表上安装小蜗应用。';
 
   @override
-  String get openOmiOnAppleWatch => '在您的 Apple Watch 上\n打开 Omi';
+  String get openOmiOnAppleWatch => '在您的 Apple Watch 上\n打开小蜗';
 
   @override
-  String get openOmiOnAppleWatchDescription => 'Omi 应用已安装在您的 Apple Watch 上。打开它并点击开始。';
+  String get openOmiOnAppleWatchDescription => '小蜗应用已安装在您的 Apple Watch 上。打开它并点击开始。';
 
   @override
   String get openWatchApp => '打开 Watch 应用';
@@ -4884,13 +4884,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get iveInstalledAndOpenedTheApp => '我已安装并打开应用';
 
   @override
-  String get unableToOpenWatchApp => '无法打开 Apple Watch 应用。请在 Apple Watch 上手动打开 Watch 应用，并从「可用应用」部分安装 Omi。';
+  String get unableToOpenWatchApp => '无法打开 Apple Watch 应用。请在 Apple Watch 上手动打开 Watch 应用，并从「可用应用」部分安装小蜗。';
 
   @override
   String get appleWatchConnectedSuccessfully => 'Apple Watch 连接成功！';
 
   @override
-  String get appleWatchNotReachable => '仍无法连接 Apple Watch。请确保 Omi 应用在手表上处于打开状态。';
+  String get appleWatchNotReachable => '仍无法连接 Apple Watch。请确保小蜗应用在手表上处于打开状态。';
 
   @override
   String errorCheckingConnection(String error) {
@@ -4965,7 +4965,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noSummary => '无摘要';
 
   @override
-  String get updateOmiFirmware => '更新Omi固件';
+  String get updateOmiFirmware => '更新小蜗固件';
 
   @override
   String get anErrorOccurredTryAgain => '发生错误，请重试。';
@@ -4974,7 +4974,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcomeBackSimple => '欢迎回来';
 
   @override
-  String get addVocabularyDescription => '添加Omi在转录时应识别的词语。';
+  String get addVocabularyDescription => '添加小蜗在转录时应识别的词语。';
 
   @override
   String get enterWordsCommaSeparated => '输入词语（逗号分隔）';
@@ -5135,13 +5135,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wrappedNoDataAvailable => '暂无数据';
 
   @override
-  String get wrappedOmiLifeRecap => 'Omi 生活回顾';
+  String get wrappedOmiLifeRecap => '小蜗生活回顾';
 
   @override
   String get wrappedSwipeUpToBegin => '向上滑动开始';
 
   @override
-  String get wrappedShareText => '我的2025，由Omi记录 ✨ omi.me/wrapped';
+  String get wrappedShareText => '我的2025，由小蜗记录 ✨ omi.me/wrapped';
 
   @override
   String get wrappedFailedToShare => '分享失败，请重试。';
@@ -5162,7 +5162,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wrappedMy2025 => '我的2025';
 
   @override
-  String get wrappedRememberedByOmi => '由Omi记录';
+  String get wrappedRememberedByOmi => '由小蜗记录';
 
   @override
   String get wrappedMostFunDay => '最开心';
@@ -5375,7 +5375,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationFrequency => '通知频率';
 
   @override
-  String get controlNotificationFrequency => '控制Omi向您发送主动通知的频率。';
+  String get controlNotificationFrequency => '控制小蜗向您发送主动通知的频率。';
 
   @override
   String get yourScore => '您的评分';
@@ -5399,7 +5399,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dailyScoreExplanation => '您的每日评分基于任务完成情况。完成任务以提高评分！';
 
   @override
-  String get notificationFrequencyDescription => '控制 Omi 向您发送主动通知和提醒的频率。';
+  String get notificationFrequencyDescription => '控制小蜗向您发送主动通知和提醒的频率。';
 
   @override
   String get sliderOff => '关闭';
@@ -5591,7 +5591,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noRecordings => '没有录音';
 
   @override
-  String get audioFromOmiWillAppearHere => '来自 Omi 设备的音频将显示在这里';
+  String get audioFromOmiWillAppearHere => '来自小蜗设备的音频将显示在这里';
 
   @override
   String get deleteProcessed => '删除已处理的';
@@ -5711,7 +5711,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get batteryUsageHigher => '电池使用量将高于云端转录。';
 
   @override
-  String get considerOmiCloud => '考虑使用 Omi Cloud 以获得更好的性能。';
+  String get considerOmiCloud => '考虑使用小蜗 Cloud 以获得更好的性能。';
 
   @override
   String get highResourceUsage => '高资源使用';
@@ -5861,7 +5861,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get omiTranscriptionOptimized => 'Omi 的实时转录专为实时对话打造，并标注谁说了什么。';
+  String get omiTranscriptionOptimized => '小蜗的实时转录专为实时对话打造，并标注谁说了什么。';
 
   @override
   String get reset => '重置';
@@ -5949,13 +5949,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get writeReviewOptional => '撰写评论（可选）';
 
   @override
-  String get setupQuestionsIntro => '告诉我们关于您自己的信息。这将帮助 Omi 更好地支持您。';
+  String get setupQuestionsIntro => '告诉我们关于您自己的信息。这将帮助小蜗更好地支持您。';
 
   @override
   String get setupQuestionProfession => '1. 你的职业是什么？';
 
   @override
-  String get setupQuestionUsage => '2. 你计划在哪里使用 Omi？';
+  String get setupQuestionUsage => '2. 你计划在哪里使用小蜗？';
 
   @override
   String get setupQuestionAge => '3. 你的年龄段是？';
@@ -6466,23 +6466,23 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get batteryFullyChargedTitle => 'Omi已充满电';
+  String get batteryFullyChargedTitle => '小蜗已充满电';
 
   @override
-  String get batteryFullyChargedBody => '您的Omi设备已充满电，可以拔掉充电线了！';
+  String get batteryFullyChargedBody => '您的小蜗设备已充满电，可以拔掉充电线了！';
 
   @override
-  String get deviceDisconnectedNotificationTitle => '您的 Omi 设备已断开连接';
+  String get deviceDisconnectedNotificationTitle => '您的小蜗设备已断开连接';
 
   @override
-  String get deviceDisconnectedNotificationBody => '请重新连接以继续使用 Omi。';
+  String get deviceDisconnectedNotificationBody => '请重新连接以继续使用小蜗。';
 
   @override
   String get firmwareUpdateAvailable => '固件更新可用';
 
   @override
   String firmwareUpdateAvailableDescription(String version) {
-    return '您的 Omi 设备有新的固件更新（$version）可用。您想现在更新吗？';
+    return '您的小蜗设备有新的固件更新（$version）可用。您想现在更新吗？';
   }
 
   @override
@@ -6518,7 +6518,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get almostDone => '即将完成…';
 
   @override
-  String get omiSays => 'Omi 说';
+  String get omiSays => '小蜗说';
 
   @override
   String get analyzingYourData => '正在分析您的数据…';
@@ -6757,7 +6757,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nextButton => '下一步';
 
   @override
-  String get connectOmiDevice => '连接 Omi 设备';
+  String get connectOmiDevice => '连接小蜗设备';
 
   @override
   String planSwitchingDescriptionWithTitle(String title) {
@@ -6786,7 +6786,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transcriptionJsonPlaceholder => '在此粘贴您的 JSON 配置…';
 
   @override
-  String get transcriptionSourceOmi => 'Omi';
+  String get transcriptionSourceOmi => '小蜗';
 
   @override
   String get pricePlaceholder => '0.00';
@@ -6810,7 +6810,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get actionItemReminderTitle => 'Omi 提醒';
+  String get actionItemReminderTitle => '小蜗提醒';
 
   @override
   String deviceDisconnectedTitle(String deviceName) {
@@ -6838,7 +6838,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingComplete => '完成';
 
   @override
-  String get onboardingWelcomeToOmi => '欢迎使用 Omi';
+  String get onboardingWelcomeToOmi => '欢迎使用小蜗';
 
   @override
   String get onboardingTellUsAboutYourself => '介绍一下您自己';
@@ -7565,19 +7565,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reportAnIssue => '报告问题';
 
   @override
-  String get pairingTitleOmi => '开启Omi';
+  String get pairingTitleOmi => '开启小蜗';
 
   @override
   String get pairingDescOmi => '按住设备直到振动以开机。';
 
   @override
-  String get pairingTitleOmiDevkit => '将Omi DevKit设置为配对模式';
+  String get pairingTitleOmiDevkit => '将小蜗 DevKit设置为配对模式';
 
   @override
   String get pairingDescOmiDevkit => '按一次按钮开机。配对模式下LED将闪烁紫色。';
 
   @override
-  String get pairingTitleOmiGlass => '开启Omi Glass';
+  String get pairingTitleOmiGlass => '开启小蜗 Glass';
 
   @override
   String get pairingDescOmiGlass => '按住侧面按钮3秒以开机。';
@@ -7616,7 +7616,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pairingTitleAppleWatch => '连接Apple Watch';
 
   @override
-  String get pairingDescAppleWatch => '在Apple Watch上安装并打开Omi应用，然后在应用中点击连接。';
+  String get pairingDescAppleWatch => '在Apple Watch上安装并打开小蜗应用，然后在应用中点击连接。';
 
   @override
   String get pairingTitleNeoOne => '将Neo One设置为配对模式';
@@ -7710,7 +7710,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingWhatIKnowAboutYouTitle => '这是我了解到的关于你的信息';
 
   @override
-  String get onboardingWhatIKnowAboutYouDescription => '这张地图会随着 Omi 从你的对话中学习而更新。';
+  String get onboardingWhatIKnowAboutYouDescription => '这张地图会随着小蜗从你的对话中学习而更新。';
 
   @override
   String get apiEnvironment => 'API 环境';
@@ -7760,7 +7760,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tasksOverdue => '逾期';
 
   @override
-  String get phoneCallsWithOmi => '使用 Omi 通话';
+  String get phoneCallsWithOmi => '使用小蜗通话';
 
   @override
   String get phoneCallsSubtitle => '实时转录通话';
@@ -7962,10 +7962,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get showTasksOnHomepage => '在首页显示任务';
 
   @override
-  String get phoneCallsUnlimitedOnly => '通过 Omi 拨打电话';
+  String get phoneCallsUnlimitedOnly => '通过小蜗拨打电话';
 
   @override
-  String get phoneCallsUpsellSubtitle => '通过 Omi 拨打电话，获取实时转录、自动摘要等功能。';
+  String get phoneCallsUpsellSubtitle => '通过小蜗拨打电话，获取实时转录、自动摘要等功能。';
 
   @override
   String get phoneCallsUpsellFeature1 => '每次通话的实时转录';
@@ -8078,7 +8078,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fairUseAboutTitle => '关于公平使用';
 
   @override
-  String get fairUseAboutBody => 'Omi 专为个人对话、会议和实时互动而设计。用量按实际说话时长计算，而非连接时长。如果你的用量远高于正常个人使用，你会先收到提醒。持续的高强度使用可能会减慢或限制转录。';
+  String get fairUseAboutBody => '小蜗专为个人对话、会议和实时互动而设计。用量按实际说话时长计算，而非连接时长。如果你的用量远高于正常个人使用，你会先收到提醒。持续的高强度使用可能会减慢或限制转录。';
 
   @override
   String fairUseCaseRefCopied(String caseRef) {
@@ -8116,7 +8116,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get improveConnectionTitle => '改善连接';
 
   @override
-  String get improveConnectionContent => '我们改进了 Omi 与您设备保持连接的方式。要激活此功能，请前往设备信息页面，点击\"断开设备\"，然后重新配对您的设备。';
+  String get improveConnectionContent => '我们改进了小蜗与您设备保持连接的方式。要激活此功能，请前往设备信息页面，点击\"断开设备\"，然后重新配对您的设备。';
 
   @override
   String get improveConnectionAction => '知道了';
@@ -8127,7 +8127,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get omisStorage => 'Omi 存储';
+  String get omisStorage => '小蜗存储';
 
   @override
   String get phoneStorage => '手机存储';
@@ -8171,7 +8171,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cancelSyncQuestion => '取消同步？';
 
   @override
-  String get phoneStorageDesc => '当 Omi 重新连接时，录音会自动传输到手机，然后再上传。';
+  String get phoneStorageDesc => '当小蜗重新连接时，录音会自动传输到手机，然后再上传。';
 
   @override
   String get cloudStorageDesc => '上传后，您的录音将被处理和转录。对话将在一分钟内可用。';
@@ -8198,10 +8198,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get permissionEnable => '启用';
 
   @override
-  String get permissionsPageDescription => 'Omi 使用这些权限来连接你的设备、录制音频、在后台持续工作、发送提醒，并记录对话发生的地点。';
+  String get permissionsPageDescription => '小蜗使用这些权限来连接你的设备、录制音频、在后台持续工作、发送提醒，并记录对话发生的地点。';
 
   @override
-  String get permissionsRequiredDescription => 'Omi 需要一些权限才能正常工作。请授予权限以继续。';
+  String get permissionsRequiredDescription => '小蜗需要一些权限才能正常工作。请授予权限以继续。';
 
   @override
   String get permissionsSetupTitle => '获得最佳体验';
@@ -8299,7 +8299,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get feedbackTitleFoundAlternative => '您要换成什么？';
 
   @override
-  String get feedbackTitleNotUsing => '什么会让您更多地使用 Omi？';
+  String get feedbackTitleNotUsing => '什么会让您更多地使用小蜗？';
 
   @override
   String get feedbackSubtitleTooExpensive => '您的反馈帮助我们找到正确的平衡。';
@@ -8317,7 +8317,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get feedbackSubtitleFoundAlternative => '我们想了解什么吸引了您。';
 
   @override
-  String get feedbackSubtitleNotUsing => '我们想让 Omi 对您更有用。';
+  String get feedbackSubtitleNotUsing => '我们想让小蜗对您更有用。';
 
   @override
   String get deviceDiagnostics => '设备诊断';
@@ -8534,7 +8534,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tasksMarkComplete => '已标记为完成';
 
   @override
-  String get appleHealthManageNote => 'Omi 通过 Apple 的 HealthKit 框架访问 Apple Health。您可以随时在 iOS 设置中撤销访问权限。';
+  String get appleHealthManageNote => '小蜗通过 Apple 的 HealthKit 框架访问 Apple Health。您可以随时在 iOS 设置中撤销访问权限。';
 
   @override
   String get appleHealthConnectCta => '连接 Apple Health';
@@ -8549,31 +8549,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appleHealthFeatureChatTitle => '聊聊你的健康';
 
   @override
-  String get appleHealthFeatureChatDesc => '向 Omi 询问你的步数、睡眠、心率和锻炼。';
+  String get appleHealthFeatureChatDesc => '向小蜗询问你的步数、睡眠、心率和锻炼。';
 
   @override
   String get appleHealthFeatureReadOnlyTitle => '仅限读取访问';
 
   @override
-  String get appleHealthFeatureReadOnlyDesc => 'Omi 永远不会写入 Apple Health 或修改您的数据。';
+  String get appleHealthFeatureReadOnlyDesc => '小蜗永远不会写入 Apple Health 或修改您的数据。';
 
   @override
   String get appleHealthFeatureSecureTitle => '安全同步';
 
   @override
-  String get appleHealthFeatureSecureDesc => '您的 Apple Health 数据私密同步到您的 Omi 账户。';
+  String get appleHealthFeatureSecureDesc => '您的 Apple Health 数据私密同步到您的小蜗账户。';
 
   @override
   String get appleHealthDeniedTitle => 'Apple Health 访问被拒绝';
 
   @override
-  String get appleHealthDeniedBody => 'Omi 没有读取您的 Apple Health 数据的权限。请在 iOS 设置 → 隐私与安全性 → 健康 → Omi 中启用。';
+  String get appleHealthDeniedBody => '小蜗没有读取您的 Apple Health 数据的权限。请在 iOS 设置 → 隐私与安全性 → 健康 → 小蜗中启用。';
 
   @override
   String get deleteFlowReasonTitle => '您为何离开?';
 
   @override
-  String get deleteFlowReasonSubtitle => '您的反馈有助于我们为所有人改进 Omi。';
+  String get deleteFlowReasonSubtitle => '您的反馈有助于我们为所有人改进小蜗。';
 
   @override
   String get deleteReasonPrivacy => '隐私方面的顾虑';
@@ -8597,7 +8597,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteReasonOther => '其他';
 
   @override
-  String get deletePauseInsteadTitle => '改为暂停 Omi？';
+  String get deletePauseInsteadTitle => '改为暂停小蜗？';
 
   @override
   String get deletePauseInsteadSubtitle => '停止录音并保留所有内容。随时回来。';
@@ -8612,7 +8612,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deletePauseReturnLine => '您仍会保持登录。随时恢复录音。您的订阅不会改变。';
 
   @override
-  String get pauseOmiButton => '暂停 Omi';
+  String get pauseOmiButton => '暂停小蜗';
 
   @override
   String get continueDeletingButton => '继续删除';
@@ -8621,7 +8621,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteFlowFeedbackTitle => '告诉我们更多';
 
   @override
-  String get deleteFlowFeedbackSubtitle => '怎样才能让 Omi 对您有用?';
+  String get deleteFlowFeedbackSubtitle => '怎样才能让小蜗对您有用?';
 
   @override
   String get deleteFlowFeedbackHint => '可选 — 您的想法有助于我们打造更好的产品。';
@@ -8783,13 +8783,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get chatQuotaSubtitle => 'AI chat messages used with Omi this month.';
+  String get chatQuotaSubtitle => 'AI chat messages used with 小蜗 this month.';
 
   @override
-  String get chatQuotaExceededReply => '您已达到每月限额。升级以无限制地继续与Omi聊天。';
+  String get chatQuotaExceededReply => '您已达到每月限额。升级以无限制地继续与小蜗聊天。';
 
   @override
-  String get voiceResponseAudio => '朗读 Omi 的回复';
+  String get voiceResponseAudio => '朗读小蜗的回复';
 
   @override
   String get voiceResponseMode => '语音回复';
@@ -8822,7 +8822,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voiceMode => '语音模式';
 
   @override
-  String get quickActionAskOmi => '向Omi询问任何事';
+  String get quickActionAskOmi => '向小蜗询问任何事';
 
   @override
   String get record => '录音';
@@ -8933,13 +8933,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncInProgress => '正在同步';
 
   @override
-  String get syncStatusUploaded => '已上传 · 正在 Omi 上处理';
+  String get syncStatusUploaded => '已上传 · 正在小蜗上处理';
 
   @override
   String get deleteWhileProcessingTitle => '仍在处理';
 
   @override
-  String get deleteWhileProcessingMessage => '此录音已上传，但 Omi 仍在创建对话。如果现在删除且处理失败，将无法恢复。仍要删除吗？';
+  String get deleteWhileProcessingMessage => '此录音已上传，但小蜗仍在创建对话。如果现在删除且处理失败，将无法恢复。仍要删除吗？';
 
   @override
   String get syncCardAllBackedUp => '所有录音已同步';
@@ -8955,7 +8955,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get syncCardProcessing => 'Omi 处理中…';
+  String get syncCardProcessing => '小蜗处理中…';
 
   @override
   String get syncCardWaitingInternet => '等待网络连接';
@@ -8971,19 +8971,19 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get syncFlowIntro => '录音从你的设备传输到这部手机并存储在本地，然后上传到 Omi 的服务器，在那里被转录并转化为对话。';
+  String get syncFlowIntro => '录音从你的设备传输到这部手机并存储在本地，然后上传到小蜗的服务器，在那里被转录并转化为对话。';
 
   @override
   String get syncStepUpload => '同步';
 
   @override
-  String get syncStepUploadDesc => '你的录音会发送到 Omi 的服务器';
+  String get syncStepUploadDesc => '你的录音会发送到小蜗的服务器';
 
   @override
   String get syncStepProcess => '转写';
 
   @override
-  String get syncStepProcessDesc => 'Omi 将音频转为对话';
+  String get syncStepProcessDesc => '小蜗将音频转为对话';
 
   @override
   String get syncStepBackedUp => '对话已就绪';
@@ -8998,7 +8998,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncStatusConversationCreated => '对话已创建';
 
   @override
-  String get syncCardUploadingTitle => '正在上传到 Omi';
+  String get syncCardUploadingTitle => '正在上传到小蜗';
 
   @override
   String get syncCardDownloadingTitle => '正在从你的设备下载';
@@ -9035,7 +9035,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncCardThrottlePaused => '同步暂时暂停 — 将自动恢复';
 
   @override
-  String get syncCardBackendBusy => 'Omi 服务器繁忙 — 容量恢复后将自动同步你的录音';
+  String get syncCardBackendBusy => '小蜗服务器繁忙 — 容量恢复后将自动同步你的录音';
 
   @override
   String get unableToDetermineFirmwareVersion => '无法确定当前固件版本';
@@ -9071,10 +9071,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backgroundModeTitle => '后台模式';
 
   @override
-  String get backgroundModeDescription => '即使完全关闭应用，也能让你的 Omi 继续录音。';
+  String get backgroundModeDescription => '即使完全关闭应用，也能让你的小蜗继续录音。';
 
   @override
-  String get backgroundModeUnavailable => '后台模式不可用，因为未连接兼容设备。请连接 Omi、OpenGlass 或 Friend Pendant 设备以使用此功能。';
+  String get backgroundModeUnavailable => '后台模式不可用，因为未连接兼容设备。请连接小蜗、OpenGlass 或 Friend Pendant 设备以使用此功能。';
 
   @override
   String get regenerateRecap => '重新生成回顾';
@@ -9092,10 +9092,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get recapRegenerateNoConversations => '这一天没有可以总结的对话。';
 
   @override
-  String get syncCustomSttWarningTitle => '同步会使用 Omi 转录';
+  String get syncCustomSttWarningTitle => '同步会使用小蜗转录';
 
   @override
-  String get syncCustomSttWarningMessage => '您使用的是自己的转录服务。同步这些录音会改为在 Omi 的服务器上转录，并计入您套餐的转录额度。';
+  String get syncCustomSttWarningMessage => '您使用的是自己的转录服务。同步这些录音会改为在小蜗的服务器上转录，并计入您套餐的转录额度。';
 
   @override
   String get transcribeLaterTitle => '稍后转写';
@@ -9104,7 +9104,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transcribeLaterDescription => '现在录音，想转录时再转录。在此之前，音频保存在你的手机上。';
 
   @override
-  String get transcribeLaterNote => '支持手机麦克风以及 Omi 和 Limitless 设备。在你主动上传之前，音频会一直保留在手机上。';
+  String get transcribeLaterNote => '支持手机麦克风以及小蜗和 Limitless 设备。在你主动上传之前，音频会一直保留在手机上。';
 
   @override
   String get transcribeLaterStorageFull => '手机存储空间不足，录音已暂停。请清理空间或上传录音，之后会自动恢复。';
@@ -9149,10 +9149,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memoryProvenanceAndroid => 'Android';
 
   @override
-  String get deviceTutorial => '如何使用 Omi';
+  String get deviceTutorial => '如何使用小蜗';
 
   @override
-  String get deviceOnboardingTranscriptionTitle => '对着 Omi 说话';
+  String get deviceOnboardingTranscriptionTitle => '对着小蜗说话';
 
   @override
   String get deviceOnboardingTranscriptionSubtitle => '说几句话，看它们实时显示出来';
@@ -9164,7 +9164,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceOnboardingStartSpeaking => '开始说话…';
 
   @override
-  String get deviceOnboardingAskQuestionTitle => '向 Omi 提问';
+  String get deviceOnboardingAskQuestionTitle => '向小蜗提问';
 
   @override
   String get deviceOnboardingAskQuestionSubtitle => '按一下按钮，说出你的问题，说完后再按一下';
@@ -9227,7 +9227,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceOnboardingSingleTapHint => '那是单击——试着快速点击两次！';
 
   @override
-  String get deviceOnboardingTryDoubleTap => '现在就试试！双击你的 Omi';
+  String get deviceOnboardingTryDoubleTap => '现在就试试！双击你的小蜗';
 
   @override
   String get deviceOnboardingContinue => '继续';
@@ -9236,7 +9236,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceOnboardingFinish => '完成';
 
   @override
-  String get deviceOnboardingIntroTitle => '了解你的 Omi';
+  String get deviceOnboardingIntroTitle => '了解你的小蜗';
 
   @override
   String get deviceOnboardingIntroSubtitle => '试试实时转录、提问和双击快捷方式。';
@@ -9282,7 +9282,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get connectRayBanMeta => '连接 Ray-Ban Meta';
 
   @override
-  String get raybanMetaSetupDescription => '将您的 Ray-Ban Meta 眼镜用作 Omi 采集设备，用于对话和视觉情境。Omi 将打开 Meta AI 应用以关联您的眼镜。';
+  String get raybanMetaSetupDescription => '将您的 Ray-Ban Meta 眼镜用作小蜗采集设备，用于对话和视觉情境。小蜗将打开 Meta AI 应用以关联您的眼镜。';
 
   @override
   String get raybanMetaOpenMetaAI => '通过 Meta AI 连接';
@@ -9297,7 +9297,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get raybanMetaAllowCamera => '允许在眼镜上使用摄像头';
 
   @override
-  String get raybanMetaCameraExplanation => 'Omi 使用您眼镜的摄像头将照片添加到您的对话中。您可以跳过此步骤，仅使用音频。';
+  String get raybanMetaCameraExplanation => '小蜗使用您眼镜的摄像头将照片添加到您的对话中。您可以跳过此步骤，仅使用音频。';
 
   @override
   String get raybanMetaSkipForNow => '暂时跳过';
@@ -9306,7 +9306,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get raybanMetaAudioOnlyTitle => 'Ray-Ban Meta 纯音频模式';
 
   @override
-  String get raybanMetaAudioOnlyExplanation => '此版本的 Omi 可以通过蓝牙使用您眼镜的麦克风。拍摄照片需要 Omi 的 Meta 开发者版本。';
+  String get raybanMetaAudioOnlyExplanation => '此版本的小蜗可以通过蓝牙使用您眼镜的麦克风。拍摄照片需要小蜗的 Meta 开发者版本。';
 
   @override
   String get raybanMetaMusicPauseNote => '使用眼镜麦克风时，您手机上的音乐将暂停。';
@@ -9517,7 +9517,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rayBanMetaMicPickerTitle => '选择您的 Ray-Ban Meta 麦克风';
 
   @override
-  String get rayBanMetaMicPickerDescription => '选择眼镜的 Bluetooth 麦克风。Omi 使用麦克风时，音乐会暂停。';
+  String get rayBanMetaMicPickerDescription => '选择眼镜的 Bluetooth 麦克风。小蜗使用麦克风时，音乐会暂停。';
 
   @override
   String get rayBanMetaMicPickerEmpty => '未找到 Bluetooth 麦克风。请在 iPhone 设置中连接眼镜，然后重试。';
@@ -9529,7 +9529,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rayBanMetaMicPickerConnectError => '无法连接到该麦克风。请确保它已在 iPhone 设置中连接。';
 
   @override
-  String get syncStatusTooOld => '太旧，无法同步 — Omi 无法接收';
+  String get syncStatusTooOld => '太旧，无法同步 — 小蜗无法接收';
 
   @override
   String get planSheetChooseYourPlan => '选择适合你的方案。';
@@ -9563,7 +9563,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get freemiumLimitsIntro => 'Omi 是免费的，但免费版存在一些会影响体验的限制：';
+  String get freemiumLimitsIntro => '小蜗是免费的，但免费版存在一些会影响体验的限制：';
 
   @override
   String get downgradeLimitDelayNotRealTime => '5-7 秒延迟（非实时）';
@@ -9572,7 +9572,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downgradeToFreemiumAction => '降级到免费版';
 
   @override
-  String get getFreeUnlimitedAccess => '免费获取 Omi Pro';
+  String get getFreeUnlimitedAccess => '免费获取小蜗 Pro';
 
   @override
   String get shareDataForTraining => '共享数据用于训练';
@@ -9584,7 +9584,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accountCutoverUpdateRequiredTitle => '需要更新';
 
   @override
-  String get accountCutoverUpdateRequiredMessage => '请安装最新的 Omi 应用，以便在账户迁移后继续使用。';
+  String get accountCutoverUpdateRequiredMessage => '请安装最新的小蜗应用，以便在账户迁移后继续使用。';
 
   @override
   String get accountCutoverMigrationInProgressTitle => '正在迁移';
@@ -9607,10 +9607,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get askAboutThisConversation => '询问此内容';
 
   @override
-  String get sendRawAudioToOmi => '向 Omi 发送原始音频';
+  String get sendRawAudioToOmi => '向小蜗发送原始音频';
 
   @override
-  String get sendRawAudioToOmiDescription => '关闭后不会向 Omi 发送原始音频；转写文本及云端功能所需数据仍可能发送至 Omi。';
+  String get sendRawAudioToOmiDescription => '关闭后不会向小蜗发送原始音频；转写文本及云端功能所需数据仍可能发送至小蜗。';
 
   @override
   String get findDevice => '查找';
@@ -9625,7 +9625,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appDisabledWebhookFailures => '其端点连续 72 小时失败，因此已停止推送。';
 
   @override
-  String get appDisabledGeneric => '它已被 Omi 停用。';
+  String get appDisabledGeneric => '它已被小蜗停用。';
 
   @override
   String get appDisabledOwnerHint => '请先修复端点——重新启用时会重新检查每个已配置的 URL。';
@@ -9736,7 +9736,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get speechToTextUnavailableDesc => '目前无法将语音转换为文字。请检查网络连接和设备的语音识别设置，然后重试。';
 
   @override
-  String get speechProfileEnrollmentPrompt => '让 Omi 知道哪个声音是你的——随便聊点什么，说大约 5 秒就好。';
+  String get speechProfileEnrollmentPrompt => '让小蜗知道哪个声音是你的——随便聊点什么，说大约 5 秒就好。';
 
   @override
   String get home => '首页';
@@ -9788,9 +9788,9 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       part,
       {
-        'title': 'Let Omi get to know you',
+        'title': 'Let 小蜗 get to know you',
         'intro':
-            'Finish four short sentences out loud. This helps Omi recognize your voice and remember what matters to you. Share only what you want.',
+            'Finish four short sentences out loud. This helps 小蜗 recognize your voice and remember what matters to you. Share only what you want.',
         'hint': 'Say the whole sentence and finish it in your own words.',
         'name': 'My name is ___, and I spend most of my time ___.',
         'work': 'Right now, I am working on ___.',
@@ -9818,7 +9818,7 @@ class AppLocalizationsZh extends AppLocalizations {
         'uploadError': 'Your voice profile could not be saved. Retry with the same recording, or set it up later.',
         'memoryError': 'Some answers could not be saved. Saved items are safe; retry to save the rest.',
         'transcriptionError': 'We could not transcribe that answer. Try again, keep speaking, or skip this question.',
-        'noMemories': 'You can tell Omi more about yourself whenever you like.',
+        'noMemories': 'You can tell 小蜗 more about yourself whenever you like.',
         'voiceOnlyHint': 'You can skip any personal prompt and talk about something else.',
         'goalPrompt': 'Right now my number one goal is to ___.',
         'savedGoal': 'Your goal is saved',
@@ -10203,7 +10203,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get phoneNoVerifiedNumbersTitle => '没有已验证的号码';
 
   @override
-  String get phoneNoVerifiedNumbersMessage => '验证你的号码即可通过 Omi 拨打电话。';
+  String get phoneNoVerifiedNumbersMessage => '验证你的号码即可通过小蜗拨打电话。';
 
   @override
   String get phoneDeleteNumberFailed => '无法删除此号码';
@@ -10212,7 +10212,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get forgetDeviceConfirmTitle => '要忘记设备吗?';
 
   @override
-  String get forgetDeviceConfirmMessage => 'Omi 将不再连接此设备。';
+  String get forgetDeviceConfirmMessage => '小蜗将不再连接此设备。';
 
   @override
   String get deviceForgottenMessage => '已忘记设备';
@@ -10229,7 +10229,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get diagnosticsExportTitle => 'Omi 设备诊断';
+  String get diagnosticsExportTitle => '小蜗设备诊断';
 
   @override
   String get diagnosticsFailBadge => '失败';
@@ -10342,7 +10342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectFirmwareZip => '选择固件 ZIP 文件';
 
   @override
-  String get customFirmwareWarning => '刷写自定义固件可能导致设备无法使用。请确认这是有效的 Omi 固件版本，并且更新期间不要断开连接。';
+  String get customFirmwareWarning => '刷写自定义固件可能导致设备无法使用。请确认这是有效的小蜗固件版本，并且更新期间不要断开连接。';
 
   @override
   String get firmwareFlashed => '固件已刷写';
@@ -10393,7 +10393,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get onboardingCompleteMessage => '让 Omi 运行几天。你的对话、回忆和待办事项将开始逐渐填充。';
+  String get onboardingCompleteMessage => '让小蜗运行几天。你的对话、回忆和待办事项将开始逐渐填充。';
 
   @override
   String get cantFindDeviceHint => '找不到设备？请确认设备已开启并靠近手机，然后重新扫描。';
@@ -10507,13 +10507,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appNotFoundOrRemoved => '此应用已不可用';
 
   @override
-  String get startupFailedTitle => 'Omi 无法启动';
+  String get startupFailedTitle => '小蜗无法启动';
 
   @override
-  String get startupFailedMessage => 'Omi 启动时出了点问题。请检查您的网络连接，然后重试。';
+  String get startupFailedMessage => '小蜗启动时出了点问题。请检查您的网络连接，然后重试。';
 
   @override
-  String get startupFailedConfigMessage => '此版本的 Omi 存在配置问题，这与您的设备无关。请联系支持团队并附上以下详细信息。';
+  String get startupFailedConfigMessage => '此版本的小蜗存在配置问题，这与您的设备无关。请联系支持团队并附上以下详细信息。';
 
   @override
   String get discardRecordingTitle => '放弃录音？';
@@ -10534,7 +10534,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String appDataAccessMessage(String appName) {
-    return '$appName 将在其开发者的服务器上接收你的对话、记忆和录音。Omi 不对这些数据在那里如何被使用负责。';
+    return '$appName 将在其开发者的服务器上接收你的对话、记忆和录音。小蜗不对这些数据在那里如何被使用负责。';
   }
 
   @override
@@ -10590,7 +10590,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatOfflineHint => '你已离线。请重新连接以发送消息。';
 
   @override
-  String get chatReplyFailed => 'Omi 无法回复。请检查网络连接后重试。';
+  String get chatReplyFailed => '小蜗无法回复。请检查网络连接后重试。';
 
   @override
   String disableAppNamed(String appName) {
@@ -10826,7 +10826,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get helpAndAbout => '帮助与关于';
 
   @override
-  String get speakerTagPromptTitle => '帮助 Omi 识别声音';
+  String get speakerTagPromptTitle => '帮助小蜗识别声音';
 
   @override
   String get speakerTagPromptIsThisYou => '刚才是你吗？';
@@ -10866,10 +10866,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get speakerTagPromptSaveVoicesTitle => '记住你命名的人的声音';
 
   @override
-  String get speakerTagPromptSaveVoicesBody => 'Omi 会保留一小段声音样本，以便下次认出对方。你可以随时在设置中更改。';
+  String get speakerTagPromptSaveVoicesBody => '小蜗会保留一小段声音样本，以便下次认出对方。你可以随时在设置中更改。';
 
   @override
-  String get speakerTagPromptThanks => '谢谢！Omi 识别声音会越来越准。';
+  String get speakerTagPromptThanks => '谢谢！小蜗识别声音会越来越准。';
 
   @override
   String get speakerTagPromptNameHint => '对方的名字';
@@ -10884,10 +10884,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voiceSettingsAskToTag => '请我标记声音';
 
   @override
-  String get voiceSettingsAskToTagSubtitle => 'Omi 偶尔会问你最近的对话中是谁在说话';
+  String get voiceSettingsAskToTagSubtitle => '小蜗偶尔会问你最近的对话中是谁在说话';
 
   @override
-  String get voiceSettingsSaveOthersSubtitle => '当你为某人命名时，Omi 会保留一小段声音样本，以便下次认出对方';
+  String get voiceSettingsSaveOthersSubtitle => '当你为某人命名时，小蜗会保留一小段声音样本，以便下次认出对方';
 
   @override
   String get leaveBlank => '留空';
@@ -10938,7 +10938,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pendantIsListeningTitle => '你的吊坠正在聆听';
 
   @override
-  String get oneSourceAtATime => 'Omi 一次只能从一个来源录音。';
+  String get oneSourceAtATime => '小蜗一次只能从一个来源录音。';
 
   @override
   String get recordWithPhoneInstead => '改用手机录音';
@@ -10962,7 +10962,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get openCall => '打开通话';
 
   @override
-  String get captureRecoveryBannerTitle => 'Omi 未发送音频';
+  String get captureRecoveryBannerTitle => '小蜗未发送音频';
 
   @override
   String get phoneRecordingBlockedByPendantBatch => '在用手机录音之前，请先停止吊坠上的“稍后转录”。';
@@ -10981,7 +10981,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get captureWedgeBleExplanation =>
-      '与 Omi 的蓝牙连接已中断，因此音频无法传输到应用。Omi 会继续在设备上录音，并在连接恢复后同步。重试会重新建立连接；如果仍然失败，请在“设置 > 设备”中检查你的设备。';
+      '与小蜗的蓝牙连接已中断，因此音频无法传输到应用。小蜗会继续在设备上录音，并在连接恢复后同步。重试会重新建立连接；如果仍然失败，请在“设置 > 设备”中检查你的设备。';
 
   @override
   String get captureConnecting => '正在连接…';
@@ -10990,11 +10990,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get captureNoAudioDetail => '挂件已连接，但没有音频传输到您的手机';
 
   @override
-  String get captureIngressNeedsReconnect => '音频未送达应用 — 请重新连接您的 Omi';
+  String get captureIngressNeedsReconnect => '音频未送达应用 — 请重新连接您的小蜗';
 
   @override
   String get captureIngressNeedsReconnectExplanation =>
-      '应用已无法再从 Omi 设备接收音频，且未能自动恢复连接。请断开并重新连接设备 — 在设备设置中操作，或将设备关机后重启。设备上已保存的音频稍后会同步。';
+      '应用已无法再从小蜗设备接收音频，且未能自动恢复连接。请断开并重新连接设备 — 在设备设置中操作，或将设备关机后重启。设备上已保存的音频稍后会同步。';
 
   @override
   String get captureStillRecording => '仍在录音';
@@ -11003,10 +11003,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get captureMicInUseElsewhere => '麦克风被其他应用占用';
 
   @override
-  String get captureMicInterruptedDetail => '通话或其他应用占用了麦克风，因此 Omi 现在无法收音。麦克风空闲后 Omi 会自动继续。此前录下的内容都已保存。';
+  String get captureMicInterruptedDetail => '通话或其他应用占用了麦克风，因此小蜗现在无法收音。麦克风空闲后小蜗会自动继续。此前录下的内容都已保存。';
 
   @override
-  String get captureCustomSttUnreachableDetail => '无法连接到你的自定义语音转文字服务。Omi 会把音频保存在这部手机上，服务恢复后再发送。不会丢失任何内容。';
+  String get captureCustomSttUnreachableDetail => '无法连接到你的自定义语音转文字服务。小蜗会把音频保存在这部手机上，服务恢复后再发送。不会丢失任何内容。';
 
   @override
   String get captureStarting => '正在启动…';
@@ -11023,7 +11023,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get deviceOnboardingVoiceReplyTitle => '聆听 Omi 的回答';
+  String get deviceOnboardingVoiceReplyTitle => '聆听小蜗的回答';
 
   @override
   String get deviceOnboardingVoiceReplySample => '明白了。你的下一场会议将在二十分钟后开始。';
@@ -11041,7 +11041,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceOnboardingAllSetDoublePressBadge => '2×';
 
   @override
-  String get deviceOnboardingVoiceReplySubtitle => '当您使用按钮询问时，Omi 可以大声读出答案。';
+  String get deviceOnboardingVoiceReplySubtitle => '当您使用按钮询问时，小蜗可以大声读出答案。';
 
   @override
   String get deviceOnboardingVoiceReplyPreviewIdle => '听听你最后的回答';
@@ -11070,15 +11070,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceOnboardingVoiceReplyAlwaysDescription => '未连接耳机时使用手机扬声器。';
 
   @override
-  String get deviceOnboardingVoiceReplyStatusOff => 'Omi将保持沉默。答案仍然出现在应用程序中。';
+  String get deviceOnboardingVoiceReplyStatusOff => '小蜗将保持沉默。答案仍然出现在应用程序中。';
 
   @override
   String deviceOnboardingVoiceReplyStatusHeadphonesConnected(String device) {
-    return '$device已连接。 Omi 在此发言。';
+    return '$device已连接。小蜗在此发言。';
   }
 
   @override
-  String get deviceOnboardingVoiceReplyStatusHeadphonesDisconnected => '未连接耳机。 Omi 保持沉默，直到您接通一些。';
+  String get deviceOnboardingVoiceReplyStatusHeadphonesDisconnected => '未连接耳机。小蜗保持沉默，直到您接通一些。';
 
   @override
   String deviceOnboardingVoiceReplyStatusAlwaysHeadphones(String device) {
@@ -11165,7 +11165,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voiceQuestionNoSpeech => '没听清楚 — 请再试一次';
 
   @override
-  String get siriIndexSetting => 'Use Omi with Siri & Apple Intelligence';
+  String get siriIndexSetting => 'Use 小蜗 with Siri & Apple Intelligence';
 
   @override
   String get siriIndexSettingDescription =>
@@ -11335,7 +11335,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get askSuggestOwe => '我还欠别人什么？';
 
   @override
-  String get askSuggestNotice => 'Omi 注意到了什么？';
+  String get askSuggestNotice => '小蜗注意到了什么？';
 
   @override
   String get pastChats => '过往聊天';
@@ -11347,7 +11347,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get startFresh => '重新开始';
 
   @override
-  String get noPastChats => '你和 Omi 的聊天会显示在这里。';
+  String get noPastChats => '你和小蜗的聊天会显示在这里。';
 
   @override
   String get deleteChatQuestion => '删除这个聊天？';
@@ -11359,7 +11359,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteChat => '删除聊天';
 
   @override
-  String get appsAskWith => '用这些向 Omi 提问';
+  String get appsAskWith => '用这些向小蜗提问';
 
   @override
   String conversationsTodayCount(int count) {
@@ -11489,17 +11489,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String confidenceSummaryConfirmed(String name) {
-    return 'Omi 能识别 $name 的声音，而且你已确认。';
+    return '小蜗能识别 $name 的声音，而且你已确认。';
   }
 
   @override
   String confidenceSummaryLikely(String name) {
-    return 'Omi 通常能识别 $name 的声音，但你只确认过几次。';
+    return '小蜗通常能识别 $name 的声音，但你只确认过几次。';
   }
 
   @override
   String confidenceSummaryUnverified(String name) {
-    return '你还没有为 $name 添加标签或确认，因此 Omi 不确定它是否认识他们的声音。';
+    return '你还没有为 $name 添加标签或确认，因此小蜗不确定它是否认识他们的声音。';
   }
 
   @override
@@ -11606,7 +11606,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String confidenceNextVoice(String name) {
-    return 'Omi 还需要 $name 的声音样本。请在开启“记住声音”的情况下进行标记。';
+    return '小蜗还需要 $name 的声音样本。请在开启“记住声音”的情况下进行标记。';
   }
 
   @override
@@ -11653,7 +11653,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String deletePinnedPersonMessage(String name) {
-    return '$name 已置顶。其声音样本将被删除，Omi 将不再识别此人，过往转录中也会显示为未命名的说话人。此操作无法撤销。';
+    return '$name 已置顶。其声音样本将被删除，小蜗将不再识别此人，过往转录中也会显示为未命名的说话人。此操作无法撤销。';
   }
 
   @override
@@ -11672,8 +11672,8 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count 位 Omi 不确定的人',
-      one: '1 位 Omi 不确定的人',
+      other: '$count 位小蜗不确定的人',
+      one: '1 位小蜗不确定的人',
     );
     return '$_temp0';
   }
@@ -11692,8 +11692,8 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Omi 不确定这 $count 个人。多数是从转录中听错的名字。取消勾选你想保留的人。',
-      one: 'Omi 不确定这个人。取消勾选即可保留。',
+      other: '小蜗不确定这 $count 个人。多数是从转录中听错的名字。取消勾选你想保留的人。',
+      one: '小蜗不确定这个人。取消勾选即可保留。',
     );
     return '$_temp0';
   }
@@ -11727,7 +11727,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cleanUpNothingTitle => '无需清理';
 
   @override
-  String get cleanUpNothingMessage => 'Omi 目前没有不确定的人。';
+  String get cleanUpNothingMessage => '小蜗目前没有不确定的人。';
 
   @override
   String get selectAllSkipsPinned => '“全选”会跳过已置顶的人物。请在其个人页面中逐个删除。';
@@ -11748,7 +11748,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get restoreAction => '恢复';
 
   @override
-  String get voiceRestoredToast => 'Omi 可能会再次询问这个声音';
+  String get voiceRestoredToast => '小蜗可能会再次询问这个声音';
 
   @override
   String get speakerTagPromptSomeoneElse => '其他人…';
@@ -11783,7 +11783,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get speakerTagPromptHintIdentify => '你的回答会帮助 Omi 下次识别这个声音。';
+  String get speakerTagPromptHintIdentify => '你的回答会帮助小蜗下次识别这个声音。';
 
   @override
   String get speakerTagPromptHintOwner => '你的回答仅标记播放的片段。';
@@ -11797,7 +11797,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get speakerTagPromptSavedAsYou => '已保存为你';
 
   @override
-  String get speakerTagPromptIgnoredNote => 'Omi 不会再询问这个声音';
+  String get speakerTagPromptIgnoredNote => '小蜗不会再询问这个声音';
 
   @override
   String speakerTagPromptLabeledToast(String name) {
@@ -11854,7 +11854,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String siriShortcutsSetupHint(String askPhrase, String questionPhrase) {
-    return '在快捷指令 → Siri 中开启 Omi。说“$askPhrase”或“$questionPhrase”，然后提出你的问题。';
+    return '在快捷指令 → Siri 中开启小蜗。说“$askPhrase”或“$questionPhrase”，然后提出你的问题。';
   }
 
   @override
@@ -11866,16 +11866,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateAvailableTitle => '有可用更新';
 
   @override
-  String get updateAvailableMessage => 'Omi 新版本已就绪，包含问题修复和改进。';
+  String get updateAvailableMessage => '小蜗新版本已就绪，包含问题修复和改进。';
 
   @override
   String get updateRequiredTitle => '需要更新';
 
   @override
-  String get updateRequiredMessage => '此版本的 Omi 已不再受支持。请更新以继续录音和同步。';
+  String get updateRequiredMessage => '此版本的小蜗已不再受支持。请更新以继续录音和同步。';
 
   @override
-  String get exportingAllData => '正在导出您的数据… 请保持 Omi 打开；大型账户可能需要几分钟。';
+  String get exportingAllData => '正在导出您的数据… 请保持小蜗打开；大型账户可能需要几分钟。';
 
   @override
   String transcriptSpeakerCount(int count) {
@@ -11931,10 +11931,10 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       state,
       {
-        'learned': '下次 Omi 就能认出 $name。',
+        'learned': '下次小蜗就能认出 $name。',
         'pending': '这需要几秒钟。',
-        'disabled': '请在设置中开启声音保存，以便 Omi 能认出 $name。',
-        'other': 'Omi 需要 $name 更清晰的语音，并会继续尝试。',
+        'disabled': '请在设置中开启声音保存，以便小蜗能认出 $name。',
+        'other': '小蜗需要 $name 更清晰的语音，并会继续尝试。',
       },
     );
     return '$_temp0';
@@ -11960,7 +11960,7 @@ class AppLocalizationsZh extends AppLocalizations {
         'soundsLike': '听起来像 $name',
         'notPerson': '不是 $name',
         'alsoTitle': '这也是 $name 吗？',
-        'alsoBody': 'Omi 在之前的对话中发现了相同的声音。',
+        'alsoBody': '小蜗在之前的对话中发现了相同的声音。',
         'confirmed': '你已确认此标签',
         'other': '查看',
       },
@@ -11974,7 +11974,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get findDeviceNoneTitle => '未找到 Omi';
+  String get findDeviceNoneTitle => '未找到小蜗';
 
   @override
   String get findDeviceNoneMessage => '请将其开机并靠近手机。';
@@ -12068,7 +12068,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get readChatRepliesAloudDescription => '仅在“语音回复”允许时才会朗读。';
 
   @override
-  String get voicePreviewSample => '嗨，我是 Omi。这是我的声音。';
+  String get voicePreviewSample => '嗨，我是小蜗。这是我的声音。';
 
   @override
   String get peopleStatsIncomplete => '统计可能不完整。';
@@ -12115,7 +12115,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unresolvedSpeakersTitle => '关于说话人标签';
 
   @override
-  String get unresolvedSpeakersMessage => 'Omi 无法区分录音中的其他声音。请轻点说话人标签，为正在说话的人命名。';
+  String get unresolvedSpeakersMessage => '小蜗无法区分录音中的其他声音。请轻点说话人标签，为正在说话的人命名。';
 
   @override
   String get nameSpeakerTitle => '命名说话者';
@@ -12145,10 +12145,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accountDeletionInProgressSignInAgain => '此账号正在删除中。请使用其他账号登录，或等待几分钟后重试。';
 
   @override
-  String get onboardingSetupTitle => '正在设置你的 Omi';
+  String get onboardingSetupTitle => '正在设置你的小蜗';
 
   @override
-  String get onboardingSetupSubtitle => '请稍等片刻，Omi 正在为你个性化设置';
+  String get onboardingSetupSubtitle => '请稍等片刻，小蜗正在为你个性化设置';
 
   @override
   String get onboardingSetupStepWorkspace => '正在准备你的工作区';
@@ -12166,7 +12166,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingSetupStepPersonalize => '正在个性化你的体验';
 
   @override
-  String get onboardingRatingPromptTitle => '你喜欢 Omi 吗？';
+  String get onboardingRatingPromptTitle => '你喜欢小蜗吗？';
 
   @override
   String get onboardingRatingPromptYes => '是';
@@ -12305,7 +12305,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewCaughtUpTitle => '没有需要回答的问题';
 
   @override
-  String get reviewCaughtUpBody => '只有需要你时，Omi 才会在这里提问。';
+  String get reviewCaughtUpBody => '只有需要你时，小蜗才会在这里提问。';
 
   @override
   String get reviewRecentChanges => '最近更改';
@@ -12320,10 +12320,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewChangeRemoved => '已从活动列表中移除';
 
   @override
-  String get reviewChangesIntro => '过去 30 天内 Omi 自行做出的更改。看起来不对的都可以撤销。';
+  String get reviewChangesIntro => '过去 30 天内小蜗自行做出的更改。看起来不对的都可以撤销。';
 
   @override
-  String get reviewChangeUndone => '已撤销。Omi 不会自行再次这样做。';
+  String get reviewChangeUndone => '已撤销。小蜗不会自行再次这样做。';
 
   @override
   String get reviewChangeFailed => '无法更新此更改，请重试。';
@@ -12335,7 +12335,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewNoChangesTitle => '暂无更改';
 
   @override
-  String get reviewNoChangesBody => 'Omi 整理你的笔记后，更改会显示在这里。';
+  String get reviewNoChangesBody => '小蜗整理你的笔记后，更改会显示在这里。';
 
   @override
   String get reviewChangesSectionTerms => '名称和术语';
@@ -12361,7 +12361,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reviewShowMore => '显示更多';
 
   @override
-  String get entityKeptCurrent => '由 Omi 保持最新';
+  String get entityKeptCurrent => '由小蜗保持最新';
 
   @override
   String get entityNotRight => '不对？';
@@ -12370,10 +12370,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get entityCorrectionTitle => '哪里不对？';
 
   @override
-  String get entityCorrectionHint => '告诉 Omi 需要修正什么';
+  String get entityCorrectionHint => '告诉小蜗需要修正什么';
 
   @override
-  String get entityCorrectionSaved => '谢谢，Omi 会修正。';
+  String get entityCorrectionSaved => '谢谢，小蜗会修正。';
 
   @override
   String get entityCorrectionFailed => '无法发送你的更正，请重试。';
@@ -12407,7 +12407,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get entityWhatOmiKnows => 'Omi 知道的内容';
+  String get entityWhatOmiKnows => '小蜗知道的内容';
 
   @override
   String get entityRecentConversations => '最近的对话';
@@ -12533,7 +12533,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String chatAppsReadOnlyBanner(String app) {
-    return '只读。请在 $app 中回复 Omi。';
+    return '只读。请在 $app 中回复小蜗。';
   }
 
   @override
@@ -12565,7 +12565,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get chatAppsConnectTelegramMessage => 'Omi 会通过只属于你的私密链接打开 Telegram。';
+  String get chatAppsConnectTelegramMessage => '小蜗会通过只属于你的私密链接打开 Telegram。';
 
   @override
   String get chatAppsOpenMessages => '打开“信息”';
@@ -12579,14 +12579,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsPrivateMemoriesSubtitle => '健康、财务以及你标记为私密的任何内容都不会进入聊天应用。';
 
   @override
-  String get chatAppsConnectIMessageMessage => '用你想使用的号码给 Omi 发一条消息。消息中的验证码会把该号码与你的账户关联。';
+  String get chatAppsConnectIMessageMessage => '用你想使用的号码给小蜗发一条消息。消息中的验证码会把该号码与你的账户关联。';
 
   @override
-  String get chatAppsWhatsAppMessage => '我们正在努力把 Omi 带到 WhatsApp。准备就绪后会显示在这里。';
+  String get chatAppsWhatsAppMessage => '我们正在努力把小蜗带到 WhatsApp。准备就绪后会显示在这里。';
 
   @override
   String chatAppsNoChatsMessage(String app) {
-    return '你在 $app 中与 Omi 的聊天会显示在这里。';
+    return '你在 $app 中与小蜗的聊天会显示在这里。';
   }
 
   @override
@@ -12594,7 +12594,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String chatAppsDisconnectMessage(String app) {
-    return 'Omi 将停止在 $app 中回复，并删除为其保存的聊天历史记录。$app 中已有的消息会保留在那里。';
+    return '小蜗将停止在 $app 中回复，并删除为其保存的聊天历史记录。$app 中已有的消息会保留在那里。';
   }
 
   @override
@@ -12603,10 +12603,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get chatAppsAddToContacts => '将 Omi 添加到通讯录';
+  String get chatAppsAddToContacts => '将小蜗添加到通讯录';
 
   @override
-  String get chatAppsProPerkContext => 'Omi 会在每个应用中记住上下文';
+  String get chatAppsProPerkContext => '小蜗会在每个应用中记住上下文';
 
   @override
   String get chatAppsWhatsAppMeantime => 'Telegram 和 iMessage 现在就能用，记忆和任务都与此相同。';
@@ -12632,7 +12632,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsLoadFailedTitle => '无法加载聊天应用';
 
   @override
-  String get chatAppsInsights => '来自 Omi 的洞察';
+  String get chatAppsInsights => '来自小蜗的洞察';
 
   @override
   String chatAppsShowInAppOff(String app) {
@@ -12640,13 +12640,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get chatAppsProPerkText => '在 Telegram 和 iMessage 里给 Omi 发消息';
+  String get chatAppsProPerkText => '在 Telegram 和 iMessage 里给小蜗发消息';
 
   @override
-  String get chatAppsVoiceNotesSubtitle => '发送语音备忘，Omi 会回复。';
+  String get chatAppsVoiceNotesSubtitle => '发送语音备忘，小蜗会回复。';
 
   @override
-  String get chatAppsPartOfPro => '聊天应用是 Omi Pro 的一部分';
+  String get chatAppsPartOfPro => '聊天应用是小蜗 Pro 的一部分';
 
   @override
   String get chatAppsMessagesApp => '信息';
@@ -12655,7 +12655,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsTelegramOtherDevice => '在另一台设备上使用 Telegram？';
 
   @override
-  String get chatAppsHeroMessage => '在 Telegram 或 iMessage 里询问你的一天、保存记忆、管理任务。你的聊天仍留在你使用的应用中，而 Omi 会在所有地方记住你们聊过的内容。';
+  String get chatAppsHeroMessage => '在 Telegram 或 iMessage 里询问你的一天、保存记忆、管理任务。你的聊天仍留在你使用的应用中，而小蜗会在所有地方记住你们聊过的内容。';
 
   @override
   String get chatAppsTryRemind => '提醒我周日给妈妈打电话';
@@ -12684,13 +12684,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsNotConnectedTitle => '未连接';
 
   @override
-  String get chatAppsTelegramPrivacyNote => '你与 Omi 的聊天也会存储在 Telegram 中。Omi 只会回复你，绝不会回复其他人，你也可以随时断开连接。';
+  String get chatAppsTelegramPrivacyNote => '你与小蜗的聊天也会存储在 Telegram 中。小蜗只会回复你，绝不会回复其他人，你也可以随时断开连接。';
 
   @override
   String get chatAppsProblemOffline => '你已离线。请检查网络连接后重试。';
 
   @override
-  String get chatAppsIMessageSubtitle => '用你的手机号给 Omi 发短信';
+  String get chatAppsIMessageSubtitle => '用你的手机号给小蜗发短信';
 
   @override
   String get chatAppsPrivateMemories => '将私密记忆保留在应用内';
@@ -12699,13 +12699,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsConnectTelegramTitle => '连接 Telegram';
 
   @override
-  String get chatAppsInsightsSubtitle => '允许 Omi 在这里向你发送回顾或洞察。';
+  String get chatAppsInsightsSubtitle => '允许小蜗在这里向你发送回顾或洞察。';
 
   @override
   String get chatAppsTelegramWaiting => '正在等待你在 Telegram 中点按“开始”…';
 
   @override
-  String get chatAppsEntrySubtitle => '在你每天都在用的应用里和 Omi 聊天。';
+  String get chatAppsEntrySubtitle => '在你每天都在用的应用里和小蜗聊天。';
 
   @override
   String chatAppsConnectedAs(String handle) {
@@ -12716,13 +12716,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsProPerkSave => '直接在聊天中保存记忆、管理任务';
 
   @override
-  String get chatAppsConnectIMessageTitle => '给 Omi 发短信以完成连接';
+  String get chatAppsConnectIMessageTitle => '给小蜗发短信以完成连接';
 
   @override
-  String get chatAppsWaitingMessage => '在“信息”中发送这条消息。Omi 一收到，此屏幕就会更新。';
+  String get chatAppsWaitingMessage => '在“信息”中发送这条消息。小蜗一收到，此屏幕就会更新。';
 
   @override
-  String get chatAppsShowInApp => '在 Omi 应用中显示这些聊天';
+  String get chatAppsShowInApp => '在小蜗应用中显示这些聊天';
 
   @override
   String get chatAppsCodeExpiredMessage => '获取新验证码，并从“信息”中发送。';
@@ -12731,7 +12731,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsNoMessages => '没有消息';
 
   @override
-  String get chatAppsHeroTitle => '在你常聊天的地方和 Omi 聊天';
+  String get chatAppsHeroTitle => '在你常聊天的地方和小蜗聊天';
 
   @override
   String get chatAppsEntryRowSubtitle => 'Telegram、iMessage 等';
@@ -12745,16 +12745,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsNotConnectedMessage => '此聊天应用已断开连接。';
 
   @override
-  String get chatAppsRepliesOnlyNote => 'Omi 只会回复你，绝不会先发短信。';
+  String get chatAppsRepliesOnlyNote => '小蜗只会回复你，绝不会先发短信。';
 
   @override
   String chatAppsDisconnectFooter(String app) {
-    return '断开连接会删除 Omi 为 $app 保存的历史记录。';
+    return '断开连接会删除小蜗为 $app 保存的历史记录。';
   }
 
   @override
   String chatAppsReplyThereAnytime(String app) {
-    return '随时在 $app 中给 Omi 发消息。';
+    return '随时在 $app 中给小蜗发消息。';
   }
 
   @override
@@ -12771,7 +12771,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String chatAppsChannelFooter(String app) {
-    return '你的 $app 聊天会保留在 $app 中。Omi 仍然知道你在应用内以及其他聊天应用中聊过什么。';
+    return '你的 $app 聊天会保留在 $app 中。小蜗仍然知道你在应用内以及其他聊天应用中聊过什么。';
   }
 
   @override
@@ -12784,7 +12784,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsProblemUnavailable => '你的账户暂时还不能使用聊天应用。';
 
   @override
-  String get chatAppsWhatOmiDoes => 'Omi 在聊天应用中能做什么';
+  String get chatAppsWhatOmiDoes => '小蜗在聊天应用中能做什么';
 
   @override
   String get chatAppsVoiceNotes => '语音备忘';
@@ -12804,13 +12804,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatAppsWaitingTitle => '正在等待你的短信';
 
   @override
-  String get chatAppsEntryTitle => '和 Omi 聊天';
+  String get chatAppsEntryTitle => '和小蜗聊天';
 
   @override
   String get chatAppsTelegramStepOpen => '点按下方的“打开 Telegram”';
 
   @override
-  String get chatAppsShowInAppOn => '开启：它们会在 Omi 应用中以只读聊天的形式显示。';
+  String get chatAppsShowInAppOn => '开启：它们会在小蜗应用中以只读聊天的形式显示。';
 
   @override
   String chatAppsDisconnectChannel(String app) {
@@ -12818,14 +12818,14 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get chatAppsTelegramStepStart => '在与 Omi 的聊天中点按“开始”';
+  String get chatAppsTelegramStepStart => '在与小蜗的聊天中点按“开始”';
 
   @override
-  String get chatAppsLocked => '需要 Omi Pro';
+  String get chatAppsLocked => '需要小蜗 Pro';
 
   @override
   String chatAppsIMessageBody(String code) {
-    return '你好 Omi，关联码 $code';
+    return '你好小蜗，关联码 $code';
   }
 
   @override
@@ -12864,7 +12864,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String chatAppsIMessageTo(String address) {
-    return '收件人：Omi · $address';
+    return '收件人：小蜗 · $address';
   }
 
   @override
@@ -12960,7 +12960,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get firstCaptureDescription => 'Choose how you want to capture your first conversation.';
 
   @override
-  String get firstCaptureOmi => 'I Have an Omi';
+  String get firstCaptureOmi => 'I Have an 小蜗';
 
   @override
   String get firstCapturePhone => 'This Phone';
@@ -12969,23 +12969,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get firstCaptureWatch => 'Apple Watch';
 
   @override
-  String get firstCaptureConnectTitle => '连接你的 Omi';
+  String get firstCaptureConnectTitle => '连接你的小蜗';
 
   @override
-  String get firstCaptureConnectDescription => '配对你的 Omi，全天候免提记录对话。';
+  String get firstCaptureConnectDescription => '配对你的小蜗，全天候免提记录对话。';
 
   @override
-  String get firstCaptureConnect => '连接我的 Omi';
+  String get firstCaptureConnect => '连接我的小蜗';
 
   @override
-  String get firstCaptureNoDevice => '我还没有 Omi';
+  String get firstCaptureNoDevice => '我还没有小蜗';
 
   @override
   String get firstCaptureSkip => 'Skip for Now';
 
   @override
   String get firstCapturePrompt =>
-      'Tell Omi what you\'re working on today, or what\'s on your mind. Talk for about 30 seconds.';
+      'Tell 小蜗 what you\'re working on today, or what\'s on your mind. Talk for about 30 seconds.';
 
   @override
   String get firstCaptureKeepGoing => 'Keep going… 30 seconds is ideal.';
@@ -13015,48 +13015,48 @@ class AppLocalizationsZh extends AppLocalizations {
   String get watchCaptureTitle => 'Record from your Apple Watch';
 
   @override
-  String get watchCaptureOpen => 'Open Omi on your Apple Watch.';
+  String get watchCaptureOpen => 'Open 小蜗 on your Apple Watch.';
 
   @override
   String get watchCaptureRecord => 'Tap Record. Allow microphone access if asked.';
 
   @override
-  String get watchCaptureSync => 'Your recording syncs to Omi on this phone.';
+  String get watchCaptureSync => 'Your recording syncs to 小蜗 on this phone.';
 
   @override
   String get pairingBluetoothOff => 'Turn on Bluetooth on your phone, then try again.';
 
   @override
-  String get pairingBluetoothPermission => 'Allow Bluetooth access for Omi in Settings, then try again.';
+  String get pairingBluetoothPermission => 'Allow Bluetooth access for 小蜗 in Settings, then try again.';
 
   @override
-  String get pairingNearbyPermission => 'Allow Nearby devices access for Omi in Settings, then try again.';
+  String get pairingNearbyPermission => 'Allow Nearby devices access for 小蜗 in Settings, then try again.';
 
   @override
   String get pairingLocationPermission =>
-      'Allow location access for Omi in Settings so this phone can find your device, then try again.';
+      'Allow location access for 小蜗 in Settings so this phone can find your device, then try again.';
 
   @override
   String get pairingNotFoundOrDropped =>
-      'Couldn\'t reach your Omi. Make sure it\'s charged, close to your phone, and its light is blinking, then try again.';
+      'Couldn\'t reach your 小蜗. Make sure it\'s charged, close to your phone, and its light is blinking, then try again.';
 
   @override
-  String get pairingBondRecovery => 'Forget Omi in your phone’s Bluetooth settings, then try pairing again.';
+  String get pairingBondRecovery => 'Forget 小蜗 in your phone’s Bluetooth settings, then try pairing again.';
 
   @override
   String get pairingHowTo => 'How to pair';
 
   @override
   String get firstCaptureWatchInstructions =>
-      'Open Omi on your Apple Watch and tap Record. Allow microphone access if asked. Your capture will sync to Omi on this phone.';
+      'Open 小蜗 on your Apple Watch and tap Record. Allow microphone access if asked. Your capture will sync to 小蜗 on this phone.';
 
   @override
   String get firstCaptureWatchInstall =>
-      'In the Watch app on your iPhone, install Omi on your Apple Watch. Then open Omi on your watch and tap Record.';
+      'In the Watch app on your iPhone, install 小蜗 on your Apple Watch. Then open 小蜗 on your watch and tap Record.';
 
   @override
   String get firstCaptureWatchPair =>
-      'Pair your Apple Watch with this iPhone using the Watch app, then install and open Omi on your watch.';
+      'Pair your Apple Watch with this iPhone using the Watch app, then install and open 小蜗 on your watch.';
 
   @override
   String get firstCaptureUnavailable =>
@@ -13073,17 +13073,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get firstCaptureShortTitle => 'Finish This Recording?';
 
   @override
-  String get firstCaptureShortWarning => 'A few more sentences help Omi understand you. About 30 seconds is ideal.';
+  String get firstCaptureShortWarning => 'A few more sentences help 小蜗 understand you. About 30 seconds is ideal.';
 
   @override
   String get firstCaptureCancelTitle => 'Leave This Recording?';
 
   @override
   String get firstCaptureCancelWarning =>
-      'Going back stops this recording. Keep talking to give Omi a few more sentences.';
+      'Going back stops this recording. Keep talking to give 小蜗 a few more sentences.';
 
   @override
-  String get firstCaptureSiriTip => 'Tip: Enable Omi in Shortcuts → Siri.';
+  String get firstCaptureSiriTip => 'Tip: Enable 小蜗 in Shortcuts → Siri.';
 
   @override
   String get paywallOutlineHeadline => '再也不错过任何一句话。';
@@ -13113,7 +13113,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get paywallTrialBrand => 'Omi Pro';
+  String get paywallTrialBrand => '小蜗 Pro';
 
   @override
   String get paywallTrialHeadline => '您的免费试用这样运作。';
@@ -13173,7 +13173,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallTrialFreeDaysBody(int days) {
-    return '我们为您提供 $days 天 Omi Pro 免费试用。';
+    return '我们为您提供 $days 天小蜗 Pro 免费试用。';
   }
 
   @override
@@ -13188,7 +13188,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paywallTrialFeatureModels => '最新 AI 模型';
 
   @override
-  String get paywallTrialFeatureAsk => '无限 Ask Omi';
+  String get paywallTrialFeatureAsk => '无限 Ask 小蜗';
 
   @override
   String get paywallTrialBilledMonthly => '按月计费';
@@ -13207,7 +13207,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get paywallTrialCodeHint => '有 Omi Pro 兑换码？请在下一个页面输入。';
+  String get paywallTrialCodeHint => '有小蜗 Pro 兑换码？请在下一个页面输入。';
 
   @override
   String get paywallTrialCancelNote => '随时取消。无费用，无罚款。';
@@ -13225,7 +13225,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String paywallTrialStarted(int days) {
-    return '您的 Omi Pro $days 天免费试用已开始。';
+    return '您的小蜗 Pro $days 天免费试用已开始。';
   }
 
   @override
@@ -13247,7 +13247,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String syncStepDownloadingAmount(String done, String total) {
-    return '正在从 Omi 下载 · $done / $total';
+    return '正在从小蜗下载 · $done / $total';
   }
 
   @override
@@ -13267,13 +13267,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncDetailsRightNow => '当前状态';
 
   @override
-  String get syncDetailsYourOmi => '你的 Omi';
+  String get syncDetailsYourOmi => '你的小蜗';
 
   @override
   String get syncDetailsTransferSpeed => '传输速度';
 
   @override
-  String get syncDetailsWaitingOnOmi => '等待 Omi 传输';
+  String get syncDetailsWaitingOnOmi => '等待小蜗传输';
 
   @override
   String get syncDetailsWaitingOnPhone => '等待此手机上传';
@@ -13291,7 +13291,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncDetailsCopy => '复制详情以供支持团队使用';
 
   @override
-  String get chatAppsChannelPlanRequired => 'Omi Pro 套餐可用';
+  String get chatAppsChannelPlanRequired => '小蜗 Pro 套餐可用';
 
   @override
   String chatAppsAtCapacity(String app) {
@@ -13325,10 +13325,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingActDemoTitle => '和 Sam 吃午饭';
 
   @override
-  String get onboardingActDictateBody => '随便说，剩下的交给 Omi。';
+  String get onboardingActDictateBody => '随便说，剩下的交给小蜗。';
 
   @override
-  String get onboardingActDictateBodyOmi => '直接说就好，你的 Omi 正在听。';
+  String get onboardingActDictateBodyOmi => '直接说就好，你的小蜗正在听。';
 
   @override
   String get onboardingActDictateExample => '刚和 Sam 吃完午饭，她六月要搬去里斯本！提醒我周五前把演示文稿发给团队，回家路上顺便买牛奶。';
@@ -13337,10 +13337,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingActDictateHint => '说完后点对勾';
 
   @override
-  String get onboardingActDictateTitle => '跟 Omi 说说你的一天';
+  String get onboardingActDictateTitle => '跟小蜗说说你的一天';
 
   @override
-  String get onboardingActIntro => '来试试 Omi 吧。';
+  String get onboardingActIntro => '来试试小蜗吧。';
 
   @override
   String get onboardingActJustNow => '刚刚';
@@ -13349,16 +13349,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingActMicAllow => '允许使用麦克风';
 
   @override
-  String get onboardingActMicBody => '这样你说话时 Omi 才能听到。';
+  String get onboardingActMicBody => '这样你说话时小蜗才能听到。';
 
   @override
-  String get onboardingActMicFallbackBody => '你的 Omi 还没有传来声音，先用手机吧。';
+  String get onboardingActMicFallbackBody => '你的小蜗还没有传来声音，先用手机吧。';
 
   @override
-  String get onboardingActMicTitle => 'Omi 需要使用麦克风';
+  String get onboardingActMicTitle => '小蜗需要使用麦克风';
 
   @override
-  String get onboardingActNoAudioOmi => '听不到你的 Omi。请确认它已开启并在附近。';
+  String get onboardingActNoAudioOmi => '听不到你的小蜗。请确认它已开启并在附近。';
 
   @override
   String get onboardingActNoAudioPhone => '还听不到你的声音，试着大声一点。';
@@ -13370,16 +13370,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingActPhoneMic => '手机麦克风';
 
   @override
-  String get onboardingActRateTitle => '目前喜欢 Omi 吗？';
+  String get onboardingActRateTitle => '目前喜欢小蜗吗？';
 
   @override
-  String get onboardingActRemembers => 'Omi 帮你记住，你无需费心';
+  String get onboardingActRemembers => '小蜗帮你记住，你无需费心';
 
   @override
   String get onboardingActSavedToTasks => '已保存到你的任务';
 
   @override
-  String get onboardingActTasksLabel => 'Omi 记下了你的待办';
+  String get onboardingActTasksLabel => '小蜗记下了你的待办';
 
   @override
   String get onboardingActWriting => '正在总结…';
@@ -13388,13 +13388,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onboardingActYourWords => '你说的内容';
 
   @override
-  String get onboardingConnectOmi => '连接 Omi';
+  String get onboardingConnectOmi => '连接小蜗';
 
   @override
-  String get onboardingConnectTapToConnect => '轻点你的 Omi 进行连接。';
+  String get onboardingConnectTapToConnect => '轻点你的小蜗进行连接。';
 
   @override
-  String get onboardingNoOmiYet => '还没有 Omi？';
+  String get onboardingNoOmiYet => '还没有小蜗？';
 
   @override
   String get onboardingOmiNotOrdered => '还没下单';
@@ -13476,7 +13476,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get activityAttentionSemantics => '活动，需要关注';
 
   @override
-  String get connectAgentHeadline => '在 ChatGPT 和你的 AI 智能体中使用 Omi 记忆';
+  String get connectAgentHeadline => '在 ChatGPT 和你的 AI 智能体中使用小蜗记忆';
 
   @override
   String get connectAgentIntro => '只需连接一次，之后就能向它们询问你的对话、回忆和任务。';
@@ -13488,7 +13488,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get connectAgentComputerAgents => '拥有自己电脑的智能体';
 
   @override
-  String get connectAgentComputerAgentsSubtitle => '复制一条提示词。Omi 会为该智能体单独生成密钥并安全发送。';
+  String get connectAgentComputerAgentsSubtitle => '复制一条提示词。小蜗会为该智能体单独生成密钥并安全发送。';
 
   @override
   String get connectAgentOtherAgent => '其他智能体';
@@ -13517,19 +13517,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get connectChatGptSubtitle => '大约需要 30 秒。你在 ChatGPT 中批准后，手机和电脑上都能使用。';
 
   @override
-  String get connectChatGptStepOpen => '我们会在 ChatGPT 中打开 Omi';
+  String get connectChatGptStepOpen => '我们会在 ChatGPT 中打开小蜗';
 
   @override
-  String get connectChatGptStepOpenBody => 'ChatGPT 会直接打开 Omi 应用页面。';
+  String get connectChatGptStepOpenBody => 'ChatGPT 会直接打开小蜗应用页面。';
 
   @override
-  String get connectChatGptStepApprove => '点按“连接”，然后登录 Omi';
+  String get connectChatGptStepApprove => '点按“连接”，然后登录小蜗';
 
   @override
   String get connectChatGptStepApproveBody => '请使用与此处相同的账号。';
 
   @override
-  String get connectChatGptStepReturn => '返回 Omi';
+  String get connectChatGptStepReturn => '返回小蜗';
 
   @override
   String get connectChatGptStepReturnBody => '我们会自动检查连接。';
@@ -13550,10 +13550,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatGptExampleMeetings => '我在昨天的会议上答应了什么？';
 
   @override
-  String get chatGptExampleTasks => '把我在 Omi 里未完成的任务整理成本周计划。';
+  String get chatGptExampleTasks => '把我在小蜗里未完成的任务整理成本周计划。';
 
   @override
-  String get chatGptExampleGoals => 'Omi 对我的目标了解多少？';
+  String get chatGptExampleGoals => '小蜗对我的目标了解多少？';
 
   @override
   String get disconnectChatGpt => '断开 ChatGPT';
@@ -13562,7 +13562,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get disconnectChatGptQuestion => '要断开 ChatGPT 吗？';
 
   @override
-  String get disconnectChatGptMessage => 'ChatGPT 将无法再读取你在 Omi 中的回忆、对话和任务。';
+  String get disconnectChatGptMessage => 'ChatGPT 将无法再读取你在小蜗中的回忆、对话和任务。';
 
   @override
   String connectAgentNamed(String name) {
@@ -13571,11 +13571,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String connectAgentPromptSubtitle(String name) {
-    return '粘贴一条提示词，$name 会在自己的电脑上设置好 Omi。';
+    return '粘贴一条提示词，$name 会在自己的电脑上设置好小蜗。';
   }
 
   @override
-  String get connectAgentGenericPromptSubtitle => '粘贴一条提示词，你的智能体会在自己的电脑上设置好 Omi。';
+  String get connectAgentGenericPromptSubtitle => '粘贴一条提示词，你的智能体会在自己的电脑上设置好小蜗。';
 
   @override
   String connectAgentKeyCreated(String name) {
@@ -13604,7 +13604,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String connectAgentActiveBody(String name) {
-    return '$name 持有一个 Omi 密钥。撤销它即可切断访问，之后随时可以重新连接。';
+    return '$name 持有一个小蜗密钥。撤销它即可切断访问，之后随时可以重新连接。';
   }
 
   @override
@@ -13614,14 +13614,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String revokeAgentKeyMessage(String name) {
-    return '$name 将立即失去对你 Omi 记忆的访问权限。';
+    return '$name 将立即失去对你小蜗记忆的访问权限。';
   }
 
   @override
   String get askAboutConversation => '询问这段对话';
 
   @override
-  String get askAboutConversationSubtitle => '打开 ChatGPT 并填好你的问题。它会通过 Omi 查找这段对话，无需粘贴转录内容。';
+  String get askAboutConversationSubtitle => '打开 ChatGPT 并填好你的问题。它会通过小蜗查找这段对话，无需粘贴转录内容。';
 
   @override
   String get askYourQuestion => '你的问题';
@@ -13662,10 +13662,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get summaryNotSummarizedYet => '尚未生成摘要';
 
   @override
-  String get summaryEmptyStateBody => 'Omi 可以将这段对话整理为概览、要点和待办事项。';
+  String get summaryEmptyStateBody => '小蜗可以将这段对话整理为概览、要点和待办事项。';
 
   @override
-  String get summaryWithOmi => '用 Omi 总结';
+  String get summaryWithOmi => '用小蜗总结';
 
   @override
   String summaryWithTemplate(String name) {
@@ -13703,7 +13703,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get summaryUseForNewConversations => '设为我的默认';
 
   @override
-  String get summaryTemplatesLoadFailed => '无法加载你的模板。Omi 仍可正常使用。';
+  String get summaryTemplatesLoadFailed => '无法加载你的模板。小蜗仍可正常使用。';
 
   @override
   String get summaryNoTemplatesYet => '你还没有添加任何模板。浏览一些模板，或自己创建一个。';
@@ -13722,13 +13722,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get summaryTemplateFailedBody => '该模板未为此对话返回摘要。';
 
   @override
-  String get summaryWithOmiInstead => '改用 Omi 总结';
+  String get summaryWithOmiInstead => '改用小蜗总结';
 
   @override
   String get summaryBusyTitle => '仍在处理中';
 
   @override
-  String get summaryBusyBody => 'Omi 已在处理此对话。完成后，摘要将显示在这里。';
+  String get summaryBusyBody => '小蜗已在处理此对话。完成后，摘要将显示在这里。';
 
   @override
   String get summaryTranscriptionPendingTitle => '尚未转录';
@@ -13761,7 +13761,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceAtCapTitle => '你已达到本月的用量上限';
 
   @override
-  String get onDeviceAtCapBody => 'Omi 仍在录音。请选择本月剩余时间的转录方式。';
+  String get onDeviceAtCapBody => '小蜗仍在录音。请选择本月剩余时间的转录方式。';
 
   @override
   String onDeviceLiveHoursReturn(String date) {
@@ -13778,7 +13778,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceOptionChargingBody => '在手机充电时运行。';
 
   @override
-  String get onDeviceUpgradeBody => '升级到 Omi Pro，获得说话人分离和更高准确度';
+  String get onDeviceUpgradeBody => '升级到小蜗 Pro，获得说话人分离和更高准确度';
 
   @override
   String get onDeviceAtCapFooter => '无论选哪种都不会丢失内容。你可以在 设置 › 转录 中更改。';
@@ -13789,7 +13789,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get onDeviceSetupBody => 'Omi 只需下载一次语音模型。之后，你的录音会直接在本机转为文字，不计入用量。';
+  String get onDeviceSetupBody => '小蜗只需下载一次语音模型。之后，你的录音会直接在本机转为文字，不计入用量。';
 
   @override
   String get onDeviceSpeechModel => '语音模型';
@@ -13847,7 +13847,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceScheduleTitle => '转录时间';
 
   @override
-  String get onDeviceScheduleHeadline => 'Omi 应在何时转录？';
+  String get onDeviceScheduleHeadline => '小蜗应在何时转录？';
 
   @override
   String get onDeviceScheduleBody => '你可以随时更改。';
@@ -13876,7 +13876,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceScheduleLive => '边说边转';
 
   @override
-  String get onDeviceScheduleLiveBody => 'Omi打开时定期转录。';
+  String get onDeviceScheduleLiveBody => '小蜗打开时定期转录。';
 
   @override
   String onDeviceBatteryPerHour(int percent) {
@@ -13892,7 +13892,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceQueueChargingBody => '手机接上充电器后即可完成。录音照常进行。';
 
   @override
-  String get onDeviceQueueHoursBody => 'Omi 每隔几小时补齐一次。录音照常进行。';
+  String get onDeviceQueueHoursBody => '小蜗每隔几小时补齐一次。录音照常进行。';
 
   @override
   String get onDeviceQueueLowBatteryBody => '电量不足，正在等待充电。录音照常进行。';
@@ -13925,13 +13925,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceTranscribedSummarizedOnIphone => '已在本 iPhone 上转录并生成摘要';
 
   @override
-  String get onDeviceSummarizedByCloud => '由 Omi Cloud 生成摘要';
+  String get onDeviceSummarizedByCloud => '由小蜗 Cloud 生成摘要';
 
   @override
   String get onDeviceWhyPhoneTitle => '为什么在你的手机上处理';
 
   @override
-  String get onDeviceWhyLiveHoursUsed => '你已达到本月上限，所以 Omi 在你的手机上转录了这段内容。';
+  String get onDeviceWhyLiveHoursUsed => '你已达到本月上限，所以小蜗在你的手机上转录了这段内容。';
 
   @override
   String get onDeviceWhySavingLiveHours => '你选择在本机转录以节省用量。';
@@ -13943,20 +13943,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceWhyNoSummary => '你选择将所有内容保留在本机，因此没有摘要。';
 
   @override
-  String get onDeviceWhyCloudTitle => '为什么由 Omi Cloud 生成此摘要';
+  String get onDeviceWhyCloudTitle => '为什么由小蜗 Cloud 生成此摘要';
 
   @override
   String get onDeviceWhyCloudIphone =>
-      '这台 iPhone 无法自行生成摘要（需要 iPhone 15 Pro 或更新机型）。文字记录在你的手机上生成，仅将其文本发送给 Omi 生成摘要。不计入你的用量。';
+      '这台 iPhone 无法自行生成摘要（需要 iPhone 15 Pro 或更新机型）。文字记录在你的手机上生成，仅将其文本发送给小蜗生成摘要。不计入你的用量。';
 
   @override
-  String get onDeviceWhyCloudPhone => '这部手机无法自行生成摘要。文字记录在你的手机上生成，仅将其文本发送给 Omi 生成摘要。不计入你的用量。';
+  String get onDeviceWhyCloudPhone => '这部手机无法自行生成摘要。文字记录在你的手机上生成，仅将其文本发送给小蜗生成摘要。不计入你的用量。';
 
   @override
-  String get onDeviceRedoWithCloud => '用 Omi Cloud 重新处理';
+  String get onDeviceRedoWithCloud => '用小蜗 Cloud 重新处理';
 
   @override
-  String get onDeviceRedoHint => '升级到 Omi Pro，获得说话人分离和更高准确度';
+  String get onDeviceRedoHint => '升级到小蜗 Pro，获得说话人分离和更高准确度';
 
   @override
   String get onDeviceKeepEverything => '所有内容保留在本机';
@@ -13977,7 +13977,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceSummariesOnIphone => '在本 iPhone 上';
 
   @override
-  String get onDeviceSummariesCloud => '由 Omi Cloud 生成';
+  String get onDeviceSummariesCloud => '由小蜗 Cloud 生成';
 
   @override
   String get onDeviceSaveLiveHours => '始终在本机转录';
@@ -14007,7 +14007,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onDeviceFinishSetupTitle => '完成设置即可查看文字记录';
 
   @override
-  String get onDeviceFinishSetupBody => '你已达到本月上限。Omi 仍在你的手机上录音并保存音频。下载语音模型后，它会补上之前的内容。';
+  String get onDeviceFinishSetupBody => '你已达到本月上限。小蜗仍在你的手机上录音并保存音频。下载语音模型后，它会补上之前的内容。';
 
   @override
   String onDeviceDownloadSize(String size) {
@@ -14062,7 +14062,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get heldAudioLiveTitle => '云端转写已暂停';
 
   @override
-  String get heldAudioLiveBody => '你已达到本月的用量上限。Omi 会继续录音。';
+  String get heldAudioLiveBody => '你已达到本月的用量上限。小蜗会继续录音。';
 
   @override
   String heldAudioRecordedSinceLimit(int minutes) {
@@ -14148,7 +14148,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get activityAttentionLinkStalledSubtitle => 'Omi 仍在录音';
+  String get activityAttentionLinkStalledSubtitle => '小蜗仍在录音';
 
   @override
   String get episodeNow => '现在';
@@ -14212,7 +14212,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get episodeWrapUpNow => '立即结束';
 
   @override
-  String get episodeWrapsUpHint => '你转去做别的事时，Omi 会自动结束';
+  String get episodeWrapsUpHint => '你转去做别的事时，小蜗会自动结束';
 
   @override
   String episodeTaskCaptured(String text) {
@@ -14231,7 +14231,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String episodeAddingFromOmi(String duration) {
-    return '正在从 Omi 添加 $duration';
+    return '正在从小蜗添加 $duration';
   }
 
   @override
@@ -14276,7 +14276,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get deviceOnboardingPressButtonTitle => '按一下 Omi 上的按钮';
+  String get deviceOnboardingPressButtonTitle => '按一下小蜗上的按钮';
 
   @override
   String get deviceOnboardingPressButtonSubtitle => '短按一下，然后随便问。';
@@ -14285,7 +14285,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deviceOnboardingAskNowTitle => '说出你的问题';
 
   @override
-  String get deviceOnboardingAskNowSubtitle => '大声说出来，Omi 正在听。';
+  String get deviceOnboardingAskNowSubtitle => '大声说出来，小蜗正在听。';
 
   @override
   String get deviceOnboardingPressAgainHint => '说完了？再按一下按钮发送。';
@@ -14297,7 +14297,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String trialUpsellBody(int days) {
-    return 'Omi Pro 免费 $days 天。扣费前会提醒你。随时可取消。';
+    return '小蜗 Pro 免费 $days 天。扣费前会提醒你。随时可取消。';
   }
 
   @override
@@ -14311,13 +14311,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get pairingPowerOnTitle => '打开 Omi 电源';
+  String get pairingPowerOnTitle => '打开小蜗电源';
 
   @override
   String get pairingPowerOnSubtitle => '按一下按钮，并放在手机附近。';
 
   @override
-  String get walkthroughBackgroundRecordingNote => '就这样。Omi 会在后台继续记录你的对话。';
+  String get walkthroughBackgroundRecordingNote => '就这样。小蜗会在后台继续记录你的对话。';
 
   @override
   String get noThanks => '不用了，谢谢';
@@ -14450,7 +14450,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteConfirmGraceSubtitle => '离开前，请查看您的数据会如何处理。';
 
   @override
-  String get deletePauseConfirmation => 'Omi 已暂停。随时恢复录音。';
+  String get deletePauseConfirmation => '小蜗已暂停。随时恢复录音。';
 
   @override
   String deleteProcessingKept(int count, int days) {
@@ -14531,18 +14531,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncHealthAlerts => '同步状态提醒';
 
   @override
-  String get syncHealthAlertsDescription => '如果 Omi 超过一天未同步录音，则发出提醒';
+  String get syncHealthAlertsDescription => '如果小蜗超过一天未同步录音，则发出提醒';
 
   @override
-  String get syncStallAlertTitle => 'Omi 未同步';
+  String get syncStallAlertTitle => '小蜗未同步';
 
   @override
   String syncStallAlertBody(int hours) {
-    return '你的 Omi 已超过 $hours 小时未同步任何录音。打开 Omi 检查设备连接。';
+    return '你的小蜗已超过 $hours 小时未同步任何录音。打开小蜗检查设备连接。';
   }
 
   @override
-  String get activityAttentionSyncStalledTitle => 'Omi 未同步';
+  String get activityAttentionSyncStalledTitle => '小蜗未同步';
 
   @override
   String activityAttentionSyncStalledSubtitle(int hours) {
@@ -14610,7 +14610,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String chatAppsWaitingMessageIn(String app) {
-    return '在“$app”中发送这条消息。Omi 一收到，此屏幕就会更新。';
+    return '在“$app”中发送这条消息。小蜗一收到，此屏幕就会更新。';
   }
 
   @override
@@ -14700,7 +14700,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get dreamReportFeedback => '已报告给 Omi 团队';
+  String get dreamReportFeedback => '已报告给小蜗团队';
 
   @override
   String dreamReportPasses(int count, int limit) {
@@ -14742,7 +14742,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get syncStepLabelDownload => 'Omi → 手机';
+  String get syncStepLabelDownload => '小蜗 → 手机';
 
   @override
   String get syncStepLabelUpload => '上传';
@@ -14842,7 +14842,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get membersAndCounting => '8000+名成员并且还在增加。';
 
   @override
-  String get privacyIntro => '在 Omi，我们致力于保护您的隐私。此页面允许您控制数据的保存和使用方式。';
+  String get privacyIntro => '在小蜗，我们致力于保护您的隐私。此页面允许您控制数据的保存和使用方式。';
 
   @override
   String get dataProtectionDesc => '默认情况下，您的数据受强加密保护。';
@@ -14908,7 +14908,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clearAllNodesAndConnections => '清除所有节点和连接';
 
   @override
-  String get welcomeToOmiDescription => '欢迎来到Omi！您的AI伴侣已准备好帮助您进行对话、任务等。';
+  String get welcomeToOmiDescription => '欢迎来到小蜗！您的AI伴侣已准备好帮助您进行对话、任务等。';
 
   @override
   String get conversationsProcessedAutomatically => '对话会自动处理';
@@ -14935,10 +14935,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get setAllMemoriesToPublic => '将所有记忆设置为公开可见性';
 
   @override
-  String get selectPreferredLanguageForBestExperience => '选择您的首选语言以获得最佳 Omi 体验';
+  String get selectPreferredLanguageForBestExperience => '选择您的首选语言以获得最佳小蜗体验';
 
   @override
-  String get enableFeaturesForBestExperience => '启用功能以在您的设备上获得最佳 Omi 体验。';
+  String get enableFeaturesForBestExperience => '启用功能以在您的设备上获得最佳小蜗体验。';
 
   @override
   String get deliveryTimeDescription => '何时接收您的每日摘要';
@@ -14959,32 +14959,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createAndShareYourApp => '创建并分享您的应用';
 
   @override
-  String get e2eeDescription => '端到端加密是隐私保护的黄金标准。启用后，您的数据在发送到我们的服务器之前会在您的设备上加密。这意味着没有人，包括Omi，可以访问您的内容。';
+  String get e2eeDescription => '端到端加密是隐私保护的黄金标准。启用后，您的数据在发送到我们的服务器之前会在您的设备上加密。这意味着没有人，包括小蜗，可以访问您的内容。';
 
   @override
   String get secureEncryptionDescription =>
-      '您的数据使用您独有的密钥在我们托管于Google Cloud的服务器上加密。这意味着包括Omi员工或Google在内的任何人都无法直接从数据库访问您的原始内容。';
+      '您的数据使用您独有的密钥在我们托管于Google Cloud的服务器上加密。这意味着包括小蜗员工或Google在内的任何人都无法直接从数据库访问您的原始内容。';
 
   @override
   String get e2eeCardDescription => '启用以获得最大安全性，只有您可以访问您的数据。点击了解更多。';
 
   @override
-  String get yourOmiUnleashed => '您的Omi，解放了。选择无限版，开启无限可能。';
+  String get yourOmiUnleashed => '您的小蜗，解放了。选择无限版，开启无限可能。';
 
   @override
-  String get privacyIntroText => '在Omi，我们非常重视您的隐私。我们希望透明地说明我们收集的数据以及如何使用它们来改进产品。以下是您需要了解的内容：';
+  String get privacyIntroText => '在小蜗，我们非常重视您的隐私。我们希望透明地说明我们收集的数据以及如何使用它们来改进产品。以下是您需要了解的内容：';
 
   @override
-  String get commitmentText => '我们承诺仅使用收集的数据来为您改进Omi产品。您的隐私和信任对我们至关重要。';
+  String get commitmentText => '我们承诺仅使用收集的数据来为您改进小蜗产品。您的隐私和信任对我们至关重要。';
 
   @override
-  String get thankYouText => '感谢您成为Omi的尊贵用户。如果您有任何问题或疑虑，请随时通过team@basedhardware.com与我们联系。';
+  String get thankYouText => '感谢您成为小蜗的尊贵用户。如果您有任何问题或疑虑，请随时通过team@basedhardware.com与我们联系。';
 
   @override
   String get knowledgeGraphDeleteDescription => '这将删除所有派生的知识图谱数据（节点和连接）。您的原始记忆将保持安全。图谱将随时间推移或在下次请求时重建。';
 
   @override
-  String get howPeopleWorks => '创建人员后，您可以转到对话记录并为他们分配相应的片段，这样 Omi 也能识别他们的语音！';
+  String get howPeopleWorks => '创建人员后，您可以转到对话记录并为他们分配相应的片段，这样小蜗也能识别他们的语音！';
 
   @override
   String get buildAndShareYourCustomApp => '构建并分享您的自定义应用';
@@ -15002,10 +15002,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get phoneCallsUpsellFeature4 => '您的通话保持私密和安全';
 
   @override
-  String get omisStorageDesc => '当 Omi 未连接到手机时，它会将音频存储在内置存储器中。您永远不会丢失任何录音。';
+  String get omisStorageDesc => '当小蜗未连接到手机时，它会将音频存储在内置存储器中。您永远不会丢失任何录音。';
 
   @override
-  String get permissionsSetupDescription => '启用一些权限，让 Omi 发挥它的魔力。';
+  String get permissionsSetupDescription => '启用一些权限，让小蜗发挥它的魔力。';
 
   @override
   String get architectSubtitle => '高级用户 AI — 数千次对话 + 代理自动化';
@@ -15019,7 +15019,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newestFirst => '最新优先';
 
   @override
-  String get backgroundModeNote => '目前仅支持 Omi 设备，并在持续改进中。';
+  String get backgroundModeNote => '目前仅支持小蜗设备，并在持续改进中。';
 
   @override
   String conversationsNotCapturedCount(int count) {
@@ -15035,13 +15035,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get captureRecoveryBanner => 'Omi 未发送音频 — 轻点以重新连接';
+  String get captureRecoveryBanner => '小蜗未发送音频 — 轻点以重新连接';
 
   @override
-  String get capturePendantDisconnectedDetail => '吊坠与这部手机的连接已断开。吊坠开机并在附近时，Omi 会自动重新连接。此前录下的内容都已保存。';
+  String get capturePendantDisconnectedDetail => '吊坠与这部手机的连接已断开。吊坠开机并在附近时，小蜗会自动重新连接。此前录下的内容都已保存。';
 
   @override
-  String get capturePendantDisconnectedShort => 'Omi 会自动重新连接';
+  String get capturePendantDisconnectedShort => '小蜗会自动重新连接';
 
   @override
   String pinPersonSubtitle(String name) {
@@ -15049,7 +15049,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get pinPersonHonestLine => 'Omi 会在匹配相近的声音前先询问你。';
+  String get pinPersonHonestLine => '小蜗会在匹配相近的声音前先询问你。';
 
   @override
   String speakerTagPromptHintConfirm(String name) {
@@ -15109,7 +15109,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get referralAffiliate => '推广合作计划';
 
   @override
-  String get referralCampaignTerms => '好友购买 Omi 硬件可享九折。前 2 位好友购买后解锁 2 个月 Pro，接下来 3 位再解锁 3 个月。最多 5 位好友，共 5 个月。';
+  String get referralCampaignTerms => '好友购买小蜗硬件可享九折。前 2 位好友购买后解锁 2 个月 Pro，接下来 3 位再解锁 3 个月。最多 5 位好友，共 5 个月。';
 
   @override
   String referralMilestone(int months, int count, int target) {
@@ -15128,10 +15128,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get referralRewardPending => '奖励将保留至你的付费订阅结束。';
 
   @override
-  String get referralCampaignTitle => '推荐 Omi，免费享用 Pro。';
+  String get referralCampaignTitle => '推荐小蜗，免费享用 Pro。';
 
   @override
-  String get referralCampaignSubtitle => '好友购买 Omi 享 9 折。你最多可得 5 个月 Pro。';
+  String get referralCampaignSubtitle => '好友购买小蜗享 9 折。你最多可得 5 个月 Pro。';
 
   @override
   String get referralShareInvite => '分享邀请';
@@ -15143,7 +15143,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get referralRewardFirstTitle => '2 个月 Pro';
 
   @override
-  String get referralRewardFirstDetail => '2 位好友购买 Omi 后';
+  String get referralRewardFirstDetail => '2 位好友购买小蜗后';
 
   @override
   String get referralRewardSecondTitle => '再得 3 个月';
@@ -15220,7 +15220,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get syncTooOldExplanation =>
-      'This recording is over 30 days old, so Omi can\'t transcribe it. Download the audio to keep it, then delete it here.';
+      'This recording is over 30 days old, so 小蜗 can\'t transcribe it. Download the audio to keep it, then delete it here.';
 
   @override
   String freeCapTitle(int minutes) {
@@ -15228,10 +15228,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get freeCapBody => 'Omi 仍在录音。选择继续转录的方式。';
+  String get freeCapBody => '小蜗仍在录音。选择继续转录的方式。';
 
   @override
-  String get omiProPlanName => 'Omi Pro';
+  String get omiProPlanName => '小蜗 Pro';
 
   @override
   String get freeCapProUnlimited => '无限云端转录';
@@ -15258,7 +15258,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transcribeWith => '转录方式';
 
   @override
-  String get omiCloud => 'Omi 云端';
+  String get omiCloud => '小蜗云端';
 
   @override
   String get thisPhone => '此手机';
