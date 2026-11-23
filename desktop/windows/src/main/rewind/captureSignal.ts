@@ -11,6 +11,24 @@
 // row they already handled, so the DB read can be skipped entirely.
 let lastCaptureAtMs: number | null = null
 
+// LOCAL ADAPT (XiaoWo): mirror of the user's Rewind captureEnabled setting, kept
+// in this dependency-free leaf (same reason as the signal above) so pollers —
+// the assistant coordinator — can skip stale-frame work without importing the
+// heavy capture stack. Defaults to true (capture-on) to match the coordinator's
+// pre-startup assumption in captureService.
+let captureEnabled = true
+
+/** Mirror the user's captureEnabled setting (called by captureService on load
+ *  and on every settings update). */
+export function setRewindCaptureEnabled(enabled: boolean): void {
+  captureEnabled = enabled
+}
+
+/** Whether rewind capture is currently storing frames (this run's view). */
+export function isRewindCaptureEnabled(): boolean {
+  return captureEnabled
+}
+
 /** Record that a frame was just stored, tagged with its capture timestamp. */
 export function markRewindCaptured(tsMs: number): void {
   lastCaptureAtMs = tsMs

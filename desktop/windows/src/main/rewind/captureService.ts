@@ -9,7 +9,7 @@ import { helperProcess } from '../ocr/helperProcess'
 import { insertRewindFrame } from '../ipc/db'
 import { persistFrameOcr, type FrameContext } from './ocrPersist'
 import { setCurrentScreen } from './currentScreen'
-import { markRewindCaptured } from './captureSignal'
+import { markRewindCaptured, setRewindCaptureEnabled } from './captureSignal'
 import { signalRewindOcrPending } from './ocrService'
 import { getPersistedRewindSettings, persistRewindSettings } from './rewindSettings'
 import { startCaptureDirective, setBaseCaptureInterval } from './captureDirective'
@@ -202,6 +202,9 @@ export async function ingestRewindFrame(jpeg: Buffer): Promise<IngestResult> {
 export function startRewindCapture(): void {
   bindPowerListeners()
   settings = getPersistedRewindSettings()
+  // LOCAL ADAPT (XiaoWo): keep the leaf capture-enabled mirror in sync so the
+  // assistant coordinator can gate stale frames without importing this module.
+  setRewindCaptureEnabled(settings.captureEnabled)
   // Own the runtime capture directive (battery cadence now; sleep/lock later) and
   // seed it with the user's base interval so the renderer paces correctly.
   startCaptureDirective(settings.intervalMs)
@@ -210,6 +213,8 @@ export function startRewindCapture(): void {
 /** Update the live settings and persist them so the choice survives restarts. */
 export function updateRewindSettings(next: RewindSettings): void {
   settings = persistRewindSettings(next)
+  // LOCAL ADAPT (XiaoWo): mirror the new enabled state for the coordinator gate.
+  setRewindCaptureEnabled(settings.captureEnabled)
   // Re-derive the effective cadence (base × battery) from the new base interval.
   setBaseCaptureInterval(settings.intervalMs)
 }

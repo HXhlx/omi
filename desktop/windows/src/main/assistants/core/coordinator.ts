@@ -22,7 +22,7 @@
 import { powerMonitor } from 'electron'
 import { getAppSettings, onAppSettingsChanged } from '../../appSettings'
 import { latestRewindFrame } from '../../ipc/db'
-import { lastRewindCaptureAtMs } from '../../rewind/captureSignal'
+import { isRewindCaptureEnabled, lastRewindCaptureAtMs } from '../../rewind/captureSignal'
 import type { RewindFrame } from '../../../shared/types'
 import { didContextChange } from './contextDetection'
 import { DEBOUNCE_MS, distributionDecision, fallbackIntervalMs } from './distributionGate'
@@ -81,6 +81,11 @@ export type CoordinatorDeps = {
   isOnBattery: () => boolean
   /** Master toggle. When false the loop does not run at all (not a per-frame gate). */
   isScreenAnalysisEnabled: () => boolean
+  /** LOCAL ADAPT (XiaoWo): whether rewind capture is currently storing frames.
+   *  When false, tick() skips the DB read entirely — there is no NEW material,
+   *  and reading would hand the stale pre-restart frame to every assistant
+   *  exactly once. Optional; undefined reads as enabled (tests). */
+  isCaptureEnabled?: () => boolean
   /** Quiet window after a context switch, during which only opted-in assistants
    *  see frames. Mac default: 60s. */
   analysisDelayMs: () => number
@@ -108,6 +113,7 @@ function defaultDeps(): CoordinatorDeps {
     // `onBatteryPower` is undefined on stubs / non-laptops — treat as mains.
     isOnBattery: () => powerMonitor.onBatteryPower === true,
     isScreenAnalysisEnabled: () => getAppSettings().screenAnalysisEnabled,
+    isCaptureEnabled: isRewindCaptureEnabled,
     analysisDelayMs: () => DEFAULT_ANALYSIS_DELAY_MS,
     mayAnalyzeFrame,
     baseIntervalMs: DEFAULT_BASE_INTERVAL_MS,
@@ -234,6 +240,16 @@ export class AssistantCoordinator {
    *  job is to call this. */
   tick(): void {
     if (!this.deps.isScreenAnalysisEnabled()) return
+
+    // LOCAL ADAPT (XiaoWo): rewind capture is the sole writer of frames. While it
+    // is disabled there is no NEW material — but the signal check below can't
+    // express that (its value is frozen, and the first tick after startup always
+    // reads), so the loop would hand the STALE pre-restart frame to every
+    // assistant exactly once (seen live 2026-11-23: capture off since 18:23, the
+    // 18:21 frame was re-analyzed after an 18:50 restart). Skip the DB read
+    // entirely while capture is off; leaving lastCaptureSignalAtRead untouched
+    // re-arms the read for when capture turns back on.
+    if (this.deps.isCaptureEnabled?.() === false) return
 
     // Cheap pre-check before the DB read: capture is the sole writer of rewind
     // frames, so when its "newest frame" signal has not advanced since our last

@@ -677,3 +677,47 @@ describe('cadence', () => {
     expect(c.intervalMs()).toBe(9_000)
   })
 })
+
+describe('LOCAL ADAPT — rewind-capture-disabled gate', () => {
+  it('analyzes nothing while capture is off, even though a stale pre-restart frame exists', async () => {
+    // The live failure this pins (2026-11-23): capture had been off for half an
+    // hour, the app restarted, and the coordinator's first tick read the DB (the
+    // capture signal is null on a fresh run) and re-analyzed the frame captured
+    // before the restart — 30 minutes stale.
+    const captureOn = false
+    const c = make({ isCaptureEnabled: () => captureOn })
+    const a = new TestAssistant()
+    c.register(a)
+
+    latest = frame({ id: 7900, ts: T0 - 1_800_000 }) // stored 30 min before this run
+    c.tick()
+    await flush()
+    c.tick()
+    await flush()
+
+    expect(a.analyzed).toHaveLength(0)
+    expect(a.handled).toHaveLength(0)
+  })
+
+  it('resumes analyzing as soon as capture turns back on and a new frame is stored', async () => {
+    let captureOn = false
+    const c = make({ isCaptureEnabled: () => captureOn })
+    const a = new TestAssistant()
+    c.register(a)
+
+    latest = frame({ id: 7900, ts: T0 - 1_800_000 })
+    c.tick()
+    await flush()
+    expect(a.analyzed).toHaveLength(0)
+
+    // The pill flips on → capture stores a genuinely NEW frame; the gate must
+    // not have poisoned the signal state, so this read goes through and analyzes.
+    captureOn = true
+    latest = frame({ id: 7901, ts: T0 })
+    c.tick()
+    await flush()
+
+    expect(a.analyzed).toHaveLength(1)
+    expect(a.analyzed[0].id).toBe(7901)
+  })
+})
