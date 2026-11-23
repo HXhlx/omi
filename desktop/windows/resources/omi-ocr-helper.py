@@ -54,9 +54,28 @@ ort.InferenceSession.__init__ = _patched_session_init
 
 import cv2
 import numpy as np
-from rapidocr_onnxruntime import RapidOCR
 
-engine = RapidOCR()
+# LOCAL ADAPT (XiaoWo): prefer the new unified `rapidocr` (v3.10+, whose default
+# models are PP-OCRv6 small — measured same-frame: ~4.4s warm, avg confidence
+# 0.96 vs 0.83 for the old PP-OCRv3 models); fall back to the legacy
+# rapidocr_onnxruntime (PP-OCRv3) when the new package is absent.
+_RAPIDOCR_V3 = False
+try:
+    from rapidocr import RapidOCR
+
+    engine = RapidOCR(
+        params={
+            "Global.log_level": "error",
+            # Screen text is upright — the angle classifier is pure overhead.
+            "Global.use_cls": False,
+            "EngineConfig.onnxruntime.intra_op_num_threads": 6,
+        }
+    )
+    _RAPIDOCR_V3 = True
+except ImportError:
+    from rapidocr_onnxruntime import RapidOCR
+
+    engine = RapidOCR()
 
 MAX_FRAME_BYTES = 64 * 1024 * 1024
 
@@ -66,31 +85,64 @@ def run_ocr(jpeg: bytes) -> dict:
     if img is None:
         return {"ok": False, "code": "DECODE_FAILED", "message": "cv2.imdecode returned None"}
     h, w = img.shape[:2]
-    result, _elapse = engine(img)
+    out = engine(img)
     lines = []
     texts = []
     confs = []
-    for row in result or []:
-        try:
-            box, text, score = row[0], row[1], float(row[2])
-        except (ValueError, IndexError, TypeError):
-            continue  # malformed row — skip, never desync the protocol
-        if not isinstance(box, (list, tuple)) or len(box) < 2:
-            continue
-        xs = [float(p[0]) for p in box]
-        ys = [float(p[1]) for p in box]
-        lines.append(
-            {
-                "text": text,
-                "x": min(xs) / w,
-                "y": min(ys) / h,
-                "w": (max(xs) - min(xs)) / w,
-                "h": (max(ys) - min(ys)) / h,
-                "confidence": score,
-            }
-        )
-        texts.append(text)
-        confs.append(score)
+    if hasattr(out, "txts"):
+        # rapidocr v3: RapidOCROutput(boxes, txts, scores, ...)
+        # NOTE: fields are numpy arrays — `arr or []` would raise on multi-element
+        # truthiness, so guard with `is None` instead.
+        boxes = out.boxes if out.boxes is not None else []
+        txts = out.txts if out.txts is not None else []
+        scores = out.scores if out.scores is not None else []
+        for text, score, box in zip(txts, scores, boxes):
+            try:
+                score = float(score)
+            except (ValueError, TypeError):
+                continue  # malformed row — skip, never desync the protocol
+            # v3 boxes are numpy arrays — a isinstance(list/tuple) check here
+            # silently dropped EVERY row (167/167 skipped, zero output).
+            if box is None or len(box) < 2:
+                continue
+            xs = [float(p[0]) for p in box]
+            ys = [float(p[1]) for p in box]
+            lines.append(
+                {
+                    "text": text,
+                    "x": min(xs) / w,
+                    "y": min(ys) / h,
+                    "w": (max(xs) - min(xs)) / w,
+                    "h": (max(ys) - min(ys)) / h,
+                    "confidence": score,
+                }
+            )
+            texts.append(text)
+            confs.append(score)
+    else:
+        # legacy rapidocr_onnxruntime: (rows, elapse), rows = [[box, text, score]]
+        rows = out[0] if isinstance(out, tuple) else out
+        for row in rows or []:
+            try:
+                box, text, score = row[0], row[1], float(row[2])
+            except (ValueError, IndexError, TypeError):
+                continue  # malformed row — skip, never desync the protocol
+            if box is None or len(box) < 2:
+                continue
+            xs = [float(p[0]) for p in box]
+            ys = [float(p[1]) for p in box]
+            lines.append(
+                {
+                    "text": text,
+                    "x": min(xs) / w,
+                    "y": min(ys) / h,
+                    "w": (max(xs) - min(xs)) / w,
+                    "h": (max(ys) - min(ys)) / h,
+                    "confidence": score,
+                }
+            )
+            texts.append(text)
+            confs.append(score)
     full_text = "\n".join(texts)
     confidence = sum(confs) / len(confs) if confs else 0.0
     return {"ok": True, "fullText": full_text, "lines": lines, "confidence": confidence}
