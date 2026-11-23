@@ -10,6 +10,10 @@ interface ImportMetaEnv {
    *  build time). Main verifies the relayed Firebase ID token's aud/iss against
    *  it (auth/firebaseIdToken.ts); it must come from here, never the renderer. */
   readonly VITE_FIREBASE_PROJECT_ID?: string
+  /** LOCAL ADAPT (XiaoWo): JSON-array command line replacing the native OCR
+   *  helper with a drop-in speaking the same stdio frame protocol (e.g. the
+   *  python RapidOCR helper). Set in .env or process.env; unset → native exe. */
+  readonly OMI_OCR_HELPER_CMD?: string
 }
 
 interface ImportMeta {
@@ -34,5 +38,8 @@ declare namespace NodeJS {
     /** '1' forces the auto-updater to run against dev-app-update.yml even in an
      *  unpackaged build (local update testing only). */
     OMI_UPDATER_DEV?: string
+    /** LOCAL ADAPT (XiaoWo): JSON-array command line replacing the native OCR
+     *  helper (same contract as import.meta.env.OMI_OCR_HELPER_CMD). */
+    OMI_OCR_HELPER_CMD?: string
   }
 }

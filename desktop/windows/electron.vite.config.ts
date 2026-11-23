@@ -19,6 +19,10 @@ if (!devInstance.isPrimary && !process.env.OMI_SANDBOX) {
 
 export default defineConfig({
   main: {
+    // LOCAL ADAPT (XiaoWo): expose OMI_* .env vars to the main bundle so the OCR
+    // helper override (OMI_OCR_HELPER_CMD) can live in .env alongside the other
+    // local-only knobs. Upstream only exposes VITE_-prefixed vars.
+    envPrefix: ['VITE_', 'OMI_'],
     build: {
       // Compile the main-process ENTRY to V8 bytecode in production builds so
       // Electron skips parse/compile of the largest main bundle at boot. This is

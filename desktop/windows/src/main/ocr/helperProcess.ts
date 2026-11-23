@@ -3,7 +3,42 @@ import { resolveHelperPath } from './resolveHelperPath'
 import { encodeRequest, FrameDecoder, OP_OCR, OP_WINDOW } from './helperProtocol'
 import type { OcrResult, WindowInfo } from '../../shared/types'
 
-const REQUEST_TIMEOUT_MS = 5000
+// LOCAL ADAPT (XiaoWo): a custom OCR helper command may replace the native exe —
+// a JSON-array command line, e.g. the python RapidOCR drop-in
+// (resources/omi-ocr-helper.py) speaking the SAME stdio frame protocol, because
+// Windows.Media.Ocr's zh recognizer produces spaced-out garbled text on dense
+// Chinese UI screens. Read from process.env or .env (electron-vite envPrefix
+// includes OMI_ — see electron.vite.config.ts). Unset → the native exe.
+function parseCustomHelperCmd(): string[] | null {
+  const raw = process.env.OMI_OCR_HELPER_CMD || import.meta.env.OMI_OCR_HELPER_CMD
+  if (typeof raw !== 'string' || !raw.trim()) return null
+  try {
+    const arr: unknown = JSON.parse(raw)
+    if (
+      Array.isArray(arr) &&
+      arr.length >= 1 &&
+      arr.every((x) => typeof x === 'string' && x.trim())
+    ) {
+      return arr as string[]
+    }
+  } catch {
+    /* fall through — a bad value must not crash the app */
+  }
+  console.warn('[win-ocr-helper] OMI_OCR_HELPER_CMD set but not a JSON string array — ignoring')
+  return null
+}
+const CUSTOM_HELPER_CMD = parseCustomHelperCmd()
+
+/** LOCAL ADAPT (XiaoWo): whether the slow custom engine is active — consumers
+ *  (the OCR backfill) size their work to it. */
+export function isCustomOcrHelper(): boolean {
+  return CUSTOM_HELPER_CMD !== null
+}
+
+// The RapidOCR drop-in loads its models at startup and runs det+rec per frame
+// (~5-20s dense on CPU under load, vs ~1s for the native exe) — give it room,
+// or every request would time out, recycle the process, and thrash forever.
+const REQUEST_TIMEOUT_MS = CUSTOM_HELPER_CMD ? 60_000 : 5_000
 const MAX_BACKOFF_MS = 10000
 
 type Pending = {
@@ -60,8 +95,12 @@ class HelperProcess {
     // tesseract orphaned (its own execFileSync timeout can't fire once the
     // process enforcing it is gone) — see recycle()'s group-kill below, which
     // this pairs with.
-    const child =
-      process.platform === 'linux'
+    const child = CUSTOM_HELPER_CMD
+      ? spawn(CUSTOM_HELPER_CMD[0], CUSTOM_HELPER_CMD.slice(1), {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          windowsHide: true
+        })
+      : process.platform === 'linux'
         ? spawn(process.execPath, [exe], {
             stdio: ['pipe', 'pipe', 'pipe'],
             env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },

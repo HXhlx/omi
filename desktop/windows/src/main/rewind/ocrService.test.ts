@@ -11,9 +11,12 @@ import { MAX_REWIND_FRAME_BYTES } from './frameFile'
 const unindexedRewindFrames = vi.fn<(limit: number) => unknown[]>(() => [])
 const persistFrameOcr = vi.fn()
 
-vi.mock('../ipc/db', () => ({ unindexedRewindFrames: (n: number) => unindexedRewindFrames(n) }))
+vi.mock('../ipc/db', () => ({
+  unindexedRewindFrames: (n: number, _newestFirst?: boolean) => unindexedRewindFrames(n)
+}))
 vi.mock('../ocr/helperProcess', () => ({
-  helperProcess: { ocr: vi.fn(async () => ({ ok: true, fullText: 'x', lines: [] })) }
+  helperProcess: { ocr: vi.fn(async () => ({ ok: true, fullText: 'x', lines: [] })) },
+  isCustomOcrHelper: vi.fn(() => false)
 }))
 vi.mock('./ocrPersist', () => ({
   persistFrameOcr: (...args: unknown[]) => persistFrameOcr(...args)

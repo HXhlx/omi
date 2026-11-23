@@ -1531,10 +1531,14 @@ export function latestRewindFrame(): RewindFrame | null {
   return row ?? null
 }
 
-export function unindexedRewindFrames(limit = 20): RewindFrame[] {
+export function unindexedRewindFrames(limit = 20, newestFirst = false): RewindFrame[] {
+  // LOCAL ADAPT (XiaoWo): `newestFirst` serves the OCR backfill when a slow
+  // custom engine (RapidOCR drop-in) is active — oldest-first would starve
+  // recent frames behind a minutes-deep video backlog that retention prunes
+  // anyway; recent content is what search and the chat cache actually want.
   return cachedStmt(
     get(),
-    `SELECT ${REWIND_COLUMNS} FROM rewind_frames WHERE indexed = 0 ORDER BY ts LIMIT ?`
+    `SELECT ${REWIND_COLUMNS} FROM rewind_frames WHERE indexed = 0 ORDER BY ts ${newestFirst ? 'DESC' : 'ASC'} LIMIT ?`
   ).all(limit) as RewindFrame[]
 }
 

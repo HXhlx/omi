@@ -1,11 +1,15 @@
-import { helperProcess } from '../ocr/helperProcess'
+import { helperProcess, isCustomOcrHelper } from '../ocr/helperProcess'
 import { unindexedRewindFrames } from '../ipc/db'
 import { persistFrameOcr } from './ocrPersist'
 import { rewindRoot } from './paths'
 import { readRewindFrame } from './frameFile'
 
 const BACKFILL_INTERVAL_MS = 4000
-const BATCH = 5
+// LOCAL ADAPT (XiaoWo): the RapidOCR drop-in is ~10x slower per dense frame than
+// the native exe — full 5-frame sweeps would peg every core for minutes and
+// starve the chat's current-screen hot path. Smaller sweeps + newest-first
+// (db.unindexedRewindFrames) bound the CPU and keep recent frames covered.
+const BATCH = isCustomOcrHelper() ? 2 : 5
 
 let timer: NodeJS.Timeout | null = null
 let running = false
@@ -31,7 +35,7 @@ async function backfill(): Promise<void> {
   // `pending` via signalRewindOcrPending, so work is never lost by clearing early.
   pending = false
   try {
-    const frames = unindexedRewindFrames(BATCH)
+    const frames = unindexedRewindFrames(BATCH, isCustomOcrHelper())
     // A full page means more may remain — keep sweeping on the next tick. A short
     // page drained the backlog, so stay gated until capture signals again.
     if (frames.length === BATCH) pending = true
