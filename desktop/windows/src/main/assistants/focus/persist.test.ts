@@ -111,3 +111,37 @@ describe('persistFocusSession — backend sync', () => {
     expect(h.markFocusSessionSynced).not.toHaveBeenCalled()
   })
 })
+
+describe('persistFocusSession — LOCAL ADAPT empty-target handling', () => {
+  it('omits the separator when the model left the description empty', () => {
+    persistFocusSession(
+      { status: 'focused', appOrSite: 'VS Code', description: '', message: null },
+      frame,
+      5
+    )
+    const body = JSON.parse(h.fetch.mock.calls[0][1].body)
+    expect(body.content).toBe('Focused on VS Code')
+  })
+
+  it('skips the backend POST entirely when target AND description are empty', () => {
+    const id = persistFocusSession(
+      { status: 'distracted', appOrSite: '', description: '', message: null },
+      frame,
+      5
+    )
+    expect(id).toBe(42) // local row still kept
+    expect(h.fetch).not.toHaveBeenCalled() // nothing synced
+    expect(h.markFocusSessionSynced).not.toHaveBeenCalled()
+  })
+
+  it('still syncs with only a target (empty description is enough to be a memory)', () => {
+    persistFocusSession(
+      { status: 'distracted', appOrSite: '哔哩哔哩', description: '', message: null },
+      frame,
+      5
+    )
+    const body = JSON.parse(h.fetch.mock.calls[0][1].body)
+    expect(body.content).toBe('Distracted on 哔哩哔哩')
+    expect(body.tags).toEqual(['focus', 'distracted', 'app:哔哩哔哩'])
+  })
+})

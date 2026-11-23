@@ -23,6 +23,13 @@ const REQUEST_TIMEOUT_MS = 30_000
 /** 3 attempts total. Mac's backoff, exactly: 2s then 8s. */
 const RETRY_DELAYS_MS = [2_000, 8_000]
 
+// LOCAL ADAPT (XiaoWo): upstream's field contract lives ONLY in Gemini's
+// generationConfig.responseSchema — the prompt text never names app_or_site or
+// description. Restate the keys in prose so a provider that ignores (or drops)
+// json_schema still fills every field instead of returning "Focused on :".
+const FOCUS_FIELD_CONTRACT =
+  '\n\nRespond with ONLY a JSON object using EXACTLY these keys: {"status": "focused" or "distracted", "app_or_site": "<the app or website visible in the main window>", "description": "<one-line description of what is on screen>", "message": "<coaching line>"}. Never leave app_or_site or description empty.'
+
 /** Carries typed response metadata only — never a response body (it can echo the prompt,
  *  which carries the user's profile and window contents). */
 export class GeminiHttpError extends Error {
@@ -137,14 +144,22 @@ async function attempt(
               {
                 role: 'user',
                 content: [
-                  { type: 'text', text: prompt },
+                  { type: 'text', text: `${prompt}${FOCUS_FIELD_CONTRACT}` },
                   { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBase64}` } }
                 ]
               }
             ],
-            // The focus verdict is a small JSON object; ask for JSON mode where
-            // the provider honors it (parseScreenAnalysis tolerates prose fences).
-            response_format: { type: 'json_object' },
+            // LOCAL ADAPT (XiaoWo): enforce the field contract at the provider.
+            // Upstream gets this for free from Gemini's responseSchema; plain
+            // json_object only promises "valid JSON" and glm-5.3-flash came back
+            // with status+message but EMPTY app_or_site/description — the origin
+            // of the "Focused on :" memories. json_schema (strict) is honored by
+            // LiteLLM → glm-5.3-flash (probed live 2026-11-23, all fields filled);
+            // FOCUS_FIELD_CONTRACT above is the belt to this suspenders.
+            response_format: {
+              type: 'json_schema',
+              json_schema: { name: 'screen_analysis', strict: true, schema: FOCUS_RESPONSE_SCHEMA }
+            },
             max_tokens: 1024,
             stream: false
           })

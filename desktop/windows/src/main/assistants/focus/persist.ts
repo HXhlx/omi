@@ -23,7 +23,11 @@ const REQUEST_TIMEOUT_MS = 15_000
 /** Mac's memory content + tags for a focus event (`saveFocusToMemoriesTable`). */
 function memoryContent(a: ScreenAnalysis): string {
   const verb = a.status === 'focused' ? 'Focused' : 'Distracted'
-  return `${verb} on ${a.appOrSite}: ${a.description}`
+  // LOCAL ADAPT (XiaoWo): upstream appends `: ${description}` unconditionally, so
+  // an empty description produced "Focused on :" — the degenerate note the
+  // backend then re-extracted into junk meta-memories. Only add the separator
+  // when a description exists.
+  return a.description ? `${verb} on ${a.appOrSite}: ${a.description}` : `${verb} on ${a.appOrSite}`
 }
 
 function memoryTags(a: ScreenAnalysis): string[] {
@@ -40,6 +44,14 @@ async function syncToBackend(
   analysis: ScreenAnalysis,
   sessionEpoch: number
 ): Promise<void> {
+  // LOCAL ADAPT (XiaoWo): a verdict with neither a target nor a description
+  // carries nothing worth remembering — upstream still POSTs it ("Focused on :")
+  // and the backend re-extracts it into a junk meta-note. Keep the local row,
+  // skip the sync (same fail-open shape as a sync failure).
+  if (!analysis.appOrSite.trim() && !analysis.description.trim()) {
+    console.log('[focus] memory sync skipped — verdict has no target or description (LOCAL ADAPT)')
+    return
+  }
   const session = getBackendSession()
   if (!session) return
   const external = getAbortSignal()

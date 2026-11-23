@@ -202,6 +202,14 @@ export class FocusAssistant implements ProactiveAssistant {
       return
     }
 
+    // LOCAL ADAPT (XiaoWo): the local vision lane cannot hard-enforce the Gemini
+    // responseSchema (json_schema mode is best-effort across providers), so a
+    // verdict may still come back with an empty app_or_site even though the
+    // frame metadata knows the foreground app. Backfill from frame.app — app
+    // -name granularity only, the same field upstream already syncs; the raw
+    // windowTitle never leaves the device (persist.ts's privacy rule).
+    if (!analysis.appOrSite && frame.app) analysis.appOrSite = frame.app
+
     // Stale-result guard: drop the verdict if a newer run already committed while
     // this one was in the Gemini call, OR if the context switched under us
     // (clearPendingWork raised minValidSeq above this run's seq).
