@@ -115,7 +115,7 @@ export function GoalStep({
       title={t('Pick one goal.', '选一个目标。')}
       subtitle={t(
         'Selecting a correct and detailed goal is very important - Omi will optimize all advice to achieve that goal. Make sure your goal contains a number to measure progress.',
-        '选择一个准确且具体的目标非常重要 —— Omi 会围绕该目标优化所有建议。请确保目标中包含一个可用于衡量进度的数字。'
+        '选择一个准确且具体的目标非常重要 ——小蜗会围绕该目标优化所有建议。请确保目标中包含一个可用于衡量进度的数字。'
       )}
       align="left"
       aside={aside}

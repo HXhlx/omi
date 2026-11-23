@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Check, Loader2, ChevronDown, Tag } from 'lucide-react'
 import { cn } from '../../../lib/utils'
+import { t } from '../../../lib/i18n'
 import {
   planEyebrow,
   planSubtitle,
@@ -32,9 +33,9 @@ export function PlanGrid(props: {
 }): React.JSX.Element {
   return (
     <section>
-      <h2 className="text-[15px] font-semibold text-text-primary">Choose a plan</h2>
+      <h2 className="text-[15px] font-semibold text-text-primary">{t('Choose a plan', '选择套餐')}</h2>
       <p className="mt-1 text-sm text-text-tertiary">
-        Pick one plan first. Billing options appear only after the card is selected.
+        {t('Pick one plan first. Billing options appear only after the card is selected.', '先选一个套餐。选中卡片后才会显示计费选项。')}
       </p>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {props.plans.map((plan) => (
@@ -97,7 +98,7 @@ function PlanCard(props: {
           <span className="text-lg font-semibold text-text-primary">{title}</span>
           <span className="shrink-0 text-right text-xs text-white/45">
             {planStartingPrice(plan)}
-            <span className="ml-1 text-white/30">starting</span>
+            <span className="ml-1 text-white/30">{t('starting', '起')}</span>
           </span>
         </div>
         <p className="text-sm text-text-tertiary">{planSubtitle(plan)}</p>
@@ -113,7 +114,7 @@ function PlanCard(props: {
       </button>
 
       {!purchasable ? (
-        <p className="mt-auto text-xs text-white/40">Included with your current plan.</p>
+        <p className="mt-auto text-xs text-white/40">{t('Included with your current plan.', '已包含在当前套餐中。')}</p>
       ) : selected ? (
         <div className="mt-auto flex flex-col gap-2 border-t border-white/[0.06] pt-3">
           <button
@@ -122,7 +123,7 @@ function PlanCard(props: {
             className="flex items-center gap-1.5 text-xs text-white/55 hover:text-white/80"
           >
             <Tag className="h-3.5 w-3.5" />
-            Promo code
+            {t('Promo code', '优惠码')}
             <ChevronDown
               className={cn('h-3.5 w-3.5 transition-transform', promoOpen && 'rotate-180')}
             />
@@ -131,11 +132,11 @@ function PlanCard(props: {
             <input
               value={promo}
               onChange={(e) => setPromo(e.target.value)}
-              placeholder="Enter promo code"
+              placeholder={t('Enter promo code', '输入优惠码')}
               className="input-field py-2 text-sm"
             />
           ) : null}
-          <div className="mt-1 text-xs font-medium text-white/45">Choose billing</div>
+          <div className="mt-1 text-xs font-medium text-white/45">{t('Choose billing', '选择计费方式')}</div>
           {blockedChange ? (
             <p className="text-sm text-amber-300">{RESUBSCRIBE_FIRST}</p>
           ) : cancelPending && currentPrice ? (
@@ -144,7 +145,7 @@ function PlanCard(props: {
               disabled={anyCheckoutActive}
               className="flex w-full items-center justify-between gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
             >
-              <span>Resubscribe</span>
+              <span>{t('Resubscribe', '重新订阅')}</span>
               <span className="flex items-center gap-2">
                 {activePriceId === currentPrice.id ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {currentPrice.price_string}
@@ -176,7 +177,7 @@ function PlanCard(props: {
           onClick={() => onSelect(plan.id)}
           className="btn-ghost mt-auto w-full"
         >
-          Select {title}
+          {t(`Select ${title}`, `选择 ${title}`)}
         </button>
       )}
     </div>

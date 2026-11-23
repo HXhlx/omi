@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { useSearchableRow } from '../searchContext'
 import { toast } from '../../../lib/toast'
+import { t } from '../../../lib/i18n'
 import { BillingCard } from '../billing/BillingCard'
 import { CurrentPlanCard } from '../billing/CurrentPlanCard'
 import { ChatUsageCard } from '../billing/ChatUsageCard'
@@ -46,8 +47,10 @@ function apiError(e: unknown): string {
 
 const wait = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms))
 
-const REFRESH_LAGGING_MSG =
-  'Payment completed, but plan refresh is still catching up. Please try reloading this page in a moment.'
+const REFRESH_LAGGING_MSG = t(
+  'Payment completed, but plan refresh is still catching up. Please try reloading this page in a moment.',
+  '支付已完成，但套餐刷新还在跟进。请稍后重新加载本页。'
+)
 
 export function PlanUsageTab(): React.JSX.Element {
   // Register the tab for cross-tab Settings search (billing content is card-based,
@@ -122,7 +125,7 @@ export function PlanUsageTab(): React.JSX.Element {
     try {
       await openCustomerPortal()
     } catch (e) {
-      toast('Could not open the billing portal', { tone: 'error', body: apiError(e) })
+      toast(t('Could not open the billing portal', '无法打开账单门户'), { tone: 'error', body: apiError(e) })
     } finally {
       setPortalBusy(false)
     }
@@ -158,17 +161,17 @@ export function PlanUsageTab(): React.JSX.Element {
           void load()
           return
         case 'refresh_lagging':
-          toast('Payment received', { tone: 'warn', body: REFRESH_LAGGING_MSG })
+          toast(t('Payment received', '已收到付款'), { tone: 'warn', body: REFRESH_LAGGING_MSG })
           setSelectedPlanId(null)
           await load()
           return
         case 'upgraded':
-          toast('Plan updated', { tone: 'success' })
+          toast(t('Plan updated', '套餐已更新'), { tone: 'success' })
           // In-place upgrade: the API accepted a scheduled change. The current
           // price id does not move until the period rolls.
           break
         case 'reactivated':
-          toast(result.message ?? 'Your plan will renew.', { tone: 'success' })
+          toast(result.message ?? t('Your plan will renew.', '你的套餐将续订。'), { tone: 'success' })
           break
         case 'blocked':
           toast(RESUBSCRIBE_FIRST, { tone: 'error' })
@@ -177,13 +180,13 @@ export function PlanUsageTab(): React.JSX.Element {
           toast(EXISTING_SUBSCRIPTION, { tone: 'error' })
           return
         default:
-          toast("You're all set", { tone: 'success' })
+          toast(t("You're all set", '一切就绪'), { tone: 'success' })
       }
       trackUpgradeSucceeded(tier, priceTitle)
       setSelectedPlanId(null)
       await load()
     } catch (e) {
-      toast('Checkout failed', { tone: 'error', body: apiError(e) })
+      toast(t('Checkout failed', '结账失败'), { tone: 'error', body: apiError(e) })
     } finally {
       setActivePriceId(null)
     }
@@ -216,7 +219,7 @@ export function PlanUsageTab(): React.JSX.Element {
         <div className="glass-subtle mb-4 px-4 py-3 text-sm text-white/60">{error}</div>
         <button onClick={onRefresh} disabled={refreshing} className="btn-ghost">
           <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-          Try again
+          {t('Try again', '重试')}
         </button>
       </div>
     )
@@ -229,11 +232,11 @@ export function PlanUsageTab(): React.JSX.Element {
     return (
       <div>
         <div className="glass-subtle mb-4 px-4 py-3 text-sm text-white/60">
-          Couldn’t load your plan details.
+          {t('Couldn’t load your plan details.', '无法加载你的套餐详情。')}
         </div>
         <button onClick={onRefresh} disabled={refreshing} className="btn-ghost">
           <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-          Try again
+          {t('Try again', '重试')}
         </button>
       </div>
     )
@@ -256,15 +259,18 @@ export function PlanUsageTab(): React.JSX.Element {
           icon={AlertTriangle}
           iconTone="amber"
           className="border border-amber-400/25"
-          title="Plan Retiring"
+          title={t('Plan Retiring', '套餐即将退役')}
           subtitle={
             subscription.deprecation_message ??
-            `Your plan is being retired. Try Omi Pro at ${OMI_PRO_DEPRECATION_FALLBACK_PRICE}.`
+            t(
+              `Your plan is being retired. Try Omi Pro at ${OMI_PRO_DEPRECATION_FALLBACK_PRICE}.`,
+              `你的套餐即将退役。以 ${OMI_PRO_DEPRECATION_FALLBACK_PRICE} 试用小蜗 Pro。`
+            )
           }
           trailing={
             showCatalog ? (
               <button onClick={jumpToOmiPro} className="btn-ghost">
-                Try Omi Pro
+                {t('Try Omi Pro', '试用小蜗 Pro')}
               </button>
             ) : undefined
           }

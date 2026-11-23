@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { X } from 'lucide-react'
 import { ChatMessages } from '../../chat/ChatMessages'
 import { useLiveEdgeFollow } from '../../../hooks/useLiveEdgeFollow'
+import { t } from '../../../lib/i18n'
 import type { ChatMsg } from '../../../hooks/useChat'
 
 // The chat stage. It renders the app's ONE chat engine (useAppState().chat) through
@@ -50,8 +51,8 @@ export function HubChatPanel(props: {
         <button
           type="button"
           className="focus-ring mb-3 shrink-0 rounded-md p-1.5 text-white/55 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Close chat"
-          title="Close chat (Esc)"
+          aria-label={t('Close chat', '关闭对话')}
+          title={t('Close chat (Esc)', '关闭对话（Esc）')}
           onClick={onDismiss}
         >
           <X className="h-4 w-4" />
@@ -67,9 +68,14 @@ export function HubChatPanel(props: {
             // otherwise reveal a large, empty, glowing box. Give the empty thread
             // something to say instead of rendering a void.
             <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
-              <p className="text-[15px] font-medium text-home-ink">Ask omi anything</p>
+              <p className="text-[15px] font-medium text-home-ink">
+                {t('Ask omi anything', '随便问小蜗…')}
+              </p>
               <p className="max-w-sm text-[13px] text-home-muted">
-                It can see your conversations, tasks, memories, and screen history.
+                {t(
+                  'It can see your conversations, tasks, memories, and screen history.',
+                  '它能看到你的对话、任务、记忆和屏幕历史。'
+                )}
               </p>
             </div>
           ) : (

@@ -22,6 +22,7 @@ vi.mock('../../hooks/usePushToTalk', () => ({
     onKeyDown: () => false,
     onKeyUp: () => false,
     beginHold: vi.fn(),
+    confirmHold: vi.fn(),
     endHold: vi.fn(),
     cancel: vi.fn()
   })

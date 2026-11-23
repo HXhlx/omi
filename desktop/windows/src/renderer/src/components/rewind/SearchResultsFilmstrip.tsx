@@ -4,6 +4,7 @@ import type { RewindSearchGroup } from '../../../../shared/types'
 import { parseWindowTitle } from '../../lib/windowTitle'
 import { highlightTerms } from '../../lib/rewindOverlay'
 import { highlightSegments } from '../../lib/rewindHighlight'
+import { t } from '../../lib/i18n'
 
 // macOS parity: search results are a vertical list of grouped hits
 // (RewindPage.fullScreenResultsView) — representative thumbnail, app + window, the
@@ -95,7 +96,9 @@ export function SearchResultsFilmstrip({
   if (groups.length === 0) {
     return (
       <div className="py-10 text-center">
-        <p className="text-sm text-white/60">{loading ? 'Searching…' : 'No results found'}</p>
+        <p className="text-sm text-white/60">
+          {loading ? t('Searching…', '搜索中…') : t('No results found', '没有找到结果')}
+        </p>
         {!loading && <p className="mt-1 text-xs text-white/35">Try a different search term</p>}
       </div>
     )
@@ -104,7 +107,7 @@ export function SearchResultsFilmstrip({
   return (
     <div className="flex flex-col gap-2">
       {groups.map((g) => {
-        const { app, title } = parseWindowTitle(g.windowTitle, g.app || 'Unknown app')
+  const { app, title } = parseWindowTitle(g.windowTitle, g.app || t('Unknown app', '未知应用'))
         return (
           <button
             key={g.id}

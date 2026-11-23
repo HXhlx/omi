@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, Trash2, Pencil, ArrowUpRight, Loader2 } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { Memory } from '../../hooks/useMemories'
 import {
   CATEGORY_LABEL,
@@ -86,7 +87,7 @@ export function MemoryDetailSheet({
             aria-describedby={undefined}
             className="pointer-events-auto flex max-h-[85vh] w-full max-w-[450px] flex-col rounded-[var(--radius-card)] border border-white/10 bg-[var(--bg-secondary)] shadow-[0_16px_48px_rgba(0,0,0,0.5)] data-[state=open]:animate-modal-in"
           >
-            <Dialog.Title className="sr-only">Memory details</Dialog.Title>
+            <Dialog.Title className="sr-only">{t('Memory details', '记忆详情')}</Dialog.Title>
 
             {/* Header: category + tier, then visibility toggle, delete, dismiss. */}
             <div className="flex items-center gap-2 border-b border-white/10 px-5 py-4">
@@ -100,26 +101,26 @@ export function MemoryDetailSheet({
               )}
               <div className="ml-auto flex items-center gap-3">
                 <label className="flex items-center gap-2 text-xs text-white/60">
-                  <span>{isPublic ? 'Public' : 'Private'}</span>
+                  <span>{isPublic ? t('Public', '公开') : t('Private', '私密')}</span>
                   <Toggle
                     checked={isPublic}
                     disabled={togglingVisibility}
                     onChange={() => void onToggleVisibility(memory)}
-                    ariaLabel="Toggle public visibility"
+                    ariaLabel={t('Toggle public visibility', '切换公开可见')}
                   />
                 </label>
                 <button
                   type="button"
                   onClick={() => onDelete(memory)}
                   className="rounded-md p-1.5 text-white/40 transition-colors hover:bg-white/5 hover:text-error"
-                  aria-label="Delete memory"
-                  title="Delete memory"
+                  aria-label={t('Delete memory', '删除记忆')}
+                  title={t('Delete memory', '删除记忆')}
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
                 <Dialog.Close
                   className="rounded-md p-1.5 text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
-                  aria-label="Close"
+                  aria-label={t('Close', '关闭')}
                 >
                   <X className="h-4 w-4" />
                 </Dialog.Close>
@@ -156,19 +157,19 @@ export function MemoryDetailSheet({
                       disabled={saving}
                       className="btn-ghost px-3 py-1.5 text-sm"
                     >
-                      Cancel
+                      {t('Cancel', '取消')}
                     </button>
                     <button
                       onClick={() => void saveEdit()}
                       disabled={saving || !draft.trim()}
                       className="btn-primary px-3 py-1.5 text-sm disabled:opacity-40"
                     >
-                      {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                      {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t('Save', '保存')}
                     </button>
                   </div>
                 </div>
               ) : protectedMem ? (
-                <p className="italic text-white/40">Protected memory</p>
+                <p className="italic text-white/40">{t('Protected memory', '受保护的记忆')}</p>
               ) : (
                 <button
                   type="button"
@@ -177,7 +178,7 @@ export function MemoryDetailSheet({
                     setEditing(true)
                   }}
                   className="group flex w-full items-start gap-2 text-left text-[15px] leading-relaxed text-white/90"
-                  title="Click to edit"
+                  title={t('Click to edit', '点击编辑')}
                 >
                   <span className="flex-1">{memory.content}</span>
                   <Pencil className="mt-1 h-3.5 w-3.5 shrink-0 text-white/25 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -186,29 +187,29 @@ export function MemoryDetailSheet({
 
               {/* Metadata panel */}
               <div className="mt-5 rounded-xl bg-[var(--bg-tertiary)] px-4 py-2">
-                <MetaRow label="Learned from" value={source} />
+                <MetaRow label={t('Learned from', '来源')} value={source} />
                 {typeof memory.capture_confidence === 'number' && (
                   <MetaRow
-                    label="Confidence"
+                    label={t('Confidence', '置信度')}
                     value={`${Math.round(memory.capture_confidence * 100)}%`}
                   />
                 )}
-                {memory.app_id && <MetaRow label="Source app" value={memory.app_id} />}
+                {memory.app_id && <MetaRow label={t('Source app', '来源应用')} value={memory.app_id} />}
                 {memory.primary_capture_device && (
-                  <MetaRow label="Device" value={memory.primary_capture_device} />
+                  <MetaRow label={t('Device', '设备')} value={memory.primary_capture_device} />
                 )}
-                <MetaRow label="Created" value={formatMemoryDate(memory.created_at)} />
+                <MetaRow label={t('Created', '创建时间')} value={formatMemoryDate(memory.created_at)} />
                 {tags.length > 0 && (
                   <MetaRow
-                    label="Tags"
+                    label={t('Tags', '标签')}
                     value={
                       <span className="flex flex-wrap gap-1">
-                        {tags.map((t) => (
+                        {tags.map((tag) => (
                           <span
-                            key={t}
+                            key={tag}
                             className="rounded bg-white/10 px-1.5 py-0.5 text-[11px] text-white/70"
                           >
-                            {t}
+                            {tag}
                           </span>
                         ))}
                       </span>
@@ -223,7 +224,7 @@ export function MemoryDetailSheet({
                   onClick={() => onOpenConversation(memory.conversation_id as string)}
                   className="mt-4 flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/[0.06]"
                 >
-                  <span>View source conversation</span>
+                  <span>{t('View source conversation', '查看来源对话')}</span>
                   <ArrowUpRight className="h-4 w-4 text-white/50" />
                 </button>
               )}

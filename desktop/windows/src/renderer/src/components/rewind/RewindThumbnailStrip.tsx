@@ -9,6 +9,7 @@ import {
   formatGapDuration
 } from '../../lib/rewindStrip'
 import { useElementWidth } from '../../hooks/useElementWidth'
+import { t } from '../../lib/i18n'
 
 // Gap spacers are sized by duration so blank time is proportional.
 const GAP_PX_PER_MS = 0.001
@@ -66,7 +67,7 @@ const Thumb = memo(function Thumb({
       <span className="leading-tight">
         <span className="block text-[11px] text-white/75">{time}</span>
         <span className="block truncate text-[10px] text-white/40">
-          {frame.app || 'Unknown app'}
+            {frame.app || t('Unknown app', '未知应用')}
         </span>
       </span>
     </button>

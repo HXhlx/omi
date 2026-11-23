@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle2, AlertCircle, Info, X, AlertTriangle } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { onToast, dismissToast, type Toast } from '../../lib/toast'
 
 const toneStyle: Record<Toast['tone'], { ring: string; Icon: typeof Info }> = {
@@ -18,26 +19,26 @@ export function ToastHost(): React.JSX.Element | null {
 
   return (
     <div className="pointer-events-none fixed bottom-6 right-6 z-[100] flex flex-col gap-2">
-      {toasts.map((t) => {
-        const { ring, Icon } = toneStyle[t.tone]
+      {toasts.map((toast) => {
+        const { ring, Icon } = toneStyle[toast.tone]
         return (
           <div
-            key={t.id}
+            key={toast.id}
             className={`glass pointer-events-auto flex w-80 items-start gap-3 border px-4 py-3 shadow-2xl animate-fade-in ${ring}`}
           >
             <Icon className="mt-0.5 h-4 w-4 shrink-0 text-white/85" />
             <div className="min-w-0 flex-1">
-              <div className="text-sm font-medium text-white/95">{t.title}</div>
-              {t.body && (
+              <div className="text-sm font-medium text-white/95">{toast.title}</div>
+              {toast.body && (
                 <div className="mt-0.5 break-words text-xs leading-relaxed text-white/65">
-                  {t.body}
+                  {toast.body}
                 </div>
               )}
             </div>
             <button
-              onClick={() => dismissToast(t.id)}
+              onClick={() => dismissToast(toast.id)}
               className="-mr-1 -mt-1 rounded-md p-1 text-white/45 hover:bg-white/10 hover:text-white"
-              aria-label="Dismiss"
+              aria-label={t('Dismiss', '关闭')}
             >
               <X className="h-3.5 w-3.5" />
             </button>

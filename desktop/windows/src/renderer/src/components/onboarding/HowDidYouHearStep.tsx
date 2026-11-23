@@ -66,7 +66,7 @@ export function HowDidYouHearStep({
       stepIndex={stepIndex}
       totalSteps={totalSteps}
       eyebrow={t('QUICK QUESTION', '小问题')}
-      title={t('How did you hear about Omi?', '你从哪里听说 Omi？')}
+      title={t('How did you hear about Omi?', '你从哪里听说小蜗？')}
       align="left"
       onBack={onBack}
       aside={aside}

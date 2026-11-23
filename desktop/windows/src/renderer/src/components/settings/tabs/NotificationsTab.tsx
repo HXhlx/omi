@@ -3,18 +3,26 @@ import { Bell, Gauge, Focus, Brain, Sparkles, Lightbulb } from 'lucide-react'
 import { SettingRow } from '../SettingRow'
 import { Toggle } from '../Toggle'
 import { Slider } from '../controls/Slider'
+import { t } from '../../../lib/i18n'
 import type { AssistantSettingsView } from '../../../../../shared/types'
 
 // Frequency levels 0–5, mirroring Mac's stepped slider labels and the interval
 // table in main/assistants/core/notify.ts (LEVEL_INTERVALS_MS).
-const FREQUENCY_LABELS = ['Off', 'Minimal', 'Low', 'Balanced', 'High', 'Maximum']
+const FREQUENCY_LABELS = [
+  t('Off', '关闭'),
+  t('Minimal', '极少'),
+  t('Low', '低'),
+  t('Balanced', '均衡'),
+  t('High', '高'),
+  t('Maximum', '最高')
+]
 const FREQUENCY_CAPTIONS = [
-  'No proactive notifications',
-  'At most every 60 min',
-  'At most every 30 min',
-  'At most every 10 min',
-  'At most every 3 min',
-  'No limit'
+  t('No proactive notifications', '无主动通知'),
+  t('At most every 60 min', '最多每 60 分钟'),
+  t('At most every 30 min', '最多每 30 分钟'),
+  t('At most every 10 min', '最多每 10 分钟'),
+  t('At most every 3 min', '最多每 3 分钟'),
+  t('No limit', '不限')
 ]
 
 /**
@@ -53,28 +61,28 @@ export function NotificationsTab(): React.JSX.Element {
       <SettingRow
         icon={Bell}
         dot={notifOn ? 'on' : 'off'}
-        title="Notifications"
-        subtitle="Control how often Omi's proactive assistants can notify you."
+        title={t('Notifications', '通知')}
+        subtitle={t("Control how often Omi's proactive assistants can notify you.", '控制小蜗主动助手通知你的频率。')}
         keywords="proactive notifications master enable assistants"
         control={
           <Toggle
             on={notifOn}
             onChange={(on) => patch({ notificationsEnabled: on })}
             disabled={!settings}
-            label="Notifications"
+            label={t('Notifications', '通知')}
           />
         }
       />
 
       <SettingRow
         icon={Gauge}
-        title="Frequency"
-        subtitle="How often to receive notifications."
+        title={t('Frequency', '频率')}
+        subtitle={t('How often to receive notifications.', '接收通知的频率。')}
         keywords="frequency rate throttle interval off minimal low balanced high maximum"
         note={
           level === 0 ? (
             <span className="text-xs text-amber-400/90">
-              Proactive notifications are off. Raise the frequency to let Omi notify you.
+              {t('Proactive notifications are off. Raise the frequency to let Omi notify you.', '主动通知已关闭。调高频率让小蜗可以通知你。')}
             </span>
           ) : undefined
         }
@@ -91,10 +99,10 @@ export function NotificationsTab(): React.JSX.Element {
             max={5}
             step={1}
             ticks={[0, 1, 2, 3, 4, 5]}
-            ariaLabel="Notification frequency"
+            ariaLabel={t('Notification frequency', '通知频率')}
             disabled={!settings}
-            leftLabel={<span className="text-xs">Off</span>}
-            rightLabel={<span className="text-xs">Max</span>}
+            leftLabel={<span className="text-xs">{t('Off', '关')}</span>}
+            rightLabel={<span className="text-xs">{t('Max', '最高')}</span>}
           />
         </div>
       </SettingRow>
@@ -102,12 +110,12 @@ export function NotificationsTab(): React.JSX.Element {
       <SettingRow
         icon={Focus}
         dot={settings && settings.focusNotificationsEnabled && notifOn ? 'on' : 'off'}
-        title="Focus notifications"
-        subtitle="Show a notification on focus changes."
+        title={t('Focus notifications', '专注通知')}
+        subtitle={t('Show a notification on focus changes.', '专注状态变化时显示通知。')}
         keywords="focus notifications distraction refocus"
         note={
           <span className="text-xs text-text-tertiary">
-            Turning this off also pauses focus analysis entirely.
+            {t('Turning this off also pauses focus analysis entirely.', '关闭此项也会完全暂停专注分析。')}
           </span>
         }
         control={
@@ -115,7 +123,7 @@ export function NotificationsTab(): React.JSX.Element {
             on={!!settings?.focusNotificationsEnabled}
             onChange={(on) => patch({ focusNotificationsEnabled: on })}
             disabled={subDisabled}
-            label="Focus notifications"
+            label={t('Focus notifications', '专注通知')}
           />
         }
       />
@@ -123,15 +131,18 @@ export function NotificationsTab(): React.JSX.Element {
       <SettingRow
         icon={Brain}
         dot={settings && settings.memoryEnabled && notifOn ? 'on' : 'off'}
-        title="Extract memories from your screen"
-        subtitle="Periodically looks at your screen and saves useful facts to your Omi memories. Runs quietly — no notifications. Requires Screen Analysis (Settings → General)."
+        title={t('Extract memories from your screen', '从屏幕提取记忆')}
+        subtitle={t(
+          'Periodically looks at your screen and saves useful facts to your Omi memories. Runs quietly — no notifications. Requires Screen Analysis (Settings → General).',
+          '定期查看你的屏幕并把有用事实存入记忆。静默运行 —— 无通知。需要开启屏幕分析（设置 → 通用）。'
+        )}
         keywords="memory notifications extraction screen facts memories synth"
         control={
           <Toggle
             on={!!settings?.memoryEnabled}
             onChange={(on) => patch({ memoryEnabled: on })}
             disabled={subDisabled}
-            label="Extract memories from your screen"
+            label={t('Extract memories from your screen', '从屏幕提取记忆')}
           />
         }
       />
@@ -139,23 +150,29 @@ export function NotificationsTab(): React.JSX.Element {
       <SettingRow
         icon={Sparkles}
         dot={settings && settings.glowOverlayEnabled && notifOn ? 'on' : 'off'}
-        title="Focus glow"
-        subtitle="Draw a colored ring around the active window when Focus detects a distraction or a refocus."
+        title={t('Focus glow', '专注光环')}
+        subtitle={t(
+          'Draw a colored ring around the active window when Focus detects a distraction or a refocus.',
+          '当专注检测到分心或重新专注时，在活动窗口周围画一圈彩色光环。'
+        )}
         keywords="focus glow ring overlay halo distraction"
         control={
           <Toggle
             on={!!settings?.glowOverlayEnabled}
             onChange={(on) => patch({ glowOverlayEnabled: on })}
             disabled={subDisabled}
-            label="Focus glow"
+            label={t('Focus glow', '专注光环')}
           />
         }
       />
 
       <SettingRow
         icon={Lightbulb}
-        title="Notification presentation"
-        subtitle="Notification style and screen privacy are configured in Settings → Rewind."
+        title={t('Notification presentation', '通知呈现')}
+        subtitle={t(
+          'Notification style and screen privacy are configured in Settings → Rewind.',
+          '通知样式和屏幕隐私在 设置 → 回顾 中配置。'
+        )}
         keywords="insights proactive suggestion notification rewind"
       />
     </>

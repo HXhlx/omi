@@ -20,6 +20,7 @@ import { GenerateGoalsButton } from '../components/ui/GenerateGoalsButton'
 import { toast } from '../lib/toast'
 import { t } from '../lib/i18n'
 import { goalEmoji } from '../lib/goalEmoji'
+import { goalLabel } from '../lib/goalLabel'
 import { isCompleted, progressColor, progressLabel, progressPct } from '../lib/goalVisuals'
 import { GoalCelebration } from '../components/goals/GoalCelebration'
 import { GoalInsightPanel } from '../components/goals/GoalInsightPanel'
@@ -284,7 +285,7 @@ export function Goals(): React.JSX.Element {
           tone: 'info',
           body: t(
             'Omi needs a few memories, conversations, or tasks before it can suggest a goal.',
-            'Omi 需要先积累一些记忆、对话或任务，才能给出目标建议。'
+            '小蜗需要先积累一些记忆、对话或任务，才能给出目标建议。'
           )
         })
       } else if (res.reason === 'no_session') {
@@ -426,7 +427,7 @@ export function Goals(): React.JSX.Element {
                   done ? 'text-white/40 line-through' : 'text-white/90'
                 }`}
               >
-                {g.title}
+                {goalLabel(g.title)}
               </button>
             )}
 

@@ -20,6 +20,7 @@ import { isAllowedExternalScheme } from './externalUrl'
 import { installContextMenu } from './contextMenu'
 import { GPU_CONTEXT_LOST_CHANNEL } from '../shared/types'
 import type { ConversationFolder, LiveNote } from '../shared/types'
+import { isZhBrand } from '../shared/brand'
 import {
   isListenSessionOwnedBy,
   registerOmiListenHandlers,
@@ -27,6 +28,7 @@ import {
   stopTestListenSession
 } from './ipc/omiListen'
 import { registerCaptureBridge } from './ipc/captureBridge'
+import { startWakeWordService } from './wake/wakeWordService'
 import { registerSoak } from './soak'
 import { createCaptureWindow, getCaptureWindow, getCaptureWc } from './captureWindow'
 import { registerFileIndexHandlers } from './ipc/fileIndex'
@@ -488,7 +490,8 @@ function createWindow(): BrowserWindow {
   // data-mica); older builds fall back to the flat token canvas.
   const mica = supportsMica()
   const mainWindow = new BrowserWindow({
-    title: 'omi',
+    // LOCAL ADAPT (XiaoWo): zh window title; test/en locale keeps upstream.
+    title: isZhBrand() ? '小蜗' : 'omi',
     width: DEFAULT_WINDOW_WIDTH,
     height: DEFAULT_WINDOW_HEIGHT,
     minWidth: 500,
@@ -721,6 +724,18 @@ app.whenReady().then(async () => {
     'http://127.0.0.1:8110/*',
     'http://localhost:8110/*'
   ]
+  // LOCAL ADAPT (XiaoWo): the local OpenAI-compatible embeddings/vision endpoint
+  // (VITE_OMI_LOCAL_EMBED_BASE, e.g. an ssh-tunneled LiteLLM on :4000) needs the
+  // same Bearer rewrite + CORS treatment as the harness backends above.
+  const localEmbedBase = String(import.meta.env.VITE_OMI_LOCAL_EMBED_BASE || '')
+    .trim()
+    .replace(/\/+$/, '')
+  if (localEmbedBase) apiUrls.push(`${localEmbedBase}/*`)
+  const localVisionBase = String(import.meta.env.VITE_OMI_LOCAL_VISION_BASE || '')
+    .trim()
+    .replace(/\/+$/, '')
+  if (localVisionBase && !apiUrls.includes(`${localVisionBase}/*`))
+    apiUrls.push(`${localVisionBase}/*`)
   // LOCAL ADAPT: in emulator mode the backend never initializes a Firebase
   // admin app, so verify_token only accepts the ADMIN_KEY impersonation form
   // the harness's own tooling uses ("<ADMIN_KEY><uid>"). Rewrite Bearer
@@ -1219,6 +1234,9 @@ app.whenReady().then(async () => {
         // fresh install, and any change the user makes in Settings survives restarts.
         // OCR/retention loops are cheap no-ops until frames exist.
         { name: 'rewindCapture', run: () => startRewindCapture() },
+        // LOCAL ADAPT (XiaoWo): always-on wake-word spotter ("小蜗同学/小蜗助手").
+        // Inert when the KWS model dir is absent; the chord/tray paths never depend on it.
+        { name: 'wakeWord', run: () => startWakeWordService() },
         {
           name: 'rewindForegroundCapture',
           run: () => startRewindForegroundCaptureTrigger()

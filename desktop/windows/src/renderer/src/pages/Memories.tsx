@@ -651,7 +651,7 @@ export function Memories(): React.JSX.Element {
                 rows={3}
                 placeholder={t(
                   'Something Omi should remember about you…',
-                  '写点你想让 Omi 记住的事…'
+                  '写点你想让小蜗记住的事…'
                 )}
                 className="input-field resize-none"
               />
@@ -681,7 +681,7 @@ export function Memories(): React.JSX.Element {
             title={t('No memories yet', '还没有记忆')}
             description={t(
               'Memories are distilled insights from your conversations. They will show up here as Omi learns about you.',
-              '记忆是从你的对话中提炼的要点，随着 Omi 越来越了解你，它们会显示在这里。'
+              '记忆是从你的对话中提炼的要点，随着小蜗越来越了解你，它们会显示在这里。'
             )}
           />
         )}

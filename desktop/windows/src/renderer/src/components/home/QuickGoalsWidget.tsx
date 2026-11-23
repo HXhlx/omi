@@ -6,6 +6,7 @@ import { auth, onAuthStateChanged } from '../../lib/firebase'
 import { toast } from '../../lib/toast'
 import { GenerateGoalsButton } from '../ui/GenerateGoalsButton'
 import { goalEmoji } from '../../lib/goalEmoji'
+import { goalLabel } from '../../lib/goalLabel'
 import { isCompleted, progressColor, progressPct } from '../../lib/goalVisuals'
 
 // Compact dashboard surface for the idle Home screen: the active goals with
@@ -149,7 +150,7 @@ export function QuickGoalsWidget({ onReady }: { onReady?: () => void }): React.J
                   <span aria-hidden="true" className="shrink-0 text-[13px] leading-none">
                     {goalEmoji(g.title)}
                   </span>
-                  <span className="truncate text-white/65">{g.title}</span>
+                  <span className="truncate text-white/65">{goalLabel(g.title)}</span>
                 </span>
                 <span className="shrink-0 text-white/35">{pct}%</span>
               </div>

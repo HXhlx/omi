@@ -1,6 +1,7 @@
 import { createElement, useCallback, useEffect, useRef, useState } from 'react'
 import { useAppState } from '../../../state/appState'
 import { cn } from '../../../lib/utils'
+import { t } from '../../../lib/i18n'
 import { HomeCanvasBackground } from '../HomeCanvasBackground'
 import { HubHeader } from './HubHeader'
 import { HubAskBar } from './HubAskBar'
@@ -263,7 +264,7 @@ export function HomeHub(): React.JSX.Element {
                 className="shrink-0 select-none font-display text-[58px] font-bold lowercase leading-none text-home-ink"
                 style={{ textShadow: '0 0 26px rgb(var(--home-stage-glow-rgb) / 0.46)' }}
               >
-                omi.
+                {t('omi.', '小蜗')}
               </h1>
 
               {/* Mac: Spacer(minLength: 24) — absorbs slack, docking the cluster. The

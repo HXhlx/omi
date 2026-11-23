@@ -10,6 +10,7 @@
 //  - TTS playback for non-realtime spoken replies, through the same gated path
 
 import { trackEvent } from '../analytics'
+import { isZhUi } from '../i18n'
 import {
   initialVoiceState,
   transition,
@@ -91,6 +92,10 @@ export const FILLER_PHRASES = [
   'One sec.',
   'Working on it.'
 ]
+
+// LOCAL ADAPT (XiaoWo): spoken filler phrases for the zh UI. Kept separate from
+// FILLER_PHRASES so the exported upstream array (unit-tested) stays untouched.
+const FILLER_PHRASES_ZH = ['我看一下。', '稍等一下。', '马上就好。', '让我想想。', '正在查。']
 
 const events: VoiceEventRecord[] = []
 function record(type: string, detail?: string): void {
@@ -519,7 +524,8 @@ let ttsSeq = 0
  *  own cancel handle keeps it independent of a real chunk's stopCurrentTts. */
 function startFiller(): void {
   if (typeof window === 'undefined' || !window.speechSynthesis) return
-  const phrase = FILLER_PHRASES[Math.floor(Math.random() * FILLER_PHRASES.length)]
+  const pool = isZhUi() ? FILLER_PHRASES_ZH : FILLER_PHRASES
+  const phrase = pool[Math.floor(Math.random() * pool.length)]
   try {
     const u = new SpeechSynthesisUtterance(phrase)
     stopCurrentFiller = () => {

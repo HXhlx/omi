@@ -2,6 +2,7 @@ import { Clock, AlertCircle, Check } from 'lucide-react'
 import { BillingCard } from './BillingCard'
 import { cn } from '../../../lib/utils'
 import { trialCountdownText, trialProgress, trialTimeTone } from '../../../lib/billing'
+import { t } from '../../../lib/i18n'
 import type { TrialMetadata } from '../../../lib/omiApi.generated'
 
 const RING_STROKE: Record<'amber' | 'yellow' | 'green', string> = {
@@ -36,9 +37,9 @@ function ProgressRing(props: {
 }
 
 const TRIAL_INCLUDED = [
-  'Unlimited listening & transcription',
-  'Unlimited memories & insights',
-  'Chat questions'
+  t('Unlimited listening & transcription', '无限聆听与转写'),
+  t('Unlimited memories & insights', '无限记忆与洞察'),
+  t('Chat questions', '聊天提问')
 ]
 
 /**
@@ -57,11 +58,11 @@ export function TrialCard(props: {
       <BillingCard
         icon={AlertCircle}
         iconTone="amber"
-        title="Trial Ended"
-        subtitle="Upgrade to keep unlimited access"
+        title={t('Trial Ended', '试用已结束')}
+        subtitle={t('Upgrade to keep unlimited access', '升级以继续无限使用')}
         trailing={
           <button onClick={onViewPlans} className="btn-primary">
-            View Plans
+            {t('View Plans', '查看套餐')}
           </button>
         }
       />
@@ -75,12 +76,12 @@ export function TrialCard(props: {
     <BillingCard
       icon={Clock}
       iconTone={tone}
-      title="Premium Trial Active"
+      title={t('Premium Trial Active', '高级试用进行中')}
       subtitle={trialCountdownText(remaining)}
       trailing={<ProgressRing progress={trialProgress(trial)} tone={tone} />}
     >
       <div className="border-t border-white/[0.06] pt-3">
-        <div className="mb-2 text-xs font-medium text-white/45">Included in your trial</div>
+        <div className="mb-2 text-xs font-medium text-white/45">{t('Included in your trial', '试用包含')}</div>
         <ul className="space-y-1.5">
           {TRIAL_INCLUDED.map((f) => (
             <li key={f} className="flex items-start gap-2 text-sm text-white/75">

@@ -1,3 +1,5 @@
+import { t } from './i18n'
+
 /**
  * The OpenAPI-generated PlanType is intentionally a closed union. The server
  * can add a value before this client is regenerated, though, so all runtime
@@ -23,8 +25,8 @@ export type DecodedPlan =
   | { readonly kind: 'known'; readonly id: CatalogPlanId; readonly raw: string }
   | { readonly kind: 'unknown'; readonly raw: string }
 
-export const UNKNOWN_PLAN_TITLE = 'Plan unavailable'
-export const UNKNOWN_PLAN_SUBTITLE = 'Your plan details are unavailable.'
+export const UNKNOWN_PLAN_TITLE = t('Plan unavailable', '套餐不可用')
+export const UNKNOWN_PLAN_SUBTITLE = t('Your plan details are unavailable.', '暂时无法获取你的套餐信息。')
 
 /**
  * Decode a plan without allowing a stale generated union to turn a new plan
@@ -92,10 +94,10 @@ export function isPaidPlanValue(value: unknown): boolean {
 }
 
 const PLAN_DISPLAY_NAMES: Readonly<Record<CatalogPlanId, string>> = {
-  basic: 'Free',
+  basic: t('Free', '免费版'),
   plus: 'Plus',
   unlimited: 'Neo',
-  unlimited_v2: 'Omi Pro',
+  unlimited_v2: t('Omi Pro', '小蜗 Pro'),
   operator: 'Operator',
   architect: 'Architect'
 }

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { ArrowUp, Link as LinkIcon, Loader2, Paperclip } from 'lucide-react'
 import { cn } from '../../../lib/utils'
+import { t } from '../../../lib/i18n'
 import {
   addAttachments,
   removeAttachment,
@@ -16,9 +17,14 @@ import type { PickedChatFile } from '../../../../../shared/types'
 // silently (Mac surfaces these). Reasons are ranked by how actionable they are.
 function describeRejections(rejected: { reason: RejectReason }[]): string {
   const reasons = new Set(rejected.map((r) => r.reason))
-  if (reasons.has('too_large')) return 'Some files exceed the 25 MB limit.'
-  if (reasons.has('cap_exceeded')) return `You can attach up to ${MAX_CHAT_ATTACHMENTS} files.`
-  return "Some files couldn't be added."
+  if (reasons.has('too_large'))
+    return t('Some files exceed the 25 MB limit.', '部分文件超过 25 MB 上限。')
+  if (reasons.has('cap_exceeded'))
+    return t(
+      `You can attach up to ${MAX_CHAT_ATTACHMENTS} files.`,
+      `最多可附加 ${MAX_CHAT_ATTACHMENTS} 个文件。`
+    )
+  return t("Some files couldn't be added.", '部分文件无法添加。')
 }
 
 // The Hub's ask bar. It is the ONLY chat input on the Hub — it re-docks to the
@@ -157,7 +163,12 @@ export function HubAskBar(props: {
           onClick={pickFiles}
           disabled={atCap}
           aria-label={
-            atCap ? `Attachment limit reached (${MAX_CHAT_ATTACHMENTS} files)` : 'Attach files'
+            atCap
+              ? t(
+                  `Attachment limit reached (${MAX_CHAT_ATTACHMENTS} files)`,
+                  `已达附件上限（${MAX_CHAT_ATTACHMENTS} 个文件）`
+                )
+              : t('Attach files', '添加附件')
           }
           className={cn(
             'focus-ring mr-1 flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full',
@@ -190,8 +201,8 @@ export function HubAskBar(props: {
             // the keystroke the user meant for the IME.
             if (e.key === 'Enter' && !e.nativeEvent.isComposing) onSubmit()
           }}
-          placeholder="Ask omi anything"
-          aria-label="Ask omi anything"
+          placeholder={t('Ask omi anything', '随便问小蜗…')}
+          aria-label={t('Ask omi anything', '随便问小蜗…')}
           className="mr-3 min-w-0 flex-1 border-0 bg-transparent text-[15px] text-home-ink placeholder:text-home-muted focus:outline-none focus:ring-0"
         />
 
@@ -209,7 +220,7 @@ export function HubAskBar(props: {
           <div
             role="status"
             aria-busy="true"
-            aria-label="Omi is replying"
+            aria-label={t('Omi is replying', '小蜗正在回复')}
             className="flex h-[34px] w-[34px] shrink-0 items-center justify-center"
           >
             <Loader2 className="h-4 w-4 animate-spin text-home-muted" strokeWidth={2.5} />
@@ -226,7 +237,7 @@ export function HubAskBar(props: {
               // then (inputRef.current is null or detached).
               requestAnimationFrame(() => inputRef.current?.focus())
             }}
-            aria-label="Send"
+            aria-label={t('Send', '发送')}
             className="focus-ring flex h-[34px] w-[34px] shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-home-paper transition-opacity duration-150 hover:opacity-90"
           >
             <ArrowUp className="h-[13px] w-[13px]" strokeWidth={2.75} />
@@ -245,7 +256,7 @@ export function HubAskBar(props: {
             )}
           >
             <LinkIcon className="h-[11px] w-[11px] shrink-0" strokeWidth={2.5} />
-            Connect
+            {t('Connect', '连接')}
           </button>
         )}
       </div>

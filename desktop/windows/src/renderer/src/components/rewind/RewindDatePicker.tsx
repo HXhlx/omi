@@ -12,7 +12,9 @@ import { MAC_PURPLE } from '../../lib/macPalette'
 // Mac's purplePrimary (#8B5CF6). That is the sanctioned Track 4 exception (Mac ports
 // its purple as-is where Mac renders purple); it stays contained to this one cell.
 
-const MONTHS = [
+import { t, isZhUi } from '../../lib/i18n'
+
+const MONTHS_EN = [
   'January',
   'February',
   'March',
@@ -26,12 +28,19 @@ const MONTHS = [
   'November',
   'December'
 ]
-const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+const MONTHS = isZhUi()
+  ? ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+  : MONTHS_EN
+const WEEKDAYS = isZhUi()
+  ? ['日', '一', '二', '三', '四', '五', '六']
+  : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
 /** `MMM d, yyyy` — e.g. "Jul 14, 2026". */
 function buttonLabel(ms: number): string {
   const d = new Date(ms)
-  return `${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}, ${d.getFullYear()}`
+  return isZhUi()
+    ? `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+    : `${MONTHS_EN[d.getMonth()].slice(0, 3)} ${d.getDate()}, ${d.getFullYear()}`
 }
 
 /** The calendar cells for a month: leading blanks (nulls) to the first weekday,
@@ -82,7 +91,7 @@ export function RewindDatePicker({
       <button
         onClick={toggle}
         className="inline-flex items-center gap-1.5 rounded-control border border-line bg-white/[0.06] px-3 py-1.5 text-sm text-white/80 transition-colors hover:border-line-strong hover:bg-white/[0.10] hover:text-white"
-        title="Pick a day"
+        title={t('Pick a day', '选择日期')}
       >
         <CalendarDays className="h-4 w-4" />
         {buttonLabel(selectedDate)}
@@ -100,17 +109,17 @@ export function RewindDatePicker({
               <button
                 onClick={() => step(-1)}
                 className="rounded p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-                title="Previous month"
+            title={t('Previous month', '上个月')}
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <span className="text-sm font-medium text-white/90">
-                {MONTHS[viewMonth]} {viewYear}
+          {isZhUi() ? `${viewYear}年${MONTHS[viewMonth]}` : `${MONTHS[viewMonth]} ${viewYear}`}
               </span>
               <button
                 onClick={() => step(1)}
                 className="rounded p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-                title="Next month"
+            title={t('Next month', '下个月')}
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

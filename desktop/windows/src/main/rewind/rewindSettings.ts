@@ -61,7 +61,10 @@ function sanitize(raw: Partial<RewindSettings>): RewindSettings {
     // default rather than reaching the capture host as an undefined constraint.
     captureQuality: QUALITIES.includes(raw.captureQuality as RewindCaptureQuality)
       ? (raw.captureQuality as RewindCaptureQuality)
-      : DEFAULTS.captureQuality
+      : DEFAULTS.captureQuality,
+    // LOCAL ADAPT (XiaoWo): camera observation mode. Only an explicit 'camera'
+    // selects it; anything else (absent, junk) stays the upstream screen path.
+    captureSource: raw.captureSource === 'camera' ? 'camera' : 'screen'
   }
 }
 

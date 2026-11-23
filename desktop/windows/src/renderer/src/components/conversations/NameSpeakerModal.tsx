@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Check, Loader2, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { Person, TranscriptSegment } from '../../lib/omiApi.generated'
 import { assignSegmentsBulk, createPerson } from '../../lib/conversations/people'
 import {
@@ -185,8 +186,8 @@ export function NameSpeakerModal({
                 autoFocus
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                placeholder="Person name"
-                aria-label="New person name"
+            placeholder={t('Person name', '人物姓名')}
+            aria-label={t('New person name', '新人物姓名')}
                 disabled={saving}
                 className="mt-3 w-full rounded-lg border border-white/15 bg-bg-secondary px-2.5 py-2 text-[13px] text-white placeholder:text-text-quaternary focus:border-white/40 focus:outline-none"
               />

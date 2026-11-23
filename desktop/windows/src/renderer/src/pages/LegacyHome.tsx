@@ -54,7 +54,7 @@ function ChatBar(props: {
         onKeyDown={(e) => {
           if (e.key === 'Enter') props.onSend()
         }}
-        placeholder={t('Ask Omi…', '问 Omi…')}
+        placeholder={t('Ask Omi…', '问小蜗…')}
         className="flex-1 border-0 bg-transparent py-2 pr-2 text-[15px] text-white placeholder:text-white/35 focus:outline-none focus:ring-0"
       />
       <button
@@ -62,7 +62,7 @@ function ChatBar(props: {
         aria-label={
           props.voiceOpen
             ? t('Hide voice session', '隐藏语音会话')
-            : t('Talk with Omi', '和 Omi 说话')
+            : t('Talk with Omi', '和小蜗说话')
         }
         className={cn(
           'shrink-0 rounded-full p-2.5 transition-colors duration-150',
@@ -513,7 +513,7 @@ export function LegacyHome(): React.JSX.Element {
                         ) : chat.sending && isLast ? (
                           <span
                             className="typing-dots"
-                            aria-label={t('Omi is replying', 'Omi 正在回复')}
+                            aria-label={t('Omi is replying', '小蜗正在回复')}
                           >
                             <span />
                             <span />

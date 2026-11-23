@@ -117,24 +117,38 @@ export function RewindCaptureHost(): React.JSX.Element {
     }
 
     const replaceStream = async (sourceId: string, gen: number): Promise<boolean> => {
-      const stream = await (
-        navigator.mediaDevices as unknown as {
-          getUserMedia: (c: unknown) => Promise<MediaStream>
-        }
-      ).getUserMedia({
-        audio: false,
-        video: {
-          mandatory: {
-            chromeMediaSource: 'desktop',
-            chromeMediaSourceId: sourceId,
-            // Resolution follows the user's quality tier; every display stays
-            // at 1fps so following focus does not add another persistent stream.
-            maxWidth: tier.maxWidth,
-            maxHeight: tier.maxHeight,
-            maxFrameRate: 1
-          }
-        }
-      })
+      // LOCAL ADAPT (XiaoWo): camera observation mode — the same periodic-JPEG
+      // pipeline, sampled from the default camera instead of a display. The
+      // synthetic source id bypasses main's display-change guard (there is no
+      // display to follow); foreground-window metadata still annotates frames.
+      const stream =
+        sourceId === 'camera:default'
+          ? await navigator.mediaDevices.getUserMedia({
+              audio: false,
+              video: {
+                width: { ideal: tier.maxWidth },
+                height: { ideal: tier.maxHeight },
+                frameRate: { ideal: 1, max: 5 }
+              }
+            })
+          : await (
+              navigator.mediaDevices as unknown as {
+                getUserMedia: (c: unknown) => Promise<MediaStream>
+              }
+            ).getUserMedia({
+              audio: false,
+              video: {
+                mandatory: {
+                  chromeMediaSource: 'desktop',
+                  chromeMediaSourceId: sourceId,
+                  // Resolution follows the user's quality tier; every display stays
+                  // at 1fps so following focus does not add another persistent stream.
+                  maxWidth: tier.maxWidth,
+                  maxHeight: tier.maxHeight,
+                  maxFrameRate: 1
+                }
+              }
+            })
       if (cancelled || gen !== generation) {
         stream.getTracks().forEach((track) => track.stop())
         return false
@@ -167,7 +181,10 @@ export function RewindCaptureHost(): React.JSX.Element {
     const captureOnce = async (gen: number): Promise<void> => {
       if (cancelled || gen !== generation) return
       try {
-        const targetSourceId = await window.omi.rewindCaptureSourceId()
+        const targetSourceId =
+          settings?.captureSource === 'camera'
+            ? 'camera:default'
+            : await window.omi.rewindCaptureSourceId()
         if (targetSourceId && targetSourceId !== activeSourceId) {
           const replaced = await replaceStream(targetSourceId, gen)
           if (!replaced) return
@@ -247,7 +264,10 @@ export function RewindCaptureHost(): React.JSX.Element {
 
     const start = async (): Promise<void> => {
       try {
-        const sourceId = await window.omi.rewindCaptureSourceId()
+        const sourceId =
+          settings?.captureSource === 'camera'
+            ? 'camera:default'
+            : await window.omi.rewindCaptureSourceId()
         if (!sourceId || cancelled) return
         const gen = generation
         if (await replaceStream(sourceId, gen)) scheduleNext(gen)
@@ -276,7 +296,7 @@ export function RewindCaptureHost(): React.JSX.Element {
     }
     // `quality` is a stream constraint, so changing it re-opens the stream —
     // otherwise the new tier would only take effect at the next app launch.
-  }, [settings?.captureEnabled, effectiveIntervalMs, paused, quality])
+  }, [settings?.captureEnabled, effectiveIntervalMs, paused, quality, settings?.captureSource])
 
   return (
     <video

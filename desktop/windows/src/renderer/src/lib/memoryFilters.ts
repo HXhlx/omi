@@ -1,4 +1,5 @@
 import type { Memory } from '../hooks/useMemories'
+import { t, isZhUi } from './i18n'
 
 // Pure, framework-free filtering/derivation helpers for the Memories page, kept
 // out of the component so they're cheap to unit-test and reuse.
@@ -17,10 +18,10 @@ export const MEMORY_CATEGORIES: readonly MemoryCategory[] = [
 ]
 
 export const CATEGORY_LABEL: Record<MemoryCategory, string> = {
-  manual: 'Manual',
-  system: 'About You',
-  interesting: 'Insights',
-  workflow: 'Workflow'
+  manual: t('Manual', '手动添加'),
+  system: t('About You', '关于你'),
+  interesting: t('Insights', '洞察'),
+  workflow: t('Workflow', '工作流')
 }
 
 // Normalize a memory's raw category to one of the four product categories.
@@ -46,17 +47,17 @@ export const LAYER_FILTERS: readonly MemoryLayerFilter[] = [
 ]
 
 export const LAYER_FILTER_LABEL: Record<MemoryLayerFilter, string> = {
-  default: 'Default',
-  short_term: 'Short-term',
-  long_term: 'Long-term',
-  archive: 'Archive'
+  default: t('Default', '默认'),
+  short_term: t('Short-term', '短期'),
+  long_term: t('Long-term', '长期'),
+  archive: t('Archive', '归档')
 }
 
 export const LAYER_FILTER_DESC: Record<MemoryLayerFilter, string> = {
-  default: 'Short-term + Long-term',
-  short_term: 'Fresh source-backed memories',
-  long_term: 'Stable memories',
-  archive: 'Explicit archive search'
+  default: t('Short-term + Long-term', '短期 + 长期'),
+  short_term: t('Fresh source-backed memories', '有来源依据的新记忆'),
+  long_term: t('Stable memories', '稳定记忆'),
+  archive: t('Explicit archive search', '仅搜索归档')
 }
 
 function matchesLayer(m: Memory, filter: MemoryLayerFilter): boolean {
@@ -70,11 +71,11 @@ function matchesLayer(m: Memory, filter: MemoryLayerFilter): boolean {
 export function layerLabel(m: Memory): string | null {
   switch (m.layer) {
     case 'short_term':
-      return 'Short-term'
+      return t('Short-term', '短期')
     case 'long_term':
-      return 'Long-term'
+      return t('Long-term', '长期')
     case 'archive':
-      return 'Archive'
+      return t('Archive', '归档')
     default:
       return null
   }
@@ -108,13 +109,13 @@ export function formatMemoryDate(created_at: string, now: number = Date.now()): 
   const hours = Math.floor(diff / 3_600_000)
   const days = Math.floor(diff / 86_400_000)
   let rel: string
-  if (mins < 1) rel = 'just now'
-  else if (mins < 60) rel = `${mins}m ago`
-  else if (hours < 24) rel = `${hours}h ago`
-  else if (days < 7) rel = `${days}d ago`
+  if (mins < 1) rel = t('just now', '刚刚')
+  else if (mins < 60) rel = isZhUi() ? `${mins}分钟前` : `${mins}m ago`
+  else if (hours < 24) rel = isZhUi() ? `${hours}小时前` : `${hours}h ago`
+  else if (days < 7) rel = isZhUi() ? `${days}天前` : `${days}d ago`
   else rel = ''
   const sameYear = d.getFullYear() === new Date(now).getFullYear()
-  const abs = d.toLocaleString(undefined, {
+  const abs = d.toLocaleString(isZhUi() ? 'zh-CN' : undefined, {
     month: 'short',
     day: 'numeric',
     ...(sameYear ? {} : { year: 'numeric' }),

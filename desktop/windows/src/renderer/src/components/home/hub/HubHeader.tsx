@@ -5,6 +5,7 @@ import { AudioWaveform, Gift, MessageCircle, Mic, Scan, Settings } from 'lucide-
 import type { LucideIcon } from 'lucide-react'
 import { getPreferences, onPreferencesChange, setPreferences } from '../../../lib/preferences'
 import { cn } from '../../../lib/utils'
+import { t } from '../../../lib/i18n'
 import type { RewindSettings } from '../../../../../shared/types'
 
 // The Hub's top-right controls: a screen-capture pill, a listening pill, and the
@@ -80,7 +81,7 @@ function GearMenu(): React.JSX.Element {
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          aria-label="Home menu"
+          aria-label={t('Home menu', '主页菜单')}
           className={cn(
             'focus-ring group flex h-[34px] w-[34px] items-center justify-center rounded-full',
             'border border-home-hairline/[0.68] bg-home-tile/[0.86] transition-colors duration-150',
@@ -101,10 +102,10 @@ function GearMenu(): React.JSX.Element {
         >
           {/* External links go through main's shell.openExternal bridge, so they
               open in the user's real browser rather than an Electron window. */}
-          {row(Gift, 'Refer a Friend', () => void window.omi?.openExternalUrl?.(REFER_URL))}
+          {row(Gift, t('Refer a Friend', '推荐给朋友'), () => void window.omi?.openExternalUrl?.(REFER_URL))}
           {row(MessageCircle, 'Discord', () => void window.omi?.openExternalUrl?.(DISCORD_URL))}
           <DropdownMenu.Separator className="my-1.5 h-px bg-home-hairline" />
-          {row(Settings, 'Settings', () => navigate('/settings'))}
+          {row(Settings, t('Settings', '设置'), () => navigate('/settings'))}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
@@ -148,16 +149,20 @@ export function HubHeader(): React.JSX.Element {
           toggle with no hint of WHICH control it is. */}
       <Pill
         Icon={Scan}
-        text="Capture"
+        text={t('Capture', '截屏')}
         on={captureOn}
-        label={captureOn ? 'Turn screen capture off' : 'Turn screen capture on'}
+        label={
+          captureOn
+            ? t('Turn screen capture off', '关闭屏幕截取')
+            : t('Turn screen capture on', '开启屏幕截取')
+        }
         onClick={toggleCapture}
       />
       <Pill
         Icon={micOn ? AudioWaveform : Mic}
-        text="Listening"
+        text={t('Listening', '收音')}
         on={micOn}
-        label={micOn ? 'Stop listening' : 'Start listening'}
+        label={micOn ? t('Stop listening', '停止收音') : t('Start listening', '开始收音')}
         onClick={toggleMic}
       />
       <GearMenu />

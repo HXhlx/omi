@@ -112,7 +112,7 @@ function localToRow(c: LocalConversation): ConversationRow {
   return {
     id: c.id,
     title:
-      c.title || (isChat ? t('Chat with Omi', '与 Omi 聊天') : t('Local recording', '本地录音')),
+      c.title || (isChat ? t('Chat with Omi', '与小蜗聊天') : t('Local recording', '本地录音')),
     subtitle: isChat
       ? `${new Date(c.startedAt).toLocaleString()} · ${c.messages?.length ?? 0} ${t('messages', '条消息')}`
       : `${new Date(c.startedAt).toLocaleString()} · ${Math.round(

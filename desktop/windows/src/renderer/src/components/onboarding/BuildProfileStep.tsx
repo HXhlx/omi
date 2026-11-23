@@ -51,7 +51,7 @@ export function BuildProfileStep({
       align="left"
       eyebrow={t('DISCOVERY', '发现')}
       title={t('Start building your profile', '开始构建你的画像')}
-      subtitle={t('Omi scans projects and recent files', 'Omi 会扫描项目与最近文件')}
+      subtitle={t('Omi scans projects and recent files', '小蜗会扫描项目与最近文件')}
       onContinue={phase === 'done' ? onContinue : undefined}
       onSkip={onSkip}
     >

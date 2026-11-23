@@ -36,14 +36,15 @@ import { SettingRow } from '../SettingRow'
 import { acceleratorToTokens, DEFAULT_OVERLAY_ACCELERATOR } from '../../../lib/overlayShortcut'
 import { useChordRecorder } from '../../../hooks/useChordRecorder'
 import { DEFAULT_RECORD_HOTKEY } from '../../../../../shared/hotkeyDefaults'
+import { t } from '../../../lib/i18n'
 
 export function ShortcutsTab(): React.JSX.Element {
   return (
     <>
       <ShortcutCard
         icon={MessageSquareText}
-        title="Summon hotkey"
-        subtitle="Global shortcut to reveal the floating bar and ask a question."
+        title={t('Summon hotkey', '唤出快捷键')}
+        subtitle={t('Global shortcut to reveal the floating bar and ask a question.', '唤出悬浮栏提问的全局快捷键。也可以直接说「小蜗同学」。')}
         keywords="hotkey shortcut summon floating bar overlay ask accelerator keybinding rebind custom"
         defaultAccel={DEFAULT_OVERLAY_ACCELERATOR}
         load={() => window.omi?.getSummonHotkey?.() ?? Promise.resolve(null)}
@@ -55,8 +56,8 @@ export function ShortcutsTab(): React.JSX.Element {
       />
       <ShortcutCard
         icon={Keyboard}
-        title="Record hotkey"
-        subtitle="Global shortcut to start and stop recording."
+        title={t('Record hotkey', '录音快捷键')}
+        subtitle={t('Global shortcut to start and stop recording.', '开始/停止录音的全局快捷键。')}
         keywords="hotkey shortcut record accelerator keybinding rebind mic custom"
         defaultAccel={DEFAULT_RECORD_HOTKEY}
         load={() => window.omi?.getRecordHotkey?.() ?? Promise.resolve(null)}
@@ -185,7 +186,7 @@ function ShortcutCard(props: {
       setRegistered(false)
       setEnabled(true)
     } else {
-      setError('That shortcut is already in use — try another.')
+      setError(t('That shortcut is already in use — try another.', '该快捷键已被占用 —— 换一个试试。'))
     }
   }
 
@@ -210,20 +211,20 @@ function ShortcutCard(props: {
           {/* Default preset chip. */}
           <Chip selected={isDefault} onClick={() => void selectDefault()}>
             <Keycaps accel={defaultAccel} />
-            <span className="text-white/50">Default</span>
+            <span className="text-white/50">{t('Default', '默认')}</span>
           </Chip>
 
           {/* Custom chip — shows the current custom chord, or records a new one. */}
           <Chip selected={isCustom} onClick={() => recorder.start()} disabled={recorder.recording}>
             {recorder.recording ? (
-              <span className="text-white/60">Press keys… (Esc to cancel)</span>
+              <span className="text-white/60">{t('Press keys… (Esc to cancel)', '按下按键…（Esc 取消）')}</span>
             ) : isCustom && accel ? (
               <>
                 <Keycaps accel={accel} />
-                <span className="text-white/50">Custom</span>
+                <span className="text-white/50">{t('Custom', '自定义')}</span>
               </>
             ) : (
-              <span>Custom…</span>
+              <span>{t('Custom…', '自定义…')}</span>
             )}
           </Chip>
 
@@ -231,16 +232,16 @@ function ShortcutCard(props: {
               chord entirely; the presets stay visible so the user can re-pick. */}
           {onSetEnabled && (
             <Chip selected={!enabled} onClick={() => void selectOff()}>
-              <span>Off</span>
+              <span>{t('Off', '关闭')}</span>
             </Chip>
           )}
         </div>
 
         {!enabled ? (
-          <p className="text-xs text-white/40">Recording shortcut is off.</p>
+          <p className="text-xs text-white/40">{t('Recording shortcut is off.', '录音快捷键已关闭。')}</p>
         ) : error || !registered ? (
           <p className="text-xs text-amber-300">
-            {error ?? 'This shortcut is held by another app — pick a different one.'}
+            {error ?? t('This shortcut is held by another app — pick a different one.', '该快捷键被其他应用占用 —— 换一个。')}
           </p>
         ) : null}
       </div>

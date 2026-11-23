@@ -62,7 +62,7 @@ export function TrustStep({
         <p className="text-center text-sm leading-relaxed text-white">
           {t(
             'Omi is open source and private by design. During setup, we’ll ask you for these permissions to understand your work and help in the right places.',
-            'Omi 开源且以隐私为核心设计。在设置过程中，我们会申请这些权限，以了解你的工作并在合适的地方提供帮助。'
+            '小蜗开源且以隐私为核心设计。在设置过程中，我们会申请这些权限，以了解你的工作并在合适的地方提供帮助。'
           )}
         </p>
 

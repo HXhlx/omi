@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { t } from '../../../lib/i18n'
 import { Modal } from '../../ui/Modal'
 import { onClaudeSignIn, dismissClaudeSignIn, OMI_PRICING_URL } from '../../../lib/claudeSignIn'
 
@@ -27,7 +28,7 @@ export function ClaudeAuthSheet(): React.JSX.Element {
       onOpenChange={(next) => {
         if (!next) dismissClaudeSignIn()
       }}
-      title="Upgrade to Omi Pro"
+      title={t('Upgrade to Omi Pro', '升级到小蜗 Pro')}
       size="sm"
       footer={
         <>
@@ -35,22 +36,22 @@ export function ClaudeAuthSheet(): React.JSX.Element {
             onClick={dismissClaudeSignIn}
             className="rounded-2xl px-4 py-2 text-sm font-medium text-text-tertiary transition hover:text-text-secondary"
           >
-            Cancel
+            {t('Cancel', '取消')}
           </button>
           <button
             onClick={onUpgrade}
             className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:opacity-90"
           >
-            Upgrade to Omi Pro
+            {t('Upgrade to Omi Pro', '升级到小蜗 Pro')}
           </button>
         </>
       }
     >
-      <p className="text-text-secondary">Unlock Omi Pro</p>
+      <p className="text-text-secondary">{t('Unlock Omi Pro', '解锁小蜗 Pro')}</p>
       <p className="mt-2 text-text-tertiary">
-        Your browser will open to the Omi Pro checkout. After subscribing, return to omi.
+        {t('Your browser will open to the Omi Pro checkout. After subscribing, return to omi.', '浏览器将打开小蜗 Pro 的订阅页面。订阅完成后回到小蜗即可。')}
       </p>
-      <p className="mt-3 text-xs text-text-tertiary">Complete sign-in in your browser…</p>
+      <p className="mt-3 text-xs text-text-tertiary">{t('Complete sign-in in your browser…', '请在浏览器中完成登录…')}</p>
     </Modal>
   )
 }

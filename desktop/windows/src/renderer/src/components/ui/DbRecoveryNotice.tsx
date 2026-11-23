@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DatabaseBackup, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
+import { brandName } from '../../../../shared/brand'
 import type { DbRecoveryStatus } from '../../../../shared/types'
 
 // Shown once, at the top of the main window, when omi.db was found corrupt at
@@ -18,26 +20,29 @@ function describe(s: DbRecoveryStatus): { title: string; body: string } {
   // plainly: nothing was touched, and nothing was thrown away.
   if (s.unrepairable) {
     return {
-      title: 'Omi found a problem with its local database',
-      body:
-        'Omi could not repair it safely, so it left your data exactly as it was. ' +
-        'Some items may not load. Nothing has been deleted.'
+      title: t('Omi found a problem with its local database', `${brandName()}发现本地数据库有问题`),
+      body: t(
+        'Omi could not repair it safely, so it left your data exactly as it was. Some items may not load. Nothing has been deleted.',
+        `${brandName()}无法安全修复，已原样保留你的数据。部分内容可能无法加载，但没有删除任何数据。`
+      )
     }
   }
   if (s.reset) {
     return {
-      title: 'Omi reset its local database',
-      body:
-        'It was damaged beyond repair, so Omi started a fresh one. ' +
-        'A copy of the old file was saved, and anything synced to your account will load again.'
+      title: t('Omi reset its local database', `${brandName()}已重置本地数据库`),
+      body: t(
+        'It was damaged beyond repair, so Omi started a fresh one. A copy of the old file was saved, and anything synced to your account will load again.',
+        `数据库损坏无法修复，${brandName()}已新建一个。旧文件已备份，已同步到账号的内容会重新加载。`
+      )
     }
   }
   const n = s.rowsRecovered
   return {
-    title: `Omi repaired its local database`,
-    body:
-      `A problem was found at startup and fixed automatically — ${n.toLocaleString()} ` +
-      `item${n === 1 ? '' : 's'} recovered. A copy of the old file was saved.`
+    title: t('Omi repaired its local database', `${brandName()}已修复本地数据库`),
+    body: t(
+      `A problem was found at startup and fixed automatically — ${n.toLocaleString()} item${n === 1 ? '' : 's'} recovered. A copy of the old file was saved.`,
+      `启动时发现问题并已自动修复，恢复了 ${n.toLocaleString()} 条记录。旧文件已备份。`
+    )
   }
 }
 
@@ -86,7 +91,7 @@ function Notice({
       <button
         onClick={onDismiss}
         className="-mr-1 -mt-1 rounded-md p-1 text-white/45 hover:bg-white/10 hover:text-white"
-        aria-label="Dismiss"
+        aria-label={t('Dismiss', '关闭')}
       >
         <X className="h-3.5 w-3.5" />
       </button>
@@ -133,11 +138,14 @@ export function DbRecoveryNotice(): React.JSX.Element | null {
   if (needsRestart && !dismissed) {
     return (
       <Notice
-        title="Omi hit a problem with its local database"
+        title={t('Omi hit a problem with its local database', `${brandName()}的本地数据库出现问题`)}
         // Honest: nothing is lost yet, and the restart is a repair, not a wipe.
-        body="Restart Omi and it will repair the database automatically. Your data is still on disk."
+        body={t(
+          'Restart Omi and it will repair the database automatically. Your data is still on disk.',
+          `重启${brandName()}后会自动修复数据库，你的数据仍保存在磁盘上。`
+        )}
         onDismiss={() => setDismissed(true)}
-        actions={[{ label: 'Restart Omi', onClick: () => window.omi.relaunchApp() }]}
+        actions={[{ label: t('Restart Omi', `重启${brandName()}`), onClick: () => window.omi.relaunchApp() }]}
       />
     )
   }
@@ -163,12 +171,12 @@ export function DbRecoveryNotice(): React.JSX.Element | null {
     }
     const label =
       rebuild.phase === 'running'
-        ? 'Rebuilding Rewind index…'
+        ? t('Rebuilding Rewind index…', '正在重建回溯索引…')
         : rebuild.phase === 'done'
           ? rebuild.count > 0
-            ? `Rebuilt Rewind index (${rebuild.count.toLocaleString()} recovered)`
-            : 'Rewind index up to date'
-          : 'Rebuild Rewind Index'
+            ? t(`Rebuilt Rewind index (${rebuild.count.toLocaleString()} recovered)`, `已重建回溯索引（恢复 ${rebuild.count.toLocaleString()} 条）`)
+            : t('Rewind index up to date', '回溯索引已是最新')
+          : t('Rebuild Rewind Index', '重建回溯索引')
     actions.push({
       label,
       onClick: runRebuild,

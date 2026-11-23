@@ -424,5 +424,13 @@ export function registerMainChatHandlers(): void {
     return result.accepted
   })
 
-  ipcMain.handle('chat:getEngine', (): 'legacy_sse' | 'pi_mono' => getAppSettings().chatEngine)
+  // LOCAL ADAPT (emulator harness): the persisted pi_mono default cannot run
+  // here — verifyFirebaseIdToken only trusts Google-signed RS256 tokens, and the
+  // auth emulator issues unsigned ones, so the owner gate refuses every turn.
+  // Force the explicit legacy_sse opt-out (native flag) whenever the admin-key
+  // rewrite is configured; the legacy /v2/messages lane rides that rewrite.
+  // Read per-call so flipping .env + restart restores pi_mono with no file edit.
+  ipcMain.handle('chat:getEngine', (): 'legacy_sse' | 'pi_mono' =>
+    import.meta.env.VITE_OMI_ADMIN_KEY ? 'legacy_sse' : getAppSettings().chatEngine
+  )
 }

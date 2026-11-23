@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Mic, MicOff, X, RefreshCw } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { cn } from '../../lib/utils'
 import {
   getVoiceState,
@@ -117,7 +118,7 @@ export function VoiceSessionSurface(props: { onClose?: () => void }): React.JSX.
           </div>
           {devices.length > 1 && (
             <select
-              aria-label="Voice output device"
+        aria-label={t('Voice output device', '语音输出设备')}
               value={sink}
               onChange={(e) => {
                 setSink(e.target.value)
@@ -125,7 +126,7 @@ export function VoiceSessionSurface(props: { onClose?: () => void }): React.JSX.
               }}
               className="max-w-[180px] truncate rounded-lg border border-white/10 bg-transparent px-2 py-1 text-xs text-white/70 focus:outline-none [&>option]:bg-neutral-900"
             >
-              <option value="">Default output</option>
+          <option value="">{t('Default output', '默认输出')}</option>
               {devices.map((d) => (
                 <option key={d.deviceId} value={d.deviceId}>
                   {d.label}
@@ -157,7 +158,7 @@ export function VoiceSessionSurface(props: { onClose?: () => void }): React.JSX.
           {state.retryable && (
             <button
               onClick={() => void startVoiceSession()}
-              aria-label="Try again"
+            aria-label={t('Try again', '重试')}
               className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.08] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.14]"
             >
               <RefreshCw className="h-3.5 w-3.5" />
@@ -166,7 +167,7 @@ export function VoiceSessionSurface(props: { onClose?: () => void }): React.JSX.
           )}
           <button
             onClick={close}
-            aria-label="Dismiss voice session"
+          aria-label={t('Dismiss voice session', '关闭语音会话')}
             className="rounded-xl p-2 text-white/60 transition-colors hover:bg-white/[0.08] hover:text-white"
           >
             <X className="h-4 w-4" />

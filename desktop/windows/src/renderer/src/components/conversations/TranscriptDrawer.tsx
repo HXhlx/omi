@@ -1,4 +1,5 @@
 import { Pencil, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { Person, TranscriptSegment } from '../../lib/omiApi.generated'
 import {
   avatarFill,
@@ -163,8 +164,8 @@ export function TranscriptDrawer({
           <button
             onClick={onClose}
             className="btn-ghost p-1.5"
-            title="Close transcript"
-            aria-label="Close transcript"
+            title={t('Close transcript', '关闭转写')}
+            aria-label={t('Close transcript', '关闭转写')}
           >
             <X className="h-4 w-4" />
           </button>

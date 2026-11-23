@@ -7,6 +7,7 @@ import {
 } from '../../../../shared/timelineGeometry'
 import { relativeTime, isSameDay } from '../../../../shared/relativeTime'
 import { parseWindowTitle } from '../../lib/windowTitle'
+import { t } from '../../lib/i18n'
 import {
   containedImageRect,
   highlightTerms,
@@ -127,12 +128,15 @@ export function RewindPlayer({
         ) : loading && frames.length === 0 ? (
           // Still loading the local frame set — show a neutral placeholder, not the
           // misleading "enable capture" message (the frames may already exist).
-          <div className="text-white/40 text-sm">Loading…</div>
+          <div className="text-white/40 text-sm">{t('Loading…', '加载中…')}</div>
         ) : (
           <div className="text-white/50 text-sm">
             {frames.length === 0
-              ? 'No frames yet — enable Rewind capture in Settings.'
-              : 'No screenshot at this moment.'}
+              ? t(
+                  'No frames yet — enable Rewind capture in Settings.',
+                  '还没有画面 —— 请在设置中开启回顾截取。'
+                )
+              : t('No screenshot at this moment.', '此刻没有截图。')}
           </div>
         )}
         {contained &&
@@ -174,7 +178,10 @@ function FrameMeta({ frame }: { frame: RewindFrame }): React.JSX.Element {
   const when = isSameDay(frame.ts, now)
     ? new Date(frame.ts).toLocaleTimeString()
     : new Date(frame.ts).toLocaleString()
-  const { app, title } = parseWindowTitle(frame.windowTitle, frame.app || 'Unknown app')
+  const { app, title } = parseWindowTitle(
+    frame.windowTitle,
+    frame.app || t('Unknown app', '未知应用')
+  )
   return (
     <div className="shrink-0 py-2 text-sm leading-snug">
       <div className="text-white/90">

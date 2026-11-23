@@ -55,7 +55,7 @@ export function DateFilterButton({
         className={`surface-panel flex items-center gap-2 px-4 py-2.5 text-sm transition-colors duration-200 ${
           active ? 'text-white' : 'text-white/55 hover:text-white/80'
         }`}
-        title="Filter by date"
+      title={t('Filter by date', '按日期筛选')}
       >
         <CalendarDays className="h-4 w-4" />
         <span className="hidden sm:inline">{t('Date', '日期')}</span>

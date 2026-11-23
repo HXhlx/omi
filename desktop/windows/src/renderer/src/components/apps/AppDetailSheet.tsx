@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { omiApi } from '../../lib/apiClient'
 import { getCacheUid } from '../../lib/persistentCache'
+import { t } from '../../lib/i18n'
 import { toast } from '../../lib/toast'
 import { startSetupPolling, urlWithUidParam, worksExternally } from '../../lib/appInstall'
 import type { App, AppCatalogItem, AppReview } from '../../lib/omiApi.generated'
@@ -337,7 +338,7 @@ export function AppDetailSheet({
               <div className="flex justify-end px-3 pt-3">
                 <Dialog.Close
                   className="rounded-md p-1.5 text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
-                  aria-label="Close"
+            aria-label={t('Close', '关闭')}
                 >
                   <X className="h-4 w-4" />
                 </Dialog.Close>
@@ -439,8 +440,8 @@ export function AppDetailSheet({
                         onClick={() => onToggle(app)}
                         disabled={busy}
                         className="rounded-xl border border-white/10 p-2 text-white/40 transition-colors hover:bg-white/5 hover:text-error disabled:opacity-50"
-                        aria-label="Disable app"
-                        title="Disable app"
+                  aria-label={t('Disable app', '停用应用')}
+                  title={t('Disable app', '停用应用')}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -452,7 +453,7 @@ export function AppDetailSheet({
 
                 {/* 3. About. */}
                 {description && (
-                  <Section title="About">
+              <Section title={t('About', '关于')}>
                     <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/75">
                       {description}
                     </p>
@@ -461,7 +462,7 @@ export function AppDetailSheet({
 
                 {/* 4. Setup steps — only when the integration defines auth steps. */}
                 {authSteps.length > 0 && (
-                  <Section title="Setup">
+              <Section title={t('Setup', '设置')}>
                     <div className="space-y-2">
                       {authSteps.map((step, i) => (
                         <button
@@ -495,7 +496,7 @@ export function AppDetailSheet({
 
                 {/* 5. Capabilities. */}
                 {capabilities.length > 0 && (
-                  <Section title="Capabilities">
+              <Section title={t('Capabilities', '能力')}>
                     <div className="flex flex-wrap gap-2">
                       {capabilities.map((c) => (
                         <span
@@ -511,7 +512,7 @@ export function AppDetailSheet({
 
                 {/* 6. Category. */}
                 {category && (
-                  <Section title="Category">
+              <Section title={t('Category', '分类')}>
                     <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/70">
                       {titleize(category)}
                     </span>

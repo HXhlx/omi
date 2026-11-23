@@ -25,7 +25,7 @@ export function NameStep({
       stepIndex={stepIndex}
       totalSteps={totalSteps}
       eyebrow={t('NAME', '名字')}
-      title={t('What should Omi call you?', 'Omi 该怎么称呼你？')}
+      title={t('What should Omi call you?', '小蜗该怎么称呼你？')}
       continueDisabled={trimmed.length === 0}
       onContinue={() => onContinue(trimmed)}
       onBack={onBack}

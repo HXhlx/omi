@@ -313,6 +313,10 @@ export type CaptureCommand =
   // MeetingSessionHost in the capture window.
   | { type: 'meeting-capture-start'; meetingId: string; attemptId: number; appName: string }
   | { type: 'meeting-capture-stop'; meetingId: string; attemptId: number }
+  // LOCAL ADAPT (XiaoWo): main → capture window. A wake keyword fired; the KWS
+  // mic host mutes its PCM tee for cooldownMs so the assistant's own voice
+  // (greeting / spoken reply) cannot re-trigger the spotter.
+  | { type: 'wake-mute'; cooldownMs: number }
 
 /** A mutation to the shared live-conversation store, emitted by the capture
  *  window as it owns the always-on mic session. UI windows apply these via
@@ -348,6 +352,10 @@ export type CaptureEvent =
   // The capture window was recreated/reloaded — UI windows re-issue their
   // standing commands (live-view, screen-view, an active PTT is abandoned).
   | { type: 'capture-window-restarted' }
+  // LOCAL ADAPT (XiaoWo): wake-word PCM tee from the capture window's always-on
+  // KWS mic host → main's sherpa-onnx spotter. Consumed ONLY by main
+  // (onCaptureEventInMain); routeCaptureEvent drops it for every UI window.
+  | { type: 'wake-pcm'; pcm: ArrayBuffer }
   // Meeting auto-capture lifecycle, emitted by MeetingSessionHost. Broadcast
   // (and tapped by main's meeting monitor to keep the toast honest).
   | {
@@ -562,9 +570,10 @@ export type OmiBarApi = {
    *  in the bar window; every other orb mount never receives it. Returns an
    *  unsubscribe fn. */
   onParked: (cb: (parked: boolean) => void) => () => void
-  /** Summon-hotkey physical hold state, driven by main's gesture machine.
-   *  'down' arms the existing PTT machine; 'up' releases it. */
-  onPtt: (cb: (phase: 'down' | 'up') => void) => () => void
+  /** Summon-hotkey physical gesture, driven by main's gesture machine.
+   *  'down' warms and arms PTT; 'confirm' promotes it to a recording hold;
+   *  'up' finishes a confirmed hold or closes an unconfirmed tap. */
+  onPtt: (cb: (phase: 'down' | 'confirm' | 'up') => void) => () => void
   /** Warm-hub PTT (A5 PR-6b, gated on `pttHubEnabled`): a bar hold delegates the
    *  turn to the MAIN window's warm-hub driver instead of running the local
    *  cascade. `backfillMs` is the pre-roll the main-owned capture should include
@@ -2047,6 +2056,11 @@ export type RewindSettings = {
    *  foreground app/process name). Empty = capture everything. */
   excludedApps: string[]
   captureQuality: RewindCaptureQuality
+  /** LOCAL ADAPT (XiaoWo): what the periodic capture samples. 'screen' (upstream
+   *  default) = the foreground display; 'camera' = the default camera — the
+   *  real-world observation mode for the accessibility assistant. Same pipeline
+   *  (JPEG → OCR → embeddings → timeline) either way. */
+  captureSource?: 'screen' | 'camera'
 }
 
 /** Whether Rewind can actually get a screen source, and why not — see

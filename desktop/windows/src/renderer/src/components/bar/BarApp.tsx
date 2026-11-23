@@ -73,13 +73,13 @@ function SignedOutContent(): React.JSX.Element {
   return (
     <div className="flex flex-col items-center gap-3 px-6 pb-5 pt-6 text-center text-neutral-100">
       <div className="text-sm text-neutral-300">
-        {t('Sign in to Omi to chat.', '登录 Omi 后即可对话。')}
+        {t('Sign in to Omi to chat.', '登录小蜗后即可对话。')}
       </div>
       <button
         onClick={() => window.omiOverlay.focusMain()}
         className="rounded-xl bg-neutral-200 px-4 py-2 text-sm font-medium text-neutral-900"
       >
-        {t('Open Omi to sign in', '打开 Omi 登录')}
+        {t('Open Omi to sign in', '打开小蜗登录')}
       </button>
     </div>
   )
@@ -309,9 +309,12 @@ export function BarApp(): React.JSX.Element {
 
   // Main drives PTT for the summon-hotkey hold; read the latest handlers.
   const beginHoldRef = useRef(ptt.beginHold)
+  const confirmHoldRef = useRef(ptt.confirmHold)
   const endHoldRef = useRef(ptt.endHold)
   // eslint-disable-next-line react-hooks/refs -- latest-ref
   beginHoldRef.current = ptt.beginHold
+  // eslint-disable-next-line react-hooks/refs -- latest-ref
+  confirmHoldRef.current = ptt.confirmHold
   // eslint-disable-next-line react-hooks/refs -- latest-ref
   endHoldRef.current = ptt.endHold
   useEffect(
@@ -323,7 +326,8 @@ export function BarApp(): React.JSX.Element {
         // 'up' was lost in transit; if both appear yet the orb stays in the
         // recording pose, endHold ran as a no-op (the machine was not `holding`).
         console.log(`[ptt-diag] renderer recv ${phase}`)
-        if (phase === 'down') beginHoldRef.current()
+        if (phase === 'down') beginHoldRef.current(true)
+        else if (phase === 'confirm') confirmHoldRef.current()
         else endHoldRef.current()
       }),
     []
@@ -596,7 +600,7 @@ export function BarApp(): React.JSX.Element {
             ? '思考中'
             : pillText === 'Speaking'
               ? '回答中'
-              : 'Omi'
+              : t('Omi', '小蜗')
       )
   // The orb's live level, by lane: the user's mic while capturing (hub-projected
   // or local analyser), the reply's own played audio while Omi speaks (fresh
@@ -673,7 +677,7 @@ export function BarApp(): React.JSX.Element {
           <div
             className={`bar-content ${!expanded ? 'bar-content-active' : ''}`}
             role="button"
-            aria-label={t('Open Omi', '打开 Omi')}
+        aria-label={t('Open assistant', '打开小蜗')}
             tabIndex={-1}
             onClick={() => window.omiBar.expand()}
           >
@@ -718,7 +722,7 @@ export function BarApp(): React.JSX.Element {
                     chat={barChat}
                     view={view === 'conversation' ? 'conversation' : 'list'}
                     expanded={expanded}
-                    conversationTitle="Omi Chat"
+      conversationTitle={t('Omi Chat', '小蜗对话')}
                     onOpenConversation={openConversation}
                     pills={pills}
                     onOpenPill={openPill}

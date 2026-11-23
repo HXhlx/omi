@@ -1,4 +1,5 @@
 import type { Memory } from '../hooks/useMemories'
+import { t } from './i18n'
 import { APP_INDEX_TAG } from './memoryCleanup'
 import { SCREEN_TAG } from './screenTag'
 
@@ -6,14 +7,14 @@ export type MemorySource =
   'screen' | 'file-index' | 'gmail' | 'sticky-notes' | 'manual' | 'conversation' | 'app' | 'unknown'
 
 const sourceLabels: Record<MemorySource, string> = {
-  screen: 'Screen capture',
-  'file-index': 'File index',
-  gmail: 'Gmail import',
-  'sticky-notes': 'Sticky Notes',
-  manual: 'Added by you',
-  conversation: 'Conversation',
-  app: 'App',
-  unknown: 'Origin not recorded'
+  screen: t('Screen capture', '屏幕截图'),
+  'file-index': t('File index', '文件索引'),
+  gmail: t('Gmail import', 'Gmail 导入'),
+  'sticky-notes': t('Sticky Notes', '便笺'),
+  manual: t('Added by you', '你添加的'),
+  conversation: t('Conversation', '对话'),
+  app: t('App', '应用'),
+  unknown: t('Origin not recorded', '来源未记录')
 }
 
 export function memorySource(memory: Memory): MemorySource {

@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ChevronRight, Copy, FolderInput, Link2, Pencil, Trash2 } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { ConversationFolder } from '../../../../shared/types'
 import type { ConversationRow } from '../../lib/pageCache'
 import { isCloudBacked } from '../../lib/conversations/filtering'
@@ -138,7 +139,7 @@ export function ConversationRowContextMenu({
       <div
         ref={panelRef}
         role="menu"
-        aria-label="Conversation actions"
+        aria-label={t('Conversation actions', '对话操作')}
         className="surface-panel fixed z-[200] w-56 p-1.5"
         style={{
           top: pos?.top ?? 0,
@@ -225,7 +226,7 @@ export function ConversationRowContextMenu({
       {cloud && submenuOpen && (
         <div
           role="menu"
-          aria-label="Move to folder"
+            aria-label={t('Move to folder', '移动到文件夹')}
           className="surface-panel fixed z-[200] max-h-72 w-52 overflow-y-auto p-1.5"
           style={{
             top: subPos?.top ?? 0,

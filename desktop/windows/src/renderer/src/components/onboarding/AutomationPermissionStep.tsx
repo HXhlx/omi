@@ -43,7 +43,7 @@ export function AutomationPermissionStep({
       aside={aside}
       eyebrow={t('PERMISSION', '权限')}
       title={t('Let Omi act when asked', '按你的要求执行操作')}
-      subtitle={t('Automation lets Omi take actions for you', '自动化让 Omi 替你执行操作')}
+      subtitle={t('Automation lets Omi take actions for you', '自动化让小蜗替你执行操作')}
       icon={<Zap className="h-5 w-5 text-white/60" />}
       cardLabel={t('Automation', '自动化')}
       statusText={{

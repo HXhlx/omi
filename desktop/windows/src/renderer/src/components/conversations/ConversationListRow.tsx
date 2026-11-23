@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, Loader2, Pencil, Star, Trash2 } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { ConversationRow } from '../../lib/pageCache'
 import type { ConversationFolder } from '../../../../shared/types'
 import { isCloudBacked } from '../../lib/conversations/filtering'
@@ -230,7 +231,7 @@ export function ConversationListRow({
             e.stopPropagation()
             beginRename()
           }}
-          aria-label="Rename"
+              aria-label={t('Rename', '重命名')}
           className="rounded-md p-1.5 text-white/45 transition-colors hover:bg-white/10 hover:text-white"
         >
           <Pencil className="h-4 w-4" />
@@ -248,7 +249,7 @@ export function ConversationListRow({
             e.stopPropagation()
             onDelete(row)
           }}
-          aria-label="Delete"
+              aria-label={t('Delete', '删除')}
           className="rounded-md p-1.5 text-white/45 transition-colors hover:bg-white/10 hover:text-red-300"
         >
           <Trash2 className="h-4 w-4" />

@@ -7,14 +7,37 @@
 // the same codec as Track 3's task embeddings (`ipc/taskEmbeddingVector.ts`).
 import { createHash } from 'node:crypto'
 
-/** Dimension of a `gemini-embedding-001` vector. */
-export const EMBED_DIM = 3072
+// LOCAL ADAPT (XiaoWo): embeddings run against a local OpenAI-compatible
+// /v1/embeddings endpoint (LiteLLM → qwen3-embedding, 1024-dim) instead of the
+// Gemini proxy, which has no embedding route on the local gateway (503s).
+// Env-driven and TEST-GUARDED: vitest keeps the upstream 3072/gemini constants
+// so every existing unit test passes unmodified; production reads the override.
+// Dim changes are safe across restarts: `dot()` scores mismatched lengths 0 and
+// the page SQL filters by blob size, so old-model rows simply never match —
+// they age out with retention and new frames backfill under the new model.
+const LOCAL_EMBED =
+  import.meta.env.MODE !== 'test'
+    ? String(import.meta.env.VITE_OMI_LOCAL_EMBED_BASE || '').trim()
+    : ''
+
+/** True when the local OpenAI-compatible embedding lane is configured. */
+export const LOCAL_EMBED_ENABLED = LOCAL_EMBED !== ''
+
+/** Base URL of the local OpenAI-compatible API (no trailing slash, no /v1). */
+export const LOCAL_EMBED_BASE = LOCAL_EMBED.replace(/\/+$/, '')
+
+/** Dimension of the active embedding model (gemini 3072 / local override). */
+export const EMBED_DIM = LOCAL_EMBED_ENABLED
+  ? Number(import.meta.env.VITE_OMI_LOCAL_EMBED_DIM) || 1024
+  : 3072
 
 /** Byte length of a stored vector BLOB (Float32 little-endian). */
 export const EMBED_BLOB_BYTES = EMBED_DIM * 4
 
 /** Model id sent to the proxy and recorded in `rewind_embeddings.model`. */
-export const EMBED_MODEL = 'gemini-embedding-001'
+export const EMBED_MODEL = LOCAL_EMBED_ENABLED
+  ? String(import.meta.env.VITE_OMI_LOCAL_EMBED_MODEL || 'qwen3-embedding')
+  : 'gemini-embedding-001'
 
 /**
  * Scale `v` to unit length. A zero (or non-finite) vector has no direction, so

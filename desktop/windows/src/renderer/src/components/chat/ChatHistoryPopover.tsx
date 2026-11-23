@@ -1,4 +1,5 @@
 import { Plus, Search, Star, MessageSquare, AlertCircle } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { UseChatSessions } from '../../hooks/useChatSessions'
 import { HistorySessionRow } from './HistorySessionRow'
 import { Spinner } from '../ui/Spinner'
@@ -28,7 +29,7 @@ export function ChatHistoryPopover(props: {
     <div className="flex max-h-[min(70vh,480px)] flex-col">
       {/* Header */}
       <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5">
-        <span className="flex-1 text-[13px] font-semibold text-white">Chats</span>
+        <span className="flex-1 text-[13px] font-semibold text-white">{t('Chats', '对话')}</span>
         <button
           type="button"
           className={cn(
@@ -37,7 +38,7 @@ export function ChatHistoryPopover(props: {
               ? 'bg-white/10 text-amber-300'
               : 'text-white/45 hover:bg-white/10 hover:text-white/80'
           )}
-          title={s.showStarredOnly ? 'Show all chats' : 'Show starred only'}
+          title={s.showStarredOnly ? t('Show all chats', '显示全部对话') : t('Show starred only', '仅显示已收藏')}
           onClick={s.toggleStarredFilter}
         >
           <Star className="h-4 w-4" fill={s.showStarredOnly ? 'currentColor' : 'none'} />
@@ -45,7 +46,7 @@ export function ChatHistoryPopover(props: {
         <button
           type="button"
           className="focus-ring rounded-md p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          title="New chat"
+          title={t('New chat', '新对话')}
           onClick={onCreate}
         >
           <Plus className="h-4 w-4" />
@@ -62,7 +63,7 @@ export function ChatHistoryPopover(props: {
             className="focus-ring rounded px-1 text-white/50 hover:text-white/80"
             onClick={s.clearCreateError}
           >
-            Dismiss
+            {t('Dismiss', '关闭')}
           </button>
         </div>
       )}
@@ -73,7 +74,7 @@ export function ChatHistoryPopover(props: {
         <input
           value={s.searchQuery}
           onChange={(e) => s.setSearchQuery(e.target.value)}
-          placeholder="Search chats"
+        placeholder={t('Search chats', '搜索对话')}
           className="input-field h-8 w-full pl-7 text-[13px]"
         />
       </div>
@@ -93,14 +94,16 @@ export function ChatHistoryPopover(props: {
               className="focus-ring rounded-md bg-white/10 px-3 py-1 text-[12px] text-white/80 hover:bg-white/15"
               onClick={s.retryLoad}
             >
-              Retry
+              {t('Retry', '重试')}
             </button>
           </div>
         ) : s.groupedSessions.length === 0 ? (
           <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
             <MessageSquare className="h-6 w-6 text-white/25" />
             <p className="text-[13px] text-white/50">
-              {s.searchQuery.trim() || s.showStarredOnly ? 'No matching chats' : 'No chats yet'}
+              {s.searchQuery.trim() || s.showStarredOnly
+                ? t('No matching chats', '没有匹配的对话')
+                : t('No chats yet', '还没有对话')}
             </p>
           </div>
         ) : (

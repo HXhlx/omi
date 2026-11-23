@@ -33,7 +33,7 @@ function WhatsNewCard({ p }: { p: WhatsNewPayload }): React.JSX.Element {
         </button>
       </div>
       <div className="insight-headline">
-        {t(`New in Omi ${p.version}`, `Omi ${p.version} 更新内容`)}
+        {t(`New in Omi ${p.version}`, `小蜗 ${p.version} 更新内容`)}
       </div>
       <ul className="whatsnew-list">
         {p.changes.slice(0, 3).map((c, i) => (
@@ -75,7 +75,7 @@ function MeetingCard({ p }: { p: MeetingToastPayload }): React.JSX.Element {
       </div>
       <div className="insight-headline">
         {capturing
-          ? t(`Omi is capturing — ${p.appName}`, `Omi 正在捕获 — ${p.appName}`)
+          ? t(`Omi is capturing — ${p.appName}`, `小蜗正在捕获 — ${p.appName}`)
           : starting
             ? t(`Starting capture — ${p.appName}`, `正在启动捕获 — ${p.appName}`)
             : failed
@@ -95,7 +95,7 @@ function MeetingCard({ p }: { p: MeetingToastPayload }): React.JSX.Element {
               ? errorKind === 'save'
                 ? t(
                     'The recording ended, but Omi could not save the local meeting transcript.',
-                    '录音已结束，但 Omi 未能保存本地会议记录。'
+                    '录音已结束，但小蜗未能保存本地会议记录。'
                   )
                 : t(
                     'Check your sign-in, internet connection, and Windows microphone access, then retry.',

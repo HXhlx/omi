@@ -16,6 +16,7 @@ import { getPreferences, onPreferencesChange, setPreferences } from '../../../li
 import { SettingRow } from '../SettingRow'
 import { Toggle } from '../Toggle'
 import { FontSizeCard } from '../FontSizeCard'
+import { t } from '../../../lib/i18n'
 
 export function GeneralTab(): React.JSX.Element {
   const [chatHistoryMode, setChatHistoryMode] = useState(getPreferences().chatHistoryMode)
@@ -37,8 +38,11 @@ export function GeneralTab(): React.JSX.Element {
       <ScreenAnalysisRow />
       <SettingRow
         icon={MessagesSquare}
-        title="Chat history"
-        subtitle="By default, one ongoing conversation (shared with the floating bar) that persists across launches — scroll up in chat to load older messages. Or start a fresh conversation each launch."
+        title={t('Chat history', '聊天历史')}
+        subtitle={t(
+          'By default, one ongoing conversation (shared with the floating bar) that persists across launches — scroll up in chat to load older messages. Or start a fresh conversation each launch.',
+          '默认是一条持续对话（与悬浮栏共享），跨启动保留 —— 在聊天中上滑加载更早消息。也可以每次启动新开对话。'
+        )}
         keywords="conversation thread floating bar history infinite"
         control={
           <select
@@ -51,18 +55,21 @@ export function GeneralTab(): React.JSX.Element {
             className="rounded-md bg-white/10 px-2 py-1.5 text-sm text-white focus:outline-none"
           >
             <option value="infinite" className="bg-neutral-900">
-              One ongoing conversation (default)
+              {t('One ongoing conversation (default)', '一条持续对话（默认）')}
             </option>
             <option value="per-launch" className="bg-neutral-900">
-              New conversation each launch
+              {t('New conversation each launch', '每次启动新开对话')}
             </option>
           </select>
         }
       />
       <SettingRow
         icon={Languages}
-        title="Sign-language translation"
-        subtitle="Transcribe spoken text into sign-language poses via the sign.mt service. Disabled by default — all transcript text is sent to an external API, which requires explicit consent."
+        title={t('Sign-language translation', '手语翻译')}
+        subtitle={t(
+          'Transcribe spoken text into sign-language poses via the sign.mt service. Disabled by default — all transcript text is sent to an external API, which requires explicit consent.',
+          '通过 sign.mt 服务把语音文本转成手语姿态。默认关闭 —— 转写文本会发送到外部 API，需要明确同意。'
+        )}
         keywords="sign language translation sign.mt consent privacy"
         control={
           <button
@@ -77,7 +84,7 @@ export function GeneralTab(): React.JSX.Element {
                 : 'bg-white/10 text-white/60 hover:bg-white/20'
             }`}
           >
-            {signLanguageEnabled ? 'Enabled' : 'Disabled'}
+            {signLanguageEnabled ? t('Enabled', '已开启') : t('Disabled', '已关闭')}
           </button>
         }
       />
@@ -102,13 +109,13 @@ function ActionAutomationRow(): React.JSX.Element {
     <SettingRow
       icon={Zap}
       dot={automationAvailable && autoConsent ? 'on' : 'off'}
-      title="Let Omi take actions"
+      title={t('Let Omi take actions', '让小蜗代操作')}
       subtitle={
         !automationAvailable
-          ? 'Disabled in this build.'
+          ? t('Disabled in this build.', '此版本不可用。')
           : autoConsent
-            ? 'Omi can click and type in your apps when you ask.'
-            : 'Turn on to let Omi act in your apps when you ask.'
+            ? t('Omi can click and type in your apps when you ask.', '你开口时，小蜗可以在你的应用里点击和输入。')
+            : t('Turn on to let Omi act in your apps when you ask.', '开启后，你开口时小蜗可以在你的应用里代操作。')
       }
       keywords="automation actions desktop control agent take action flaui approve"
       control={
@@ -116,7 +123,7 @@ function ActionAutomationRow(): React.JSX.Element {
           on={automationAvailable && autoConsent}
           onChange={toggleAutomation}
           disabled={!automationAvailable}
-          label="Let Omi take actions"
+          label={t('Let Omi take actions', '让小蜗代操作')}
         />
       }
     />
@@ -147,11 +154,15 @@ function ScreenCaptureRow(): React.JSX.Element {
     <SettingRow
       icon={Monitor}
       dot={on ? 'on' : 'off'}
-      title="Screen Capture"
-      subtitle={on ? 'Capturing your screen for Rewind' : 'Screen capture is paused'}
+      title={t('Screen Capture', '屏幕截取')}
+      subtitle={
+        on
+          ? t('Capturing your screen for Rewind', '正在为回顾截取屏幕')
+          : t('Screen capture is paused', '屏幕截取已暂停')
+      }
       keywords="screen capture rewind record monitor recording"
       control={
-        <Toggle on={on} onChange={change} disabled={rewind === null} label="Screen Capture" />
+        <Toggle on={on} onChange={change} disabled={rewind === null} label={t('Screen Capture', '屏幕截取')} />
       }
     />
   )
@@ -174,10 +185,14 @@ function AudioRecordingRow(): React.JSX.Element {
     <SettingRow
       icon={Mic}
       dot={on ? 'on' : 'off'}
-      title="Audio Recording"
-      subtitle={on ? 'Recording and transcribing audio' : 'Audio recording is paused'}
+      title={t('Audio Recording', '音频录制')}
+      subtitle={
+        on
+          ? t('Recording and transcribing audio', '正在录制并转写音频')
+          : t('Audio recording is paused', '音频录制已暂停')
+      }
       keywords="audio recording microphone transcribe listening voice"
-      control={<Toggle on={on} onChange={change} label="Audio Recording" />}
+      control={<Toggle on={on} onChange={change} label={t('Audio Recording', '音频录制')} />}
     />
   )
 }
@@ -206,11 +221,14 @@ export function ScreenAnalysisRow(): React.JSX.Element {
     <SettingRow
       icon={ScanEye}
       dot={on ? 'on' : 'off'}
-      title="Screen Analysis"
-      subtitle="Master switch for Omi's proactive screen features — Focus, memory and task extraction, and insights. When off, Omi never analyzes your screen. Separate from Screen Capture above, which only records your local Rewind timeline."
+      title={t('Screen Analysis', '屏幕分析')}
+      subtitle={t(
+        "Master switch for Omi's proactive screen features — Focus, memory and task extraction, and insights. When off, Omi never analyzes your screen. Separate from Screen Capture above, which only records your local Rewind timeline.",
+        '小蜗主动屏幕功能的总开关 —— 专注、记忆与任务提取、洞察。关闭后小蜗绝不分析你的屏幕。与上面的屏幕截取独立，后者只记录本地回顾时间线。'
+      )}
       keywords="screen analysis proactive focus memory task insight vision master consent"
       control={
-        <Toggle on={!!on} onChange={change} disabled={on === null} label="Screen Analysis" />
+        <Toggle on={!!on} onChange={change} disabled={on === null} label={t('Screen Analysis', '屏幕分析')} />
       }
     />
   )
@@ -234,10 +252,14 @@ function MultiChatRow(): React.JSX.Element {
   return (
     <SettingRow
       icon={MessageSquarePlus}
-      title="Multiple Chat Sessions"
-      subtitle={on ? 'Create separate chat threads' : 'Single chat synced with the mobile app'}
+      title={t('Multiple Chat Sessions', '多聊天会话')}
+      subtitle={
+        on
+          ? t('Create separate chat threads', '创建独立聊天线程')
+          : t('Single chat synced with the mobile app', '与手机应用同步的单条聊天')
+      }
       keywords="multi chat sessions threads history switcher conversations separate"
-      control={<Toggle on={on} onChange={change} label="Multiple Chat Sessions" />}
+      control={<Toggle on={on} onChange={change} label={t('Multiple Chat Sessions', '多聊天会话')} />}
     />
   )
 }
@@ -256,11 +278,14 @@ function LegacyHomeRow(): React.JSX.Element {
     <SettingRow
       icon={LayoutDashboard}
       dot={legacy ? 'off' : 'on'}
-      title="New Home screen"
-      subtitle="The redesigned Home — one stage with your stats, an ask bar, and suggestions. Turn this off to go back to the previous Home."
+      title={t('New Home screen', '新版主页')}
+      subtitle={t(
+        'The redesigned Home — one stage with your stats, an ask bar, and suggestions. Turn this off to go back to the previous Home.',
+        '重新设计的主页 —— 一个舞台呈现统计、提问栏和建议。关闭可回到旧版主页。'
+      )}
       keywords="hub home dashboard layout redesign legacy old classic"
       control={
-        <Toggle on={!legacy} onChange={(on) => change(!on)} label="Use the new Home screen" />
+        <Toggle on={!legacy} onChange={(on) => change(!on)} label={t('Use the new Home screen', '使用新版主页')} />
       }
     />
   )
@@ -284,8 +309,11 @@ function MeetingDetectionRow(): React.JSX.Element {
     <SettingRow
       icon={Presentation}
       dot={mode === 'off' ? 'off' : 'on'}
-      title="Meeting detection"
-      subtitle="When a meeting app is holding the microphone (Zoom, Teams, Meet, and more), Omi can capture and transcribe it — always with a visible notice, never silently."
+      title={t('Meeting detection', '会议检测')}
+      subtitle={t(
+        'When a meeting app is holding the microphone (Zoom, Teams, Meet, and more), Omi can capture and transcribe it — always with a visible notice, never silently.',
+        '当会议应用占用麦克风时（Zoom、Teams、Meet 等），小蜗可以捕获并转写 —— 始终有可见提示，绝不静默。'
+      )}
       keywords="meeting zoom teams meet webex discord detect auto capture record"
       control={
         <select
@@ -295,13 +323,13 @@ function MeetingDetectionRow(): React.JSX.Element {
           className="rounded-md bg-white/10 px-2 py-1.5 text-sm text-white focus:outline-none"
         >
           <option value="ask" className="bg-neutral-900">
-            Ask before capturing (default)
+            {t('Ask before capturing (default)', '捕获前询问（默认）')}
           </option>
           <option value="auto" className="bg-neutral-900">
-            Capture automatically
+            {t('Capture automatically', '自动捕获')}
           </option>
           <option value="off" className="bg-neutral-900">
-            Off
+            {t('Off', '关闭')}
           </option>
         </select>
       }
@@ -331,11 +359,14 @@ function LaunchAtLoginRow(): React.JSX.Element {
     <SettingRow
       icon={Power}
       dot={openAtLogin ? 'on' : 'off'}
-      title="Launch at login"
+      title={t('Launch at login', '开机自启')}
       subtitle={
         supported
-          ? 'Start Omi automatically when you sign in to Windows.'
-          : 'Start Omi automatically when you sign in to Windows. Available in installed builds only.'
+          ? t('Start Omi automatically when you sign in to Windows.', '登录 Windows 时自动启动小蜗。')
+          : t(
+              'Start Omi automatically when you sign in to Windows. Available in installed builds only.',
+              '登录 Windows 时自动启动小蜗。仅安装版可用。'
+            )
       }
       keywords="startup autostart launch login boot start"
       control={
@@ -343,7 +374,7 @@ function LaunchAtLoginRow(): React.JSX.Element {
           on={!!openAtLogin}
           onChange={change}
           disabled={openAtLogin === null || !supported}
-          label="Launch at login"
+          label={t('Launch at login', '开机自启')}
         />
       }
     />

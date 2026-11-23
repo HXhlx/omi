@@ -5,6 +5,7 @@
 // buildTrayMenuTemplate() to drive the real Tray tooltip and context menu.
 import type { MenuItemConstructorOptions } from 'electron'
 import type { TrayListeningState } from '../shared/types'
+import { brandName, isZhBrand } from '../shared/brand'
 
 // The union lives in shared/types.ts (mirrored to the renderer); alias it here so
 // the main process and renderer can never disagree on the set of tray states.
@@ -33,13 +34,24 @@ export function describeTray(
   state: TrayState,
   opts: { updateReady?: boolean } = {}
 ): TrayPresentation {
-  const base: Record<TrayState, TrayPresentation> = {
-    idle: { tooltip: 'Omi', toggleLabel: 'Resume listening' },
-    listening: { tooltip: 'Omi — listening', toggleLabel: 'Pause listening' },
-    paused: { tooltip: 'Omi — paused', toggleLabel: 'Resume listening' }
-  }
+  // LOCAL ADAPT (XiaoWo): zh tray copy on this machine; test mode keeps the
+  // upstream English strings so trayState.test.ts passes unmodified.
+  const zh = isZhBrand()
+  const name = brandName()
+  const base: Record<TrayState, TrayPresentation> = zh
+    ? {
+        idle: { tooltip: name, toggleLabel: '继续收音' },
+        listening: { tooltip: `${name} — 聆听中`, toggleLabel: '暂停收音' },
+        paused: { tooltip: `${name} — 已暂停`, toggleLabel: '继续收音' }
+      }
+    : {
+        idle: { tooltip: 'Omi', toggleLabel: 'Resume listening' },
+        listening: { tooltip: 'Omi — listening', toggleLabel: 'Pause listening' },
+        paused: { tooltip: 'Omi — paused', toggleLabel: 'Resume listening' }
+      }
   const p = base[state]
-  return { ...p, tooltip: opts.updateReady ? `${p.tooltip} · update ready` : p.tooltip }
+  const readySuffix = zh ? ' · 有更新' : ' · update ready'
+  return { ...p, tooltip: opts.updateReady ? `${p.tooltip}${readySuffix}` : p.tooltip }
 }
 
 // Electron-touching actions the tray menu triggers. Injected so the template
@@ -85,19 +97,19 @@ export function buildTrayMenuTemplate(
   return [
     {
       type: 'checkbox',
-      label: 'Screen Analysis',
+      label: isZhBrand() ? '屏幕分析' : 'Screen Analysis',
       checked: opts.screenCaptureEnabled,
       click: () => actions.toggleScreenCapture()
     },
     { type: 'separator' },
-    { label: 'Open Omi', click: () => actions.showMainWindow() },
-    { label: 'Toggle OMI Bar', click: () => actions.openBar() },
+    { label: isZhBrand() ? `打开${brandName()}` : 'Open Omi', click: () => actions.showMainWindow() },
+    { label: isZhBrand() ? '唤出悬浮栏' : 'Toggle OMI Bar', click: () => actions.openBar() },
     { label: opts.toggleLabel, click: () => actions.toggleListening() },
     { type: 'separator' },
-    { label: 'Settings', click: () => actions.openSettings() },
+    { label: isZhBrand() ? '设置' : 'Settings', click: () => actions.openSettings() },
     { type: 'separator' },
-    { label: 'Check for Updates', click: () => actions.checkForUpdates() },
+    { label: isZhBrand() ? '检查更新' : 'Check for Updates', click: () => actions.checkForUpdates() },
     { type: 'separator' },
-    { label: 'Quit Omi', click: () => actions.quit() }
+    { label: isZhBrand() ? `退出${brandName()}` : 'Quit Omi', click: () => actions.quit() }
   ]
 }

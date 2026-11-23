@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { TriangleAlert, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
+import { brandName } from '../../../../shared/brand'
 
 // A subtle, non-blocking banner shown while the backend is in a 429 "storm" (this
 // account hits recurring ones). During a storm, background work — task hydrate/
@@ -48,15 +50,15 @@ export function DegradedModeNotice(): React.JSX.Element | null {
     >
       <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" strokeWidth={1.9} />
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-medium text-white/95">Omi is catching up</div>
+        <div className="text-sm font-medium text-white/95">{t('Omi is catching up', `${brandName()}正在追赶进度`)}</div>
         <div className="mt-0.5 break-words text-xs leading-relaxed text-white/65">
-          Omi&rsquo;s servers are busy. Syncing will resume automatically.
+          {t("Omi's servers are busy. Syncing will resume automatically.", '服务器繁忙，同步会自动恢复。')}
         </div>
       </div>
       <button
         onClick={() => setDismissed(true)}
         className="-mr-1 -mt-1 rounded-md p-1 text-white/45 hover:bg-white/10 hover:text-white"
-        aria-label="Dismiss"
+        aria-label={t('Dismiss', '关闭')}
       >
         <X className="h-3.5 w-3.5" />
       </button>

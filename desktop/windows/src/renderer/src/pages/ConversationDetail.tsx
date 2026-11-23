@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { omiApi } from '../lib/apiClient'
 import { t } from '../lib/i18n'
+import { brandName } from '../../../shared/brand'
 import { deleteCloudConversation } from '../lib/conversations/mutations'
 import { isLocalConversationId, isPendingConversationId } from '../lib/conversationId'
 import { invalidateConversationsCache } from '../lib/pageCache'
@@ -266,7 +267,7 @@ function ConversationDetailView({ conversationId }: { conversationId: string }):
           setLocal(
             c.kind === 'chat'
               ? {
-                  title: c.title || t('Chat with Omi', '与 Omi 聊天'),
+                  title: c.title || t('Chat with Omi', '与小蜗聊天'),
                   subtitle: `${new Date(c.startedAt).toLocaleString()} · ${c.messages?.length ?? 0} ${t('messages', '条消息')}`,
                   chatMessages: c.messages ?? [],
                   transcript: c.transcript
@@ -417,7 +418,7 @@ function ConversationDetailView({ conversationId }: { conversationId: string }):
       await reprocessConversation(id, appId)
       toast(t('Reprocessing', '重新处理中'), {
         tone: 'info',
-        body: t('Omi is regenerating the summary.', 'Omi 正在重新生成摘要。')
+        body: t('Omi is regenerating the summary.', '小蜗正在重新生成摘要。')
       })
       setConv((c) => (c ? { ...c, status: 'processing' } : c))
     } catch (e) {
@@ -523,7 +524,7 @@ function ConversationDetailView({ conversationId }: { conversationId: string }):
         <p className="max-w-sm text-sm text-text-tertiary">
           {t(
             'Omi is still processing this conversation. It’ll appear in your list shortly.',
-            'Omi 正在处理这段对话，稍后会出现在你的列表中。'
+            '小蜗正在处理这段对话，稍后会出现在你的列表中。'
           )}
         </p>
       </div>
@@ -574,7 +575,7 @@ function ConversationDetailView({ conversationId }: { conversationId: string }):
                     }
                   >
                     <div className="mb-1 text-[10px] uppercase tracking-wide text-text-quaternary">
-                      {m.role === 'user' ? t('You', '你') : 'Omi'}
+            {m.role === 'user' ? t('You', '你') : brandName()}
                     </div>
                     <div className="whitespace-pre-wrap">{m.content}</div>
                   </li>
@@ -765,7 +766,7 @@ function ConversationDetailView({ conversationId }: { conversationId: string }):
                   <p className="text-xs text-text-tertiary">
                     {t(
                       'Run an Omi app over this conversation for extra insights.',
-                      '运行一个 Omi 应用，为这段对话生成更多洞察。'
+                      '运行一个小蜗应用，为这段对话生成更多洞察。'
                     )}
                   </p>
                   <button

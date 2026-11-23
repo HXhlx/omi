@@ -160,10 +160,15 @@ export function registerRewindHandlers(): void {
   // Receive a sampled JPEG frame from the renderer capture host and store it
   // (after foreground-window metadata + idle/lock/dup gating).
   ipcMain.handle('rewind:saveFrame', async (_e, data: Uint8Array, sourceId: string) => {
-    // Foreground focus can move again while getUserMedia opens a new display.
-    // Never attach the new window's metadata/privacy decision to stale pixels.
-    if (!(await isCurrentRewindCaptureSource(sourceId))) {
-      return { captured: false, reason: 'display-changed' }
+    // LOCAL ADAPT (XiaoWo): camera frames carry a synthetic source id — the
+    // display-change guard is meaningless for them (there is no display to
+    // follow), so accept the camera marker directly.
+    if (sourceId !== 'camera:default') {
+      // Foreground focus can move again while getUserMedia opens a new display.
+      // Never attach the new window's metadata/privacy decision to stale pixels.
+      if (!(await isCurrentRewindCaptureSource(sourceId))) {
+        return { captured: false, reason: 'display-changed' }
+      }
     }
     const result = await ingestRewindFrame(Buffer.from(data))
     // A stored frame bumps the all-time frame count. Tell open windows so the

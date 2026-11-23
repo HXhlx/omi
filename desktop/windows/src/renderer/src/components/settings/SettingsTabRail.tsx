@@ -1,6 +1,7 @@
 import { Search, ArrowLeft } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { SETTINGS_TABS, type SettingsTabId } from './tabs'
+import { t } from '../../lib/i18n'
 
 const HOVER = 'hover:bg-[var(--nav-sel)]'
 
@@ -28,15 +29,17 @@ export function SettingsTabRail(props: {
         )}
       >
         <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
-        Back
+        {t('Back', '返回')}
       </button>
-      <h2 className="mb-3 px-2.5 font-display text-2xl font-semibold text-text-primary">Settings</h2>
+      <h2 className="mb-3 px-2.5 font-display text-2xl font-semibold text-text-primary">
+        {t('Settings', '设置')}
+      </h2>
       <div className="relative mb-3">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
         <input
           value={query}
           onChange={(e) => onQuery(e.target.value)}
-          placeholder="Search settings…"
+          placeholder={t('Search settings…', '搜索设置…')}
           className="glass-subtle focus-ring w-full rounded-lg py-2 pl-9 pr-3 text-sm text-text-secondary placeholder:text-white/35"
         />
       </div>

@@ -69,6 +69,9 @@ export function routeCaptureEvent(
   windowIds: number[],
   mainWindowId: number | undefined
 ): number[] {
+  // LOCAL ADAPT (XiaoWo): the wake-word PCM tee is main-only (the sherpa spotter
+  // lives in main). No UI window may receive it — it is raw always-on mic audio.
+  if (event.type === 'wake-pcm') return []
   if (isOwnedCaptureEvent(event)) {
     return ownerId !== undefined && windowIds.includes(ownerId) ? [ownerId] : []
   }

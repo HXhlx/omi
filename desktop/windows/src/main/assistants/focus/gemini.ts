@@ -113,6 +113,49 @@ async function attempt(
   imageBase64: string,
   external?: AbortSignal
 ): Promise<string> {
+  // LOCAL ADAPT (XiaoWo): vision rides the local OpenAI-compatible lane when
+  // configured (VITE_OMI_LOCAL_VISION_BASE / _MODEL) — the Gemini proxy's
+  // generateContent has no working route on the local gateway. Same image,
+  // same prompts, same JSON contract; only the wire format changes.
+  const visionBase = String(import.meta.env.VITE_OMI_LOCAL_VISION_BASE || '').trim().replace(/\/+$/, '')
+  if (visionBase && import.meta.env.MODE !== 'test') {
+    return withTimeout(
+      REQUEST_TIMEOUT_MS,
+      async (signal) => {
+        const model = String(import.meta.env.VITE_OMI_LOCAL_VISION_MODEL || 'glm-5.3-flash')
+        const res = await net.fetch(`${visionBase}/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: localVisionAuth(session)
+          },
+          signal,
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              {
+                role: 'user',
+                content: [
+                  { type: 'text', text: prompt },
+                  { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBase64}` } }
+                ]
+              }
+            ],
+            // The focus verdict is a small JSON object; ask for JSON mode where
+            // the provider honors it (parseScreenAnalysis tolerates prose fences).
+            response_format: { type: 'json_object' },
+            max_tokens: 1024,
+            stream: false
+          })
+        })
+        if (!res.ok) throw new GeminiHttpError(res.status, res.status === 429 || res.status >= 500)
+        const json = (await res.json()) as { choices?: { message?: { content?: string } }[] }
+        return (json.choices?.[0]?.message?.content ?? '').trim()
+      },
+      external
+    )
+  }
   return withTimeout(
     REQUEST_TIMEOUT_MS,
     async (signal) => {
@@ -154,6 +197,21 @@ async function attempt(
     },
     external
   )
+}
+
+// Same ADMIN_KEY impersonation convention as the embeddings lane: main's
+// net.fetch bypasses the session webRequest rewrite, so build the header here.
+function localVisionAuth(session: BackendSession): string {
+  const adminKey = String(import.meta.env.VITE_OMI_ADMIN_KEY || '')
+  if (!adminKey) return `Bearer ${session.token}`
+  try {
+    const payload = JSON.parse(Buffer.from(session.token.split('.')[1], 'base64').toString('utf8'))
+    const uid = payload?.sub ?? payload?.user_id
+    if (typeof uid === 'string' && uid) return `Bearer ${adminKey}${uid}`
+  } catch {
+    /* fall through */
+  }
+  return `Bearer ${session.token}`
 }
 
 /**

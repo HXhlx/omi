@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AlertTriangle, X } from 'lucide-react'
+import { t } from '../../../lib/i18n'
 import { onUsageLimit, dismissUsageLimit, type UsageLimitReason } from '../../../lib/usageLimit'
 import { requestSettingsTab } from '../../../lib/settingsNav'
 import { trackPaywallOpened } from '../../../lib/analytics'
@@ -9,13 +10,21 @@ import { trackPaywallOpened } from '../../../lib/analytics'
 // button is purple; Windows uses the app's neutral white primary (INV-UI-1: no
 // purple). Like Mac, a secondary "Bring your own keys" action deep-links into
 // Settings → Advanced (the Developer API Keys / BYOK subsection).
-const HEADLINE = "You've hit your monthly limit"
+const HEADLINE = t("You've hit your monthly limit", '已达到本月用量上限')
 
 const BODY: Record<UsageLimitReason, string> = {
-  transcription:
+  transcription: t(
     "You've hit your monthly limit. Upgrade to make sure your new recordings aren't lost.",
-  chat: "You've hit your monthly limit. Upgrade to keep chatting with Omi without restrictions.",
-  trial_expired: "You've hit your monthly limit. Upgrade to keep using Omi without restrictions."
+    '已达到本月用量上限。升级套餐，确保新的录音不会丢失。'
+  ),
+  chat: t(
+    "You've hit your monthly limit. Upgrade to keep chatting with Omi without restrictions.",
+    '已达到本月用量上限。升级套餐，继续无限制地和小蜗对话。'
+  ),
+  trial_expired: t(
+    "You've hit your monthly limit. Upgrade to keep using Omi without restrictions.",
+    '已达到本月用量上限。升级套餐，继续无限制地使用小蜗。'
+  )
 }
 
 /**
@@ -63,7 +72,7 @@ export function UsageLimitPopup(): React.JSX.Element | null {
         <button
           onClick={dismissUsageLimit}
           className="absolute right-3 top-3 rounded-md p-1 text-white/40 hover:bg-white/10 hover:text-white"
-          aria-label="Dismiss"
+          aria-label={t('Dismiss', '关闭')}
         >
           <X className="h-4 w-4" />
         </button>
@@ -76,13 +85,13 @@ export function UsageLimitPopup(): React.JSX.Element | null {
           onClick={onUpgrade}
           className="mt-6 w-full rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90"
         >
-          Upgrade
+          {t('Upgrade', '升级')}
         </button>
         <button
           onClick={onBringYourOwnKeys}
           className="mt-2 w-full rounded-2xl px-4 py-2.5 text-sm font-medium text-text-tertiary transition hover:text-text-primary"
         >
-          Bring your own keys
+          {t('Bring your own keys', '使用自己的 API Key')}
         </button>
       </div>
     </div>

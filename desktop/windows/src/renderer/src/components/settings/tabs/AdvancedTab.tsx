@@ -20,6 +20,7 @@ import { runMemoryExport } from '../../../lib/memoryExport'
 import { useMemories, type Memory } from '../../../hooks/useMemories'
 import { resetOnboarding } from '../../../lib/preferences'
 import { SettingRow } from '../SettingRow'
+import { t } from '../../../lib/i18n'
 import { IntegrationsTab } from './IntegrationsTab'
 import { DeveloperKeysSection } from './DeveloperKeysSection'
 import { AiProfileCard } from './AiProfileCard'
@@ -42,10 +43,10 @@ export function AdvancedTab(): React.JSX.Element {
     setScanning(true)
     try {
       setFileIndex(await window.omi.indexFilesScan())
-      toast('File index updated', { tone: 'success' })
+      toast(t('File index updated', '文件索引已更新'), { tone: 'success' })
       void buildLocalGraph().catch(() => {})
     } catch (e) {
-      toast('File indexing failed', { tone: 'error', body: (e as Error).message })
+      toast(t('File indexing failed', '文件索引失败'), { tone: 'error', body: (e as Error).message })
     } finally {
       setScanning(false)
     }
@@ -65,9 +66,9 @@ export function AdvancedTab(): React.JSX.Element {
     setRebuildingKg(true)
     try {
       setKgStatus(await buildLocalGraph())
-      toast('Knowledge graph rebuilt', { tone: 'success' })
+      toast(t('Knowledge graph rebuilt', '知识图谱已重建'), { tone: 'success' })
     } catch (e) {
-      toast('Knowledge graph rebuild failed', { tone: 'error', body: (e as Error).message })
+      toast(t('Knowledge graph rebuild failed', '知识图谱重建失败'), { tone: 'error', body: (e as Error).message })
     } finally {
       setRebuildingKg(false)
     }
@@ -95,7 +96,7 @@ export function AdvancedTab(): React.JSX.Element {
       setProfile(r.profile)
       toastForExtractResult(r)
     } catch (e) {
-      toast('Could not extract memories', { tone: 'error', body: (e as Error).message })
+      toast(t('Could not extract memories', '无法提取记忆'), { tone: 'error', body: (e as Error).message })
     } finally {
       setExtracting(false)
     }
@@ -129,11 +130,11 @@ export function AdvancedTab(): React.JSX.Element {
   const runExport = async (target: 'obsidian' | 'file' | 'notion'): Promise<void> => {
     if (exporting) return
     if (memories.length === 0) {
-      toast('No memories to export yet', { tone: 'warn' })
+      toast(t('No memories to export yet', '还没有可导出的记忆'), { tone: 'warn' })
       return
     }
     if (target === 'notion' && (!notionToken.trim() || !notionPage.trim())) {
-      toast('Enter your Notion token and parent page ID', { tone: 'warn' })
+      toast(t('Enter your Notion token and parent page ID', '请输入 Notion 令牌和父页面 ID'), { tone: 'warn' })
       return
     }
     setExporting(true)
@@ -146,13 +147,13 @@ export function AdvancedTab(): React.JSX.Element {
           : undefined
       )
       if (!r.canceled) {
-        toast(`Exported ${r.count} memor${r.count === 1 ? 'y' : 'ies'}`, {
+        toast(t(`Exported ${r.count} memories`, `已导出 ${r.count} 条记忆`), {
           tone: 'success',
           body: r.location
         })
       }
     } catch (e) {
-      toast('Export failed', { tone: 'error', body: (e as Error).message })
+      toast(t('Export failed', '导出失败'), { tone: 'error', body: (e as Error).message })
     } finally {
       setExporting(false)
     }
@@ -173,7 +174,7 @@ export function AdvancedTab(): React.JSX.Element {
       setMemAllMemories(all)
       setMemBreakdown(summarizeMemories(all))
     } catch (e) {
-      toast('Could not load memories', { tone: 'error', body: (e as Error).message })
+      toast(t('Could not load memories', '无法加载记忆'), { tone: 'error', body: (e as Error).message })
     } finally {
       setMemAuditing(false)
     }
@@ -184,13 +185,16 @@ export function AdvancedTab(): React.JSX.Element {
     if (ids.length === 0 || memDeleting) return
     if (
       !window.confirm(
-        `Permanently delete ${ids.length} app/file-index memories? This cannot be undone.`
+        t(
+          `Permanently delete ${ids.length} app/file-index memories? This cannot be undone.`,
+          `永久删除 ${ids.length} 条应用/文件索引记忆？此操作不可撤销。`
+        )
       )
     )
       return
     const token = await auth.currentUser?.getIdToken(true)
     if (!token) {
-      toast('Sign in required to delete memories', { tone: 'warn' })
+      toast(t('Sign in required to delete memories', '删除记忆需要登录'), { tone: 'warn' })
       return
     }
     setMemDeleting(true)
@@ -202,14 +206,17 @@ export function AdvancedTab(): React.JSX.Element {
     const offProgress = window.omi.onMemoriesDeleteProgress((p) => setMemDeleteProgress(p.deleted))
     try {
       const result = await window.omi.memoriesBulkDelete({ token, ids })
-      toast(`Deleted ${result.deleted} of ${ids.length} memories`, {
+      toast(t(`Deleted ${result.deleted} of ${ids.length} memories`, `已删除 ${result.deleted}/${ids.length} 条记忆`), {
         tone: result.failed ? 'warn' : 'success',
         body: result.failed
-          ? `${result.failed} failed${result.firstError ? ` — ${result.firstError}` : ''}. Analyze again to retry.`
+          ? t(
+              `${result.failed} failed. Analyze again to retry.`,
+              `${result.failed} 条失败。重新分析后可重试。`
+            )
           : undefined
       })
     } catch (e) {
-      toast('Delete failed', { tone: 'error', body: (e as Error).message })
+      toast(t('Delete failed', '删除失败'), { tone: 'error', body: (e as Error).message })
     } finally {
       offProgress()
       setMemDeleting(false)
@@ -227,13 +234,16 @@ export function AdvancedTab(): React.JSX.Element {
     <>
       <SettingRow
         icon={Download}
-        title="Import memories"
-        subtitle="Paste a ChatGPT/Claude “everything you remember about me” reply; Omi extracts distinct, durable facts."
+        title={t('Import memories', '导入记忆')}
+        subtitle={t(
+          'Paste a ChatGPT/Claude “everything you remember about me” reply; Omi extracts distinct, durable facts.',
+          '粘贴 ChatGPT/Claude 的「你记得关于我的一切」回复；小蜗会提取独立、持久的事实。'
+        )}
         keywords="import chatgpt claude memories paste extract"
       >
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-text-tertiary">Exported from</span>
+            <span className="text-sm text-text-tertiary">{t('Exported from', '导出来源')}</span>
             {(['chatgpt', 'claude'] as const).map((s) => (
               <button
                 key={s}
@@ -252,7 +262,7 @@ export function AdvancedTab(): React.JSX.Element {
               setProfile('')
             }}
             rows={5}
-            placeholder="Paste the assistant’s full reply here…"
+            placeholder={t('Paste the assistant’s full reply here…', '把助手的完整回复粘贴到这里…')}
             className="input-field resize-none"
           />
           <div className="flex items-center gap-2">
@@ -261,7 +271,7 @@ export function AdvancedTab(): React.JSX.Element {
               disabled={!dump.trim() || extracting || importing}
               className="btn-ghost disabled:opacity-40"
             >
-              {extracting ? 'Extracting…' : 'Extract memories'}
+              {extracting ? t('Extracting…', '提取中…') : t('Extract memories', '提取记忆')}
             </button>
             {parsed && parsed.length > 0 && (
               <button
@@ -270,8 +280,8 @@ export function AdvancedTab(): React.JSX.Element {
                 className="btn-primary px-4 py-2 disabled:opacity-40"
               >
                 {importing
-                  ? 'Importing…'
-                  : `Import ${parsed.length} memor${parsed.length === 1 ? 'y' : 'ies'}`}
+                  ? t('Importing…', '导入中…')
+                  : t(`Import ${parsed.length} memories`, `导入 ${parsed.length} 条记忆`)}
               </button>
             )}
           </div>
@@ -294,8 +304,11 @@ export function AdvancedTab(): React.JSX.Element {
 
       <SettingRow
         icon={Upload}
-        title="Export memories"
-        subtitle={`Export your ${memories.length} memor${memories.length === 1 ? 'y' : 'ies'} as Markdown (Obsidian, a plain file, or Notion).`}
+        title={t('Export memories', '导出记忆')}
+        subtitle={t(
+          `Export your ${memories.length} memories as Markdown (Obsidian, a plain file, or Notion).`,
+          `把 ${memories.length} 条记忆导出为 Markdown（Obsidian、纯文件或 Notion）。`
+        )}
         keywords="export obsidian notion file markdown"
       >
         <div className="space-y-3">
@@ -305,30 +318,30 @@ export function AdvancedTab(): React.JSX.Element {
               disabled={exporting}
               className="btn-ghost disabled:opacity-40"
             >
-              Obsidian vault…
+              {t('Obsidian vault…', 'Obsidian 库…')}
             </button>
             <button
               onClick={() => runExport('file')}
               disabled={exporting}
               className="btn-ghost disabled:opacity-40"
             >
-              Plain file…
+              {t('Plain file…', '纯文件…')}
             </button>
           </div>
           <div className="border-t border-white/5 pt-3">
             <p className="mb-2 text-sm text-text-tertiary">
-              Notion — paste an internal-integration token and a page ID it can access.
+              {t('Notion — paste an internal-integration token and a page ID it can access.', 'Notion —— 粘贴内部集成令牌和它可访问的页面 ID。')}
             </p>
             <input
               value={notionToken}
               onChange={(e) => setNotionToken(e.target.value)}
-              placeholder="Notion integration token (secret_…)"
+              placeholder={t('Notion integration token (secret_…)', 'Notion 集成令牌（secret_…）')}
               className="glass-subtle mb-2 w-full rounded-lg px-4 py-3 text-sm text-text-secondary focus:outline-none"
             />
             <input
               value={notionPage}
               onChange={(e) => setNotionPage(e.target.value)}
-              placeholder="Parent page ID"
+              placeholder={t('Parent page ID', '父页面 ID')}
               className="glass-subtle mb-2 w-full rounded-lg px-4 py-3 text-sm text-text-secondary focus:outline-none"
             />
             <button
@@ -336,7 +349,7 @@ export function AdvancedTab(): React.JSX.Element {
               disabled={exporting}
               className="btn-ghost disabled:opacity-40"
             >
-              {exporting ? 'Exporting…' : 'Export to Notion'}
+              {exporting ? t('Exporting…', '导出中…') : t('Export to Notion', '导出到 Notion')}
             </button>
           </div>
         </div>
@@ -344,8 +357,11 @@ export function AdvancedTab(): React.JSX.Element {
 
       <SettingRow
         icon={Wrench}
-        title="Memory maintenance"
-        subtitle="Find and remove legacy app/file-index memories (these belong in the knowledge graph, not memories). Analyze is read-only."
+        title={t('Memory maintenance', '记忆维护')}
+        subtitle={t(
+          'Find and remove legacy app/file-index memories (these belong in the knowledge graph, not memories). Analyze is read-only.',
+          '查找并移除遗留的应用/文件索引记忆（它们属于知识图谱，不是记忆）。分析是只读的。'
+        )}
         keywords="maintenance cleanup delete app file index memories audit"
       >
         <div className="space-y-3">
@@ -355,7 +371,7 @@ export function AdvancedTab(): React.JSX.Element {
               disabled={memAuditing || memDeleting}
               className="btn-ghost disabled:opacity-40"
             >
-              {memAuditing ? 'Analyzing…' : 'Analyze memories'}
+              {memAuditing ? t('Analyzing…', '分析中…') : t('Analyze memories', '分析记忆')}
             </button>
             {memBreakdown && memBreakdown.appIndexCount > 0 && (
               <button
@@ -364,17 +380,17 @@ export function AdvancedTab(): React.JSX.Element {
                 className="btn-primary px-4 py-2 disabled:opacity-40"
               >
                 {memDeleting
-                  ? `Deleting ${memDeleteProgress}/${memBreakdown.appIndexCount}…`
-                  : `Delete ${memBreakdown.appIndexCount} app/file memories`}
+                  ? t(`Deleting ${memDeleteProgress}/${memBreakdown.appIndexCount}…`, `删除中 ${memDeleteProgress}/${memBreakdown.appIndexCount}…`)
+                  : t(`Delete ${memBreakdown.appIndexCount} app/file memories`, `删除 ${memBreakdown.appIndexCount} 条应用/文件记忆`)}
               </button>
             )}
           </div>
           {memBreakdown && (
             <div className="glass-subtle rounded-lg px-4 py-3 text-sm text-text-tertiary">
               <p className="mb-2 text-text-secondary">
-                {memBreakdown.total} total memories ·{' '}
+                {t(`${memBreakdown.total} total memories`, `共 ${memBreakdown.total} 条记忆`)} ·{' '}
                 <span className="text-text-primary">{memBreakdown.appIndexCount}</span>{' '}
-                app/file-index matches
+                {t('app/file-index matches', '条应用/文件索引匹配')}
               </p>
               {memBreakdown.appIndexCount > 0 && (
                 <ul className="mb-3 max-h-32 overflow-y-auto">
@@ -385,7 +401,7 @@ export function AdvancedTab(): React.JSX.Element {
                   ))}
                 </ul>
               )}
-              <p className="mb-1 text-text-secondary">Breakdown by tag (not deleted):</p>
+              <p className="mb-1 text-text-secondary">{t('Breakdown by tag (not deleted):', '按标签分组（不删除）：')}</p>
               <ul className="max-h-40 overflow-y-auto">
                 {memBreakdown.groups.map((g) => (
                   <li key={g.key} className="py-0.5">
@@ -412,35 +428,49 @@ export function AdvancedTab(): React.JSX.Element {
 
       <SettingRow
         icon={FolderSearch}
-        title="File indexing"
+        title={t('File indexing', '文件索引')}
         subtitle={
           fileIndex
-            ? `${fileIndex.filesIndexed.toLocaleString()} items indexed${
-                fileIndex.lastRunAt
-                  ? ` · last run ${new Date(fileIndex.lastRunAt).toLocaleString()}`
-                  : ''
-              }`
-            : 'Indexes file names/metadata locally (contents never read or uploaded).'
+            ? t(
+                `${fileIndex.filesIndexed.toLocaleString()} items indexed${
+                  fileIndex.lastRunAt
+                    ? ` · last run ${new Date(fileIndex.lastRunAt).toLocaleString()}`
+                    : ''
+                }`,
+                `已索引 ${fileIndex.filesIndexed.toLocaleString()} 项${
+                  fileIndex.lastRunAt
+                    ? ` · 上次运行 ${new Date(fileIndex.lastRunAt).toLocaleString()}`
+                    : ''
+                }`
+              )
+            : t('Indexes file names/metadata locally (contents never read or uploaded).', '在本地索引文件名/元数据（绝不读取或上传内容）。')
         }
         keywords="file index scan rescan local"
         control={
           <button onClick={rescan} disabled={scanning} className="btn-ghost disabled:opacity-40">
-            {scanning ? 'Indexing…' : 'Re-scan now'}
+            {scanning ? t('Indexing…', '索引中…') : t('Re-scan now', '立即重新扫描')}
           </button>
         }
       />
 
       <SettingRow
         icon={Network}
-        title="Knowledge graph"
+        title={t('Knowledge graph', '知识图谱')}
         subtitle={
           kgStatus
-            ? `${kgStatus.nodeCount.toLocaleString()} nodes · ${kgStatus.edgeCount.toLocaleString()} relationships${
-                kgStatus.lastBuiltAt
-                  ? ` · last built ${new Date(kgStatus.lastBuiltAt).toLocaleString()}`
-                  : ''
-              }`
-            : 'A local graph of your projects, tech, people, and apps — used to ground chat answers.'
+            ? t(
+                `${kgStatus.nodeCount.toLocaleString()} nodes · ${kgStatus.edgeCount.toLocaleString()} relationships${
+                  kgStatus.lastBuiltAt
+                    ? ` · last built ${new Date(kgStatus.lastBuiltAt).toLocaleString()}`
+                    : ''
+                }`,
+                `${kgStatus.nodeCount.toLocaleString()} 个节点 · ${kgStatus.edgeCount.toLocaleString()} 条关系${
+                  kgStatus.lastBuiltAt
+                    ? ` · 上次构建 ${new Date(kgStatus.lastBuiltAt).toLocaleString()}`
+                    : ''
+                }`
+              )
+            : t('A local graph of your projects, tech, people, and apps — used to ground chat answers.', '项目、技术、人物和应用的本地图谱 —— 用于让聊天回答有据可依。')
         }
         keywords="knowledge graph rebuild kg nodes"
         control={
@@ -449,19 +479,19 @@ export function AdvancedTab(): React.JSX.Element {
             disabled={rebuildingKg}
             className="btn-ghost disabled:opacity-40"
           >
-            {rebuildingKg ? 'Rebuilding…' : 'Rebuild now'}
+            {rebuildingKg ? t('Rebuilding…', '重建中…') : t('Rebuild now', '立即重建')}
           </button>
         }
       />
 
       <SettingRow
         icon={RotateCcw}
-        title="Replay onboarding"
-        subtitle="Run the startup wizard again from the beginning."
+        title={t('Replay onboarding', '重玩引导')}
+        subtitle={t('Run the startup wizard again from the beginning.', '从头再跑一遍启动向导。')}
         keywords="onboarding wizard replay reset"
         control={
           <button onClick={replayOnboarding} className="btn-ghost">
-            Replay
+            {t('Replay', '重玩')}
           </button>
         }
       />

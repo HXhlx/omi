@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Lightbulb, RefreshCw, Loader2, AlertTriangle, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { omiApi } from '../../lib/apiClient'
 import { Modal } from '../ui/Modal'
 import { goalEmoji } from '../../lib/goalEmoji'
@@ -130,8 +131,8 @@ export function GoalInsightPanel({
         <button
           onClick={onClose}
           className="shrink-0 rounded-md p-1 text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
-          title="Close"
-          aria-label="Close"
+          title={t('Close', '关闭')}
+          aria-label={t('Close', '关闭')}
         >
           <X className="h-4 w-4" />
         </button>
@@ -200,7 +201,7 @@ export function GoalInsightPanel({
             onClick={refresh}
             disabled={refreshDisabled}
             className="btn-ghost px-4 py-2 disabled:opacity-40"
-            title="Get a fresh insight"
+          title={t('Get a fresh insight', '获取新洞察')}
           >
             <RefreshCw className={`h-4 w-4 ${status === 'loading' ? 'animate-spin' : ''}`} />
             Refresh

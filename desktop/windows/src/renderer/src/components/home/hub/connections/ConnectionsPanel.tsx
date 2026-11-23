@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, LayoutGrid, ArrowRight, X } from 'lucide-react'
+import { t } from '../../../../lib/i18n'
 import type { HubConnectSlotProps } from '../hubConnectSlot'
 import { CalendarConnector } from './CalendarConnector'
 import { StickyNotesConnector } from './StickyNotesConnector'
@@ -76,7 +77,7 @@ function DetailShell({
           className="focus-ring -ml-1.5 flex items-center gap-1 rounded-lg py-1 pl-1 pr-2 text-[13px] font-medium text-home-muted transition-colors hover:text-home-ink"
         >
           <ChevronLeft className="h-4 w-4" strokeWidth={2.25} />
-          Back
+          {t('Back', '返回')}
         </button>
         <h1 className="min-w-0 truncate font-serif text-[18px] font-medium text-home-ink">
           {title}
@@ -84,7 +85,7 @@ function DetailShell({
         <button
           type="button"
           onClick={onDismiss}
-          aria-label="Close connect"
+          aria-label={t('Close connect', '关闭连接面板')}
           className="focus-ring ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-home-muted transition-colors hover:bg-white/10 hover:text-home-ink"
         >
           <X className="h-4 w-4" strokeWidth={2} />
@@ -103,8 +104,8 @@ function MarketplaceLink({ onOpen }: { onOpen: () => void }): React.JSX.Element 
   return (
     <ConnectorRow
       icon={LayoutGrid}
-      title="Browse the App Marketplace"
-      description="Discover chat personas, notification plugins, and more."
+      title={t('Browse the App Marketplace', '浏览应用市场')}
+      description={t('Discover chat personas, notification plugins, and more.', '发现对话角色、通知插件等更多能力。')}
       onClick={onOpen}
       action={<ArrowRight className="h-4 w-4 text-home-faint" strokeWidth={2} />}
     />
@@ -163,7 +164,7 @@ export function ConnectionsPanel({ onDismiss }: HubConnectSlotProps): React.JSX.
         <StickyNotesConnector />
       )
     return (
-      <DetailShell title="Connect data" onBack={back} onDismiss={onDismiss}>
+      <DetailShell title={t('Connect data', '连接数据')} onBack={back} onDismiss={onDismiss}>
         <div className="flex flex-col">{detail}</div>
       </DetailShell>
     )
@@ -171,8 +172,8 @@ export function ConnectionsPanel({ onDismiss }: HubConnectSlotProps): React.JSX.
 
   if (view.kind === 'imports') {
     return (
-      <DetailShell title="Import sources" onBack={back} onDismiss={onDismiss}>
-        <SectionHeader>Imports</SectionHeader>
+      <DetailShell title={t('Import sources', '导入来源')} onBack={back} onDismiss={onDismiss}>
+        <SectionHeader>{t('Imports', '导入')}</SectionHeader>
         <div className="flex flex-col">
           <CalendarConnector />
           <StickyNotesConnector />
@@ -189,8 +190,8 @@ export function ConnectionsPanel({ onDismiss }: HubConnectSlotProps): React.JSX.
 
   if (view.kind === 'exports') {
     return (
-      <DetailShell title="Use omi memory anywhere" onBack={back} onDismiss={onDismiss}>
-        <SectionHeader>Exports</SectionHeader>
+      <DetailShell title={t('Use omi memory anywhere', '随处使用小蜗记忆')} onBack={back} onDismiss={onDismiss}>
+        <SectionHeader>{t('Exports', '导出')}</SectionHeader>
         <div className="flex flex-col">
           <ExportsConnector />
         </div>
@@ -206,7 +207,7 @@ export function ConnectionsPanel({ onDismiss }: HubConnectSlotProps): React.JSX.
   // give an external tool read access to your Omi memory.
   return (
     <DetailShell title={EXPORT_TITLES[view.id]} onBack={back} onDismiss={onDismiss}>
-      <SectionHeader>Use omi memory anywhere</SectionHeader>
+      <SectionHeader>{t('Use omi memory anywhere', '随处使用小蜗记忆')}</SectionHeader>
       <McpExportDetail exportId={view.id} />
       <div className="mt-6">
         <MarketplaceLink onOpen={openApps} />

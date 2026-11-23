@@ -10,7 +10,8 @@ import {
   Mic,
   Trash2,
   Target,
-  ScanText
+  ScanText,
+  Camera
 } from 'lucide-react'
 import { runScreenSynthesisOnce } from '../../../lib/screenSynthesis'
 import { runRetentionSweep } from '../../../lib/retentionSweep'
@@ -18,6 +19,8 @@ import { BUILT_IN_EXCLUDED_APPS } from '../../../../../shared/rewindExclusions'
 import { SettingRow } from '../SettingRow'
 import { Toggle } from '../Toggle'
 import { getPreferences, setPreferences } from '../../../lib/preferences'
+import { t } from '../../../lib/i18n'
+import { brandName } from '../../../../../shared/brand'
 import type {
   RewindSettings,
   RewindCaptureQuality,
@@ -96,17 +99,23 @@ export function RewindTab(): React.JSX.Element {
       <SettingRow
         icon={Mic}
         dot={continuousRec ? 'on' : 'off'}
-        title="Continuous recording"
-        subtitle="Always-on microphone. Omi turns what you hear into conversations automatically."
+        title={t('Continuous recording', '持续录音')}
+        subtitle={t(
+          'Always-on microphone. Omi turns what you hear into conversations automatically.',
+          '麦克风常开，小蜗自动把听到的内容整理成对话。'
+        )}
         keywords="continuous recording microphone audio always-on"
         control={
-          <Toggle on={continuousRec} onChange={toggleContinuous} label="Continuous recording" />
+          <Toggle on={continuousRec} onChange={toggleContinuous} label={t('Continuous recording', '持续录音')} />
         }
       />
       <SettingRow
         icon={Trash2}
-        title="Auto-cleanup"
-        subtitle="Remove empty conversations and junk memories. Preview logs what it would delete; switch to Delete to apply."
+        title={t('Auto-cleanup', '自动清理')}
+        subtitle={t(
+          'Remove empty conversations and junk memories. Preview logs what it would delete; switch to Delete to apply.',
+          '清除空对话和无用记忆。“预览”只记录将删除的内容，切到“删除”才真正执行。'
+        )}
         keywords="retention cleanup delete conversations memories sweep"
       >
         <div className="flex gap-1">
@@ -120,7 +129,7 @@ export function RewindTab(): React.JSX.Element {
                   : 'rounded-md px-2.5 py-1 text-xs text-white/50 hover:text-white/80'
               }
             >
-              {m === 'off' ? 'Off' : m === 'dry-run' ? 'Preview' : 'Delete'}
+              {m === 'off' ? t('Off', '关闭') : m === 'dry-run' ? t('Preview', '预览') : t('Delete', '删除')}
             </button>
           ))}
         </div>
@@ -128,22 +137,25 @@ export function RewindTab(): React.JSX.Element {
       <SettingRow
         icon={Monitor}
         dot={rewind?.captureEnabled ? 'on' : 'off'}
-        title="Capture my screen"
-        subtitle="A local, searchable timeline stored only on this PC — never uploaded."
+        title={t('Capture my screen', '定时截取')}
+        subtitle={t(
+          'A local, searchable timeline stored only on this PC — never uploaded.',
+          '本地可搜索的时间线，仅存于这台电脑 —— 绝不上传。'
+        )}
         keywords="rewind screen capture record"
         control={
           <Toggle
             on={!!rewind?.captureEnabled}
             onChange={(on) => rewind && saveRewind({ ...rewind, captureEnabled: on })}
             disabled={!rewind}
-            label="Capture my screen"
+            label={t('Capture my screen', '定时截取')}
           />
         }
       />
       <SettingRow
         icon={Clock}
-        title="Capture interval"
-        subtitle="How often a frame is sampled."
+        title={t('Capture interval', '截取间隔')}
+        subtitle={t('How often a frame is sampled.', '每隔多久采样一帧。')}
         keywords="rewind frequency seconds"
         control={
           <select
@@ -155,24 +167,56 @@ export function RewindTab(): React.JSX.Element {
             className="rounded-md bg-white/10 px-2 py-1.5 text-sm text-white focus:outline-none disabled:opacity-40"
           >
             <option value={1000} className="bg-neutral-900">
-              Every 1s
+              {t('Every 1s', '每 1 秒')}
             </option>
             <option value={2000} className="bg-neutral-900">
-              Every 2s
+              {t('Every 2s', '每 2 秒')}
             </option>
             <option value={5000} className="bg-neutral-900">
-              Every 5s
+              {t('Every 5s', '每 5 秒')}
             </option>
             <option value={10000} className="bg-neutral-900">
-              Every 10s
+              {t('Every 10s', '每 10 秒')}
+            </option>
+          </select>
+        }
+      />
+      {/* LOCAL ADAPT (XiaoWo): observation source — screen (upstream) or camera
+          (real-world observation for the accessibility assistant). */}
+      <SettingRow
+        icon={Camera}
+        title={t('Capture source', '截取来源')}
+        subtitle={t(
+          'Screen captures your display; Camera observes the real world through the default camera.',
+          '屏幕截取显示器画面；摄像头通过默认摄像头观察真实世界。'
+        )}
+        keywords="rewind camera source observation 摄像头 拍照"
+        control={
+          <select
+            value={rewind?.captureSource ?? 'screen'}
+            onChange={(e) =>
+              rewind &&
+              saveRewind({ ...rewind, captureSource: e.target.value as 'screen' | 'camera' })
+            }
+            disabled={!rewind}
+            className="rounded-md bg-white/10 px-2 py-1.5 text-sm text-white focus:outline-none disabled:opacity-40"
+          >
+            <option value="screen" className="bg-neutral-900">
+              {t('Screen', '屏幕')}
+            </option>
+            <option value="camera" className="bg-neutral-900">
+              {t('Camera', '摄像头')}
             </option>
           </select>
         }
       />
       <SettingRow
         icon={ScanText}
-        title="Capture quality"
-        subtitle="Higher quality makes small on-screen text readable (better search and OCR), and uses more CPU and disk."
+        title={t('Capture quality', '截取画质')}
+        subtitle={t(
+          'Higher quality makes small on-screen text readable (better search and OCR), and uses more CPU and disk.',
+          '更高画质让小字更清晰（搜索和 OCR 更准），但更耗 CPU 和磁盘。'
+        )}
         keywords="rewind resolution quality ocr sharpness readable text"
         control={
           <select
@@ -185,21 +229,21 @@ export function RewindTab(): React.JSX.Element {
             className="rounded-md bg-white/10 px-2 py-1.5 text-sm text-white focus:outline-none disabled:opacity-40"
           >
             <option value="standard" className="bg-neutral-900">
-              Standard (720p)
+              {t('Standard (720p)', '标准（720p）')}
             </option>
             <option value="high" className="bg-neutral-900">
-              High (1080p)
+              {t('High (1080p)', '高（1080p）')}
             </option>
             <option value="max" className="bg-neutral-900">
-              Maximum (1440p)
+              {t('Maximum (1440p)', '最高（1440p）')}
             </option>
           </select>
         }
       />
       <SettingRow
         icon={CalendarClock}
-        title="Keep history for"
-        subtitle="Older frames are pruned automatically."
+        title={t('Keep history for', '历史保留时长')}
+        subtitle={t('Older frames are pruned automatically.', '更早的画面会被自动清理。')}
         keywords="rewind retention days delete"
         control={
           <div className="flex items-center gap-2 text-sm text-text-secondary">
@@ -215,14 +259,17 @@ export function RewindTab(): React.JSX.Element {
               disabled={!rewind}
               className="w-16 rounded-md bg-white/10 px-2 py-1.5 text-white focus:outline-none disabled:opacity-40"
             />
-            days
+            {t('days', '天')}
           </div>
         }
       />
       <SettingRow
         icon={Ban}
-        title="Excluded apps"
-        subtitle="Rewind never screenshots while one of these apps is in focus. Matched loosely (e.g. “chrome” covers Google Chrome)."
+        title={t('Excluded apps', '排除的应用')}
+        subtitle={t(
+          'Rewind never screenshots while one of these apps is in focus. Matched loosely (e.g. “chrome” covers Google Chrome).',
+          '这些应用处于前台时不截屏。模糊匹配（如“chrome”可覆盖 Google Chrome）。'
+        )}
         keywords="rewind exclude block private app capture"
       >
         <div className="space-y-3">
@@ -236,7 +283,7 @@ export function RewindTab(): React.JSX.Element {
                   addExcludedApp()
                 }
               }}
-              placeholder="App name (e.g. Banking)"
+              placeholder={t('App name (e.g. Banking)', '应用名（如：银行）')}
               className="flex-1 rounded-lg bg-white/10 px-3 py-2 text-sm text-text-secondary focus:outline-none"
             />
             <button
@@ -244,7 +291,7 @@ export function RewindTab(): React.JSX.Element {
               disabled={!newExcluded.trim()}
               className="btn-ghost disabled:opacity-40"
             >
-              Add
+              {t('Add', '添加')}
             </button>
           </div>
           {/* User additions — removable. */}
@@ -258,7 +305,7 @@ export function RewindTab(): React.JSX.Element {
                   <span className="max-w-[16rem] truncate">{app}</span>
                   <button
                     onClick={() => removeExcludedApp(app)}
-                    aria-label={`Remove ${app}`}
+                    aria-label={t(`Remove ${app}`, `移除 ${app}`)}
                     className="rounded-full p-0.5 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     <X className="h-3.5 w-3.5" />
@@ -269,11 +316,13 @@ export function RewindTab(): React.JSX.Element {
           )}
           {/* Built-in, always-on exclusions (not removable). */}
           <div className="rounded-lg bg-white/[0.04] px-3 py-2 text-xs leading-relaxed text-text-tertiary">
-            <span className="text-text-secondary">Always excluded:</span>{' '}
-            {['Omi', ...BUILT_IN_EXCLUDED_APPS].join(' · ')}.
+            <span className="text-text-secondary">{t('Always excluded:', '始终排除：')}</span>{' '}
+            {[brandName(), ...BUILT_IN_EXCLUDED_APPS].join(' · ')}。
             <span className="mt-1 block">
-              Login, password, and private-browsing screens are skipped automatically (by window
-              title).
+              {t(
+                'Login, password, and private-browsing screens are skipped automatically (by window title).',
+                '登录、密码和隐私浏览窗口会自动跳过（按窗口标题识别）。'
+              )}
             </span>
           </div>
         </div>
@@ -282,15 +331,18 @@ export function RewindTab(): React.JSX.Element {
       <SettingRow
         icon={Brain}
         dot={screenSynth?.enabled ? 'on' : 'off'}
-        title="Screen activity → memories"
-        subtitle="Turns recent on-screen text (from Rewind) into memories. On-device redaction first; skips private/incognito windows. Off by default — writes to your Omi account."
+        title={t('Screen activity → memories', '屏幕活动 → 记忆')}
+        subtitle={t(
+          'Turns recent on-screen text (from Rewind) into memories. On-device redaction first; skips private/incognito windows. Off by default — writes to your Omi account.',
+          '把最近的屏幕文字（来自回溯）提炼成记忆。先在本机脱敏，跳过隐私/无痕窗口。默认关闭 —— 会写入你的账号。'
+        )}
         keywords="synthesis screen memories gemini"
         control={
           <Toggle
             on={!!screenSynth?.enabled}
             onChange={(on) => void patchScreenSynth({ enabled: on })}
             disabled={!screenSynth}
-            label="Screen activity to memories"
+            label={t('Screen activity to memories', '屏幕活动转记忆')}
           />
         }
       >
@@ -298,7 +350,10 @@ export function RewindTab(): React.JSX.Element {
           <div className="space-y-2">
             <textarea
               rows={2}
-              placeholder="Denylist — one app/site keyword per line (e.g. therapy, salary)"
+              placeholder={t(
+                'Denylist — one app/site keyword per line (e.g. therapy, salary)',
+                '屏蔽清单 —— 每行一个应用/网站关键词（如：医疗、工资）'
+              )}
               defaultValue={screenSynth.denylist.join('\n')}
               onBlur={(e) =>
                 void patchScreenSynth({
@@ -313,11 +368,14 @@ export function RewindTab(): React.JSX.Element {
             <div className="flex items-center justify-between">
               <span className="text-xs text-text-tertiary">
                 {screenSynth.lastRunAt
-                  ? `Last run ${new Date(screenSynth.lastRunAt).toLocaleString()} — ${screenSynth.lastCount} memories`
-                  : 'Not run yet'}
+                  ? t(
+                      `Last run ${new Date(screenSynth.lastRunAt).toLocaleString()} — ${screenSynth.lastCount} memories`,
+                      `上次运行 ${new Date(screenSynth.lastRunAt).toLocaleString('zh-CN')} —— ${screenSynth.lastCount} 条记忆`
+                    )
+                  : t('Not run yet', '尚未运行')}
               </span>
               <button onClick={() => void synthesizeNow()} className="btn-ghost">
-                Synthesize now
+                {t('Synthesize now', '立即提炼')}
               </button>
             </div>
           </div>
@@ -326,14 +384,14 @@ export function RewindTab(): React.JSX.Element {
 
       <SettingRow
         icon={Lightbulb}
-        title="Notification presentation"
-        subtitle="Choose how Omi displays notifications."
+        title={t('Notification presentation', '通知展示方式')}
+        subtitle={t('Choose how Omi displays notifications.', '选择小蜗展示通知的方式。')}
         keywords="notifications style privacy"
       >
         {insight && (
           <div className="space-y-3">
             <label className="flex items-center gap-2 text-sm text-text-secondary">
-              Notification style
+              {t('Notification style', '通知样式')}
               <select
                 value={insight.notificationStyle}
                 onChange={(e) =>
@@ -344,15 +402,15 @@ export function RewindTab(): React.JSX.Element {
                 className="rounded-md bg-white/10 px-2 py-1.5 text-white focus:outline-none"
               >
                 <option value="omi" className="bg-neutral-900">
-                  Omi notification
+                  {t('Omi notification', '小蜗内置通知')}
                 </option>
                 <option value="native" className="bg-neutral-900">
-                  Windows notification
+                  {t('Windows notification', 'Windows 系统通知')}
                 </option>
               </select>
             </label>
             <button onClick={() => window.omi.insightTest()} className="btn-ghost self-start">
-              Send a test notification
+              {t('Send a test notification', '发送测试通知')}
             </button>
 
           </div>
@@ -362,15 +420,18 @@ export function RewindTab(): React.JSX.Element {
       <SettingRow
         icon={Target}
         dot={goalAutoGen ? 'on' : 'off'}
-        title="Automatically suggest goals"
-        subtitle="Occasionally reviews your memories, conversations, and tasks on-device and creates a goal it thinks fits you. Off by default; you can always use Suggest on the Goals page."
+        title={t('Automatically suggest goals', '自动推荐目标')}
+        subtitle={t(
+          'Occasionally reviews your memories, conversations, and tasks on-device and creates a goal it thinks fits you. Off by default; you can always use Suggest on the Goals page.',
+          '偶尔在本机回顾你的记忆、对话和任务，生成一个适合你的目标。默认关闭；也可随时在“目标”页点击推荐。'
+        )}
         keywords="goals suggest auto generate proactive"
         control={
           <Toggle
             on={!!goalAutoGen}
             onChange={toggleGoalAutoGen}
             disabled={goalAutoGen === null}
-            label="Automatically suggest goals"
+            label={t('Automatically suggest goals', '自动推荐目标')}
           />
         }
       />

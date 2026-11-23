@@ -22,32 +22,33 @@ import {
   type ByokProvider,
   type ByokValidationResults
 } from '../../../../../shared/byok'
+import { t } from '../../../lib/i18n'
 
 /** Field metadata per provider — titles/subtitles verbatim from the macOS view. */
 const PROVIDERS: { id: ByokProvider; title: string; subtitle: string; displayName: string }[] = [
   {
     id: 'openrouter',
-    title: 'OpenRouter API Key',
-    subtitle: 'For OpenRouter models.',
+    title: t('OpenRouter API Key', 'OpenRouter API 密钥'),
+    subtitle: t('For OpenRouter models.', '用于 OpenRouter 模型。'),
     displayName: 'OpenRouter'
   },
-  { id: 'openai', title: 'OpenAI API Key', subtitle: 'For GPT calls.', displayName: 'OpenAI' },
+  { id: 'openai', title: t('OpenAI API Key', 'OpenAI API 密钥'), subtitle: t('For GPT calls.', '用于 GPT 调用。'), displayName: 'OpenAI' },
   {
     id: 'anthropic',
-    title: 'Anthropic API Key',
-    subtitle: 'For chat (Claude).',
+    title: t('Anthropic API Key', 'Anthropic API 密钥'),
+    subtitle: t('For chat (Claude).', '用于聊天（Claude）。'),
     displayName: 'Anthropic'
   },
   {
     id: 'gemini',
-    title: 'Gemini API Key',
-    subtitle: 'For proactive AI (memory, tasks, insights, focus).',
+    title: t('Gemini API Key', 'Gemini API 密钥'),
+    subtitle: t('For proactive AI (memory, tasks, insights, focus).', '用于主动 AI（记忆、任务、洞察、专注）。'),
     displayName: 'Gemini'
   },
   {
     id: 'deepgram',
-    title: 'Deepgram API Key',
-    subtitle: 'For live transcription.',
+    title: t('Deepgram API Key', 'Deepgram API 密钥'),
+    subtitle: t('For live transcription.', '用于实时转写。'),
     displayName: 'Deepgram'
   }
 ]
@@ -145,7 +146,7 @@ export function DeveloperKeysSection(): React.JSX.Element {
     } else if (result.backendError) {
       // The enroll POST failed; the store retains prior enrollment evidence
       // only for keys that still match its accepted fingerprints.
-      setActivationError("Couldn't reach Omi to switch on the free plan. Try again.")
+      setActivationError(t("Couldn't reach Omi to switch on the free plan. Try again.", '无法连接服务器开启免费套餐。请重试。'))
     } else {
       // Deactivate DELETE sent (or every LLM key rejected) — the free plan is off.
       if (willValidate) {
@@ -154,7 +155,10 @@ export function DeveloperKeysSection(): React.JSX.Element {
           .sort()
         setActivationError(
           rejected.length
-            ? `Rejected by provider: ${rejected.join(', ')}. Free plan stays off until an LLM key authenticates.`
+            ? t(
+                `Rejected by provider: ${rejected.join(', ')}. Free plan stays off until an LLM key authenticates.`,
+                `被供应商拒绝：${rejected.join(', ')}。在某个 LLM 密钥通过鉴权前，免费套餐保持关闭。`
+              )
             : null
         )
       }
@@ -191,7 +195,7 @@ export function DeveloperKeysSection(): React.JSX.Element {
       <div className="mb-4 mt-2 flex items-center gap-2 border-t border-white/[0.06] pt-6">
         <KeyRound className="h-4 w-4 text-white/45" strokeWidth={1.9} />
         <h3 className="text-sm font-semibold uppercase tracking-wide text-text-tertiary">
-          Developer API Keys
+          {t('Developer API Keys', '开发者 API 密钥')}
         </h3>
       </div>
 
@@ -204,23 +208,25 @@ export function DeveloperKeysSection(): React.JSX.Element {
         )}
         <div className="min-w-0">
           <div className="text-[15px] font-semibold text-text-primary">
-            {hasActiveLLMByok ? 'Chat and AI: BYOK keys active' : 'Bring your own keys'}
+            {hasActiveLLMByok ? t('Chat and AI: BYOK keys active', '聊天与 AI：BYOK 密钥已激活') : t('Bring your own keys', '自带密钥')}
           </div>
           <div className="mt-0.5 text-sm text-text-tertiary">
             {hasActiveLLMByok
-              ? 'Your LLM keys cover supported chat and AI features. Keys stay on this PC.'
-              : 'Add an LLM key for supported chat and AI features. OpenRouter is preferred when configured. Keys stay on this PC — we never store them on our servers.'}
+              ? t('Your LLM keys cover supported chat and AI features. Keys stay on this PC.', '你的 LLM 密钥覆盖支持的聊天和 AI 功能。密钥只留在这台电脑。')
+              : t('Add an LLM key for supported chat and AI features. OpenRouter is preferred when configured. Keys stay on this PC — we never store them on our servers.', '添加 LLM 密钥以使用支持的聊天和 AI 功能。配置后优先走 OpenRouter。密钥只留在这台电脑 —— 我们绝不存到服务器。')}
           </div>
           <div className="mt-2 text-sm text-text-tertiary">
-            A validated Deepgram key is required for BYOK transcription. Without it, your Omi
-            transcription allowance and conversation locks still apply.
+            {t(
+              'A validated Deepgram key is required for BYOK transcription. Without it, your Omi transcription allowance and conversation locks still apply.',
+              'BYOK 转写需要一个通过验证的 Deepgram 密钥。没有它，仍按套餐转写额度和对话锁执行。'
+            )}
           </div>
           <div className="mt-2 text-sm text-text-tertiary">
             {hasTranscriptionByok
-              ? 'Transcription: Deepgram BYOK'
+              ? t('Transcription: Deepgram BYOK', '转写：Deepgram BYOK')
               : validatedProviders
-                ? 'Transcription: Omi plan allowance'
-                : 'Transcription status unavailable — reopen settings to check'}
+                ? t('Transcription: Omi plan allowance', '转写：套餐额度')
+                : t('Transcription status unavailable — reopen settings to check', '转写状态不可用 —— 重新打开设置查看')}
           </div>
         </div>
       </div>
@@ -247,12 +253,12 @@ export function DeveloperKeysSection(): React.JSX.Element {
               showChecking ? (
                 <span className="flex items-center gap-1.5 text-sm text-text-tertiary">
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Checking…
+                  {t('Checking…', '验证中…')}
                 </span>
               ) : status?.ok ? (
-                <span className="text-sm font-semibold text-emerald-400">Valid</span>
+                <span className="text-sm font-semibold text-emerald-400">{t('Valid', '有效')}</span>
               ) : status && !status.ok ? (
-                <span className="text-sm font-semibold text-amber-400">Invalid</span>
+                <span className="text-sm font-semibold text-amber-400">{t('Invalid', '无效')}</span>
               ) : undefined
             }
           >
@@ -261,7 +267,7 @@ export function DeveloperKeysSection(): React.JSX.Element {
                 type={reveal[id] ? 'text' : 'password'}
                 value={keys[id]}
                 onChange={(e) => onFieldChange(id, e.target.value)}
-                placeholder="Leave blank for default"
+                placeholder={t('Leave blank for default', '留空使用默认')}
                 className="glass-subtle w-full rounded-lg px-4 py-3 pr-11 font-mono text-sm text-text-secondary focus:outline-none"
                 spellCheck={false}
                 autoComplete="off"
@@ -270,7 +276,7 @@ export function DeveloperKeysSection(): React.JSX.Element {
                 type="button"
                 onClick={() => setReveal((r) => ({ ...r, [id]: !r[id] }))}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45 hover:text-white/75"
-                aria-label={reveal[id] ? `Hide ${title}` : `Show ${title}`}
+                aria-label={reveal[id] ? t(`Hide ${title}`, `隐藏 ${title}`) : t(`Show ${title}`, `显示 ${title}`)}
               >
                 {reveal[id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -288,7 +294,7 @@ export function DeveloperKeysSection(): React.JSX.Element {
             onClick={() => void clearAll()}
             className="text-sm font-medium text-red-400 hover:text-red-300"
           >
-            Clear All Custom Keys
+            {t('Clear All Custom Keys', '清除全部自定义密钥')}
           </button>
         </div>
       )}

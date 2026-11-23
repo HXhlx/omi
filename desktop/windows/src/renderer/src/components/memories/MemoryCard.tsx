@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { Info, ArrowUpRight, Monitor } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { Memory } from '../../hooks/useMemories'
 import {
   CATEGORY_LABEL,
@@ -140,7 +141,7 @@ function MemoryCardImpl({
                   type="button"
                   onClick={(e) => e.stopPropagation()}
                   className="rounded-md p-1 text-white/30 transition-colors hover:bg-white/5 hover:text-white/70"
-                  aria-label="Memory details"
+      aria-label={t('Memory details', '记忆详情')}
                 >
                   <Info className="h-3.5 w-3.5" />
                 </button>

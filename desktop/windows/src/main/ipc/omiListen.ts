@@ -197,7 +197,9 @@ const ownersWithDestroyHook = new Set<number>()
 // app — verify_token then only accepts the ADMIN_KEY impersonation form the
 // harness's own tooling uses ("<ADMIN_KEY><uid>"). VITE_OMI_ADMIN_KEY carries
 // that harness value; unset keeps the upstream Bearer token untouched.
-const ADMIN_KEY = String(import.meta.env.VITE_OMI_ADMIN_KEY || '')
+// Test mode keeps the upstream Bearer behavior so upstream unit tests pass.
+const ADMIN_KEY =
+  import.meta.env.MODE === 'test' ? '' : String(import.meta.env.VITE_OMI_ADMIN_KEY || '')
 export function buildListenHeaders(token: string, deviceIdHash: string): Record<string, string> {
   const auth = ADMIN_KEY
     ? `Bearer ${ADMIN_KEY}${decodeUidFromIdToken(token)}`

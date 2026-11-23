@@ -4,6 +4,7 @@ import type { KnowledgeGraph } from '../../../../shared/types'
 import { BrainGraph } from './LazyBrainGraph'
 import { EmptyState } from '../ui/EmptyState'
 import { capGraph, isCapped, DEFAULT_NODE_CAP, DEFAULT_LABEL_TOPK } from '../../lib/graphDisplay'
+import { t } from '../../lib/i18n'
 
 // Full-screen, INTERACTIVE (orbit/pan/zoom) home for the shared BrainGraph. This
 // is a promotion of the small non-interactive "Brain Map" card on the Memories
@@ -73,8 +74,11 @@ export function KnowledgeGraphViewer(props: {
         <div className="flex h-full w-full items-center justify-center">
           <EmptyState
             icon={Brain}
-            title="Your brain map is empty"
-            description="The map appears once you have enough linked memories. Keep talking to Omi — or rebuild to re-derive it from your latest memories."
+            title={t('Your brain map is empty', '你的脑图还是空的')}
+            description={t(
+              'The map appears once you have enough linked memories. Keep talking to Omi — or rebuild to re-derive it from your latest memories.',
+              '有足够相互关联的记忆后脑图就会出现。继续和小蜗聊聊 —— 或重建以从最新记忆重新推导。'
+            )}
             action={
               rebuild && (
                 <button
@@ -87,7 +91,7 @@ export function KnowledgeGraphViewer(props: {
                   ) : (
                     <RefreshCw className="h-4 w-4" />
                   )}
-                  Rebuild
+                  {t('Rebuild', '重建')}
                 </button>
               )
             }
@@ -103,13 +107,13 @@ export function KnowledgeGraphViewer(props: {
           <button
             onClick={onClose}
             className="btn-ghost p-2"
-            title="Back to Memories"
-            aria-label="Back"
+            title={t('Back to Memories', '返回记忆')}
+            aria-label={t('Back', '返回')}
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <span className="font-display text-lg font-bold tracking-tight text-white">
-            Brain Map
+            {t('Brain Map', '脑图')}
           </span>
         </div>
         <div className="pointer-events-auto flex items-center gap-2">
@@ -119,12 +123,14 @@ export function KnowledgeGraphViewer(props: {
               className="btn-ghost px-3 py-2"
               title={
                 showAll
-                  ? 'Show only the most connected nodes'
-                  : 'Render every node in your brain map'
+                  ? t('Show only the most connected nodes', '只显示连接最多的节点')
+                  : t('Render every node in your brain map', '渲染脑图中的每个节点')
               }
               aria-pressed={showAll}
             >
-              {showAll ? `Show key ${DEFAULT_NODE_CAP}` : `Show all ${graph.nodes.length}`}
+              {showAll
+                ? t(`Show key ${DEFAULT_NODE_CAP}`, `显示关键 ${DEFAULT_NODE_CAP}`)
+                : t(`Show all ${graph.nodes.length}`, `显示全部 ${graph.nodes.length}`)}
             </button>
           )}
           {hasGraph && labelsBite && (
@@ -133,12 +139,12 @@ export function KnowledgeGraphViewer(props: {
               className="btn-ghost px-3 py-2"
               title={
                 showAllLabels
-                  ? 'Label only the most connected nodes'
-                  : 'Show a label on every visible node'
+                  ? t('Label only the most connected nodes', '只标注连接最多的节点')
+                  : t('Show a label on every visible node', '为每个可见节点显示标签')
               }
               aria-pressed={showAllLabels}
             >
-              {showAllLabels ? 'Show key labels' : 'Show all labels'}
+              {showAllLabels ? t('Show key labels', '显示关键标签') : t('Show all labels', '显示全部标签')}
             </button>
           )}
           {rebuild && hasGraph && (
@@ -146,14 +152,14 @@ export function KnowledgeGraphViewer(props: {
               onClick={rebuild}
               disabled={rebuilding}
               className="btn-ghost px-3 py-2 disabled:opacity-40"
-              title="Rebuild the brain map from your latest memories"
+              title={t('Rebuild the brain map from your latest memories', '从最新记忆重建脑图')}
             >
               {rebuilding ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <RefreshCw className="h-4 w-4" />
               )}
-              Rebuild
+              {t('Rebuild', '重建')}
             </button>
           )}
         </div>

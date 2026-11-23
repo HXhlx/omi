@@ -100,7 +100,7 @@ export function AutoCreatedTasksStep({ onFinish }: AutoCreatedTasksStepProps): R
       <p className="mt-3 text-sm leading-relaxed text-white/50">
         {t(
           'omi listens to your conversations and automatically creates tasks, action items, and follow-ups for you.',
-          'Omi 会聆听你的对话，自动为你创建任务、行动项和跟进事项。'
+          '小蜗会聆听你的对话，自动为你创建任务、行动项和跟进事项。'
         )}
       </p>
 

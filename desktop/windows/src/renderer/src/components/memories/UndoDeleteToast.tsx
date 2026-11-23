@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Trash2, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
 
 type UndoDeleteToastProps = {
   // How long the undo window stays open before the delete commits.
@@ -63,7 +64,7 @@ export function UndoDeleteToast({
           type="button"
           onClick={onCommit}
           className="rounded-full p-1.5 text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
-          aria-label="Dismiss and delete now"
+        aria-label={t('Dismiss and delete now', '关闭并立即删除')}
         >
           <X className="h-4 w-4" />
         </button>

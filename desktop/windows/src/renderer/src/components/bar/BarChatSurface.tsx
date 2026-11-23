@@ -75,7 +75,7 @@ function OmiChatRow({ onOpen }: { onOpen: () => void }): React.JSX.Element {
         <ChatBubbleIcon />
       </span>
       <span className="min-w-0 flex-1 truncate text-sm font-medium text-neutral-100">
-        {t('Omi Chat', 'Omi 对话')}
+        {t('Omi Chat', '小蜗对话')}
       </span>
       <span
         aria-hidden="true"
@@ -433,7 +433,7 @@ export function BarChatSurface(props: BarChatSurfaceProps): React.JSX.Element {
           sendDisabled={sendDisabled}
           placeholder={t(
             'Ask Omi anything…  ·  hold Space to talk',
-            '向 Omi 提问…  ·  按住 Space 说话'
+            '向小蜗提问…  ·  按住 Space 说话'
           )}
           className="flex items-end gap-2 px-1 pb-1 pt-1"
         />
@@ -510,7 +510,7 @@ export function BarChatSurface(props: BarChatSurfaceProps): React.JSX.Element {
         </div>
       ) : (
         <div className="px-4 pb-2 pt-1 text-sm text-neutral-500">
-          {t('Ask Omi anything, or hold Space to talk.', '向 Omi 提问，或按住 Space 说话。')}
+          {t('Ask Omi anything, or hold Space to talk.', '向小蜗提问，或按住 Space 说话。')}
         </div>
       )}
 
@@ -534,7 +534,7 @@ export function BarChatSurface(props: BarChatSurfaceProps): React.JSX.Element {
         onKeyUp={onComposerKeyUp}
         onSubmit={submit}
         sendDisabled={sendDisabled}
-        placeholder={t('Ask Omi…  ·  hold Space to talk', '向 Omi 提问…  ·  按住 Space 说话')}
+        placeholder={t('Ask Omi…  ·  hold Space to talk', '向小蜗提问…  ·  按住 Space 说话')}
         className="flex items-end gap-2 px-3 pb-3 pt-2"
       />
     </div>

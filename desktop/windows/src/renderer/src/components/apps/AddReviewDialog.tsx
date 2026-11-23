@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, Star, Loader2 } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { omiApi } from '../../lib/apiClient'
 import type { AppReview } from '../../lib/omiApi.generated'
 
@@ -100,7 +101,7 @@ export function AddReviewDialog({
               </Dialog.Title>
               <Dialog.Close
                 className="rounded-md p-1.5 text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
-                aria-label="Close"
+            aria-label={t('Close', '关闭')}
               >
                 <X className="h-4 w-4" />
               </Dialog.Close>
@@ -125,7 +126,7 @@ export function AddReviewDialog({
                     }
                   }}
                   rows={4}
-                  placeholder="Share what you think about this app…"
+            placeholder={t('Share what you think about this app…', '说说你对这个应用的看法…')}
                   className="input-field resize-none text-sm"
                 />
                 <div className="text-right text-[11px] text-white/35">
@@ -152,9 +153,9 @@ export function AddReviewDialog({
                 {submitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : isEdit ? (
-                  'Update review'
+                  t('Update review', '更新评价')
                 ) : (
-                  'Submit review'
+                  t('Submit review', '提交评价')
                 )}
               </button>
             </div>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { MonitorX, X } from 'lucide-react'
+import { t } from '../../lib/i18n'
+import { brandName } from '../../../../shared/brand'
 import type { RewindCaptureDiagnostics } from '../../../../shared/types'
 
 // Shown once, at the top of the main window, when Rewind is enabled but can't
@@ -44,12 +46,14 @@ export function RewindCaptureNotice(): React.JSX.Element | null {
   if (dismissed || !captureEnabled || !diagnostics || diagnostics.available) return null
 
   const body = diagnostics.likelyMissingLinuxPortal
-    ? "Your Linux desktop doesn't have a working screen-sharing portal for this " +
-      "compositor, so Omi can't get a screen source. Install a matching " +
-      'xdg-desktop-portal backend (e.g. xdg-desktop-portal-wlr for niri/Sway/' +
-      "Hyprland), make sure it's preferred for ScreenCast, then restart Omi."
-    : `Omi couldn't get a screen source${diagnostics.reason ? ` (${diagnostics.reason})` : ''}. ` +
-      'Recording will stay off until this is resolved.'
+    ? t(
+        "Your Linux desktop doesn't have a working screen-sharing portal for this compositor, so Omi can't get a screen source. Install a matching xdg-desktop-portal backend (e.g. xdg-desktop-portal-wlr for niri/Sway/Hyprland), make sure it's preferred for ScreenCast, then restart Omi.",
+        `当前 Linux 桌面缺少可用的屏幕共享 portal，${brandName()}无法获取屏幕画面。请安装匹配的 xdg-desktop-portal 后端（如 niri/Sway/Hyprland 使用 xdg-desktop-portal-wlr），并将其设为 ScreenCast 首选，然后重启${brandName()}。`
+      )
+    : t(
+        `Omi couldn't get a screen source${diagnostics.reason ? ` (${diagnostics.reason})` : ''}. Recording will stay off until this is resolved.`,
+        `${brandName()}无法获取屏幕画面${diagnostics.reason ? `（${diagnostics.reason}）` : ''}。问题解决前将保持停止录制。`
+      )
 
   return (
     <div
@@ -58,13 +62,13 @@ export function RewindCaptureNotice(): React.JSX.Element | null {
     >
       <MonitorX className="mt-0.5 h-4 w-4 shrink-0 text-white/85" />
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-medium text-white/95">Screen recording isn&apos;t working</div>
+        <div className="text-sm font-medium text-white/95">{t("Screen recording isn't working", '屏幕录制无法工作')}</div>
         <div className="mt-0.5 break-words text-xs leading-relaxed text-white/65">{body}</div>
       </div>
       <button
         onClick={() => setDismissed(true)}
         className="-mr-1 -mt-1 rounded-md p-1 text-white/45 hover:bg-white/10 hover:text-white"
-        aria-label="Dismiss"
+        aria-label={t('Dismiss', '关闭')}
       >
         <X className="h-3.5 w-3.5" />
       </button>

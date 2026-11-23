@@ -71,10 +71,10 @@ export function ScreenPermissionStep({
       totalSteps={totalSteps}
       aside={aside}
       eyebrow={t('SCREEN', '屏幕')}
-      title={t('Let Omi read your screen', '让 Omi 读取你的屏幕')}
+      title={t('Let Omi read your screen', '让小蜗读取你的屏幕')}
       subtitle={t(
         "Omi keeps a private, local timeline of what's on your screen. It stays on this device, and you can turn it off any time in Settings.",
-        'Omi 会为你屏幕上的内容保留一条私密的本机时间线。数据只保存在这台设备上，你可以随时在设置中关闭。'
+        '小蜗会为你屏幕上的内容保留一条私密的本机时间线。数据只保存在这台设备上，你可以随时在设置中关闭。'
       )}
       icon={<Monitor className="h-5 w-5 text-white/60" />}
       cardLabel={t('Screen capture', '屏幕捕获')}

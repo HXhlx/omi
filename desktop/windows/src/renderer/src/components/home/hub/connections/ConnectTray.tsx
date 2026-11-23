@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ChevronRight, X } from 'lucide-react'
+import { t } from '../../../../lib/i18n'
 import { getCalendarStatus, type CalendarStatus } from '../../../../lib/calendarConnect'
 import { getXSession } from '../../../../lib/xSession'
 import type { XStatus } from '../../../../../../shared/types'
@@ -104,7 +105,7 @@ export function ConnectTray(props: ConnectTrayCallbacks): React.JSX.Element {
       <button
         type="button"
         onClick={onDismiss}
-        aria-label="Close connect"
+        aria-label={t('Close connect', '关闭连接面板')}
         data-testid="connect-tray-close"
         className="focus-ring absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full text-home-muted transition-colors hover:bg-white/10 hover:text-home-ink"
       >
@@ -115,16 +116,16 @@ export function ConnectTray(props: ConnectTrayCallbacks): React.JSX.Element {
         <div className="flex min-h-full items-center justify-center px-5 py-6">
           <div className="flex w-full max-w-[920px] items-stretch gap-2.5">
             <ColumnCard>
-              <ColumnHeader title="Connect data" subtitle="Sources Omi learns from." />
+              <ColumnHeader title={t('Connect data', '连接数据')} subtitle={t('Sources Omi learns from.', '小蜗学习的来源。')} />
               <div className="flex flex-col gap-2.5">
                 <TrayTile
-                  title="Calendar"
+                  title={t('Calendar', '日历')}
                   brand="calendar"
                   connected={calendar.connected}
                   onClick={() => onOpenSource('calendar')}
                 />
                 <TrayTile
-                  title="Sticky Notes"
+                  title={t('Sticky Notes', '便笺')}
                   brand="sticky"
                   onClick={() => onOpenSource('sticky')}
                 />
@@ -134,9 +135,9 @@ export function ConnectTray(props: ConnectTrayCallbacks): React.JSX.Element {
                   connected={xConnected}
                   onClick={() => onOpenSource('x')}
                 />
-                <TrayTile title="Omi Device" brand="omi" onClick={onOpenDevice} />
+                <TrayTile title={t('Omi Device', '小蜗设备')} brand="omi" onClick={onOpenDevice} />
                 <TrayTile
-                  title="More"
+                  title={t('More', '更多')}
                   plus
                   testId="tray-tile-more-imports"
                   onClick={onOpenImports}
@@ -152,11 +153,11 @@ export function ConnectTray(props: ConnectTrayCallbacks): React.JSX.Element {
 
             <ColumnCard>
               <ColumnHeader
-                title="Use omi memory anywhere"
-                subtitle="Bring your memories to the apps you use"
+                title={t('Use omi memory anywhere', '随处使用小蜗记忆')}
+                subtitle={t('Bring your memories to the apps you use', '把你的记忆带进常用应用')}
               />
               <div className="flex flex-col gap-2.5">
-                <TrayTile title="Ask Omi" brand="omi" onClick={onAskOmi} />
+                <TrayTile title={t('Ask Omi', '问小蜗')} brand="omi" onClick={onAskOmi} />
                 <TrayTile
                   title="Claude / Claude Code"
                   brand="claude"
@@ -170,7 +171,7 @@ export function ConnectTray(props: ConnectTrayCallbacks): React.JSX.Element {
                 <TrayTile title="OpenClaw" brand="openclaw" onClick={() => onOpenExport('openclaw')} />
                 <TrayTile title="Hermes" brand="hermes" onClick={() => onOpenExport('hermes')} />
                 <TrayTile
-                  title="More"
+                  title={t('More', '更多')}
                   plus
                   testId="tray-tile-more-exports"
                   onClick={onOpenExports}

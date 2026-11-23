@@ -111,6 +111,10 @@ export type Preferences = {
   // (opt-in), matching macOS's default: PTT/voice-originated replies are always
   // spoken; a typed bar question is spoken only when this is true.
   floatingBarTypedVoiceEnabled?: boolean
+  // LOCAL ADAPT (XiaoWo): always-on voice summon ("小蜗同学" / "小蜗助手").
+  // Undefined = ON — the wake word is the product's primary activation; set
+  // false to disable the always-on mic tee (chord + tray summon still work).
+  wakeEnabled?: boolean
   // Launch commands for the external coding agents (OpenClaw/Hermes/Codex).
   // Set in Settings → Agents; undefined = not connected (the matching
   // OMI_*_ADAPTER_COMMAND env var still works as a power-user override).

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Check, ChevronDown, MessageSquare } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { useAppState } from '../../state/appState'
 import { getPreferences, onPreferencesChange } from '../../lib/preferences'
 import type { ChatApp } from '../../lib/chatApps'
@@ -71,12 +72,12 @@ export function ChatAppPickerView(props: {
         <button
           type="button"
           className="focus-ring flex items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-white/10"
-          title="Chat assistant"
-          aria-label="Select chat assistant"
+              title={t('Chat assistant', '对话助手')}
+              aria-label={t('Select chat assistant', '选择对话助手')}
         >
           <AppIcon image={selected?.image ?? ''} size={22} />
           <span className="max-w-[160px] truncate text-[13px] font-medium text-white/90">
-            {selected ? selected.name : 'omi'}
+          {selected ? selected.name : 'omi'}
           </span>
           <ChevronDown className="h-3.5 w-3.5 text-white/40" />
         </button>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Star, Pencil, Trash2, Check, X } from 'lucide-react'
+import { t, isZhUi } from '../../lib/i18n'
 import type { ChatSession } from '../../../../shared/chatSessions'
 import { toEpochMs } from '../../lib/chatSessionsView'
 import { macPurple } from '../../lib/macPalette'
@@ -21,11 +22,11 @@ function formatRelativeDate(value: number | string, now = Date.now()): string {
   const ms = toEpochMs(value)
   if (!ms) return ''
   const diff = Math.max(0, now - ms)
-  if (diff < MINUTE) return 'now'
-  if (diff < HOUR) return `${Math.floor(diff / MINUTE)}m`
-  if (diff < DAY) return `${Math.floor(diff / HOUR)}h`
-  if (diff < 7 * DAY) return `${Math.floor(diff / DAY)}d`
-  return new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  if (diff < MINUTE) return t('now', '刚刚')
+  if (diff < HOUR) return isZhUi() ? `${Math.floor(diff / MINUTE)}分钟前` : `${Math.floor(diff / MINUTE)}m`
+  if (diff < DAY) return isZhUi() ? `${Math.floor(diff / HOUR)}小时前` : `${Math.floor(diff / HOUR)}h`
+  if (diff < 7 * DAY) return isZhUi() ? `${Math.floor(diff / DAY)}天前` : `${Math.floor(diff / DAY)}d`
+  return new Date(ms).toLocaleDateString(isZhUi() ? 'zh-CN' : undefined, { month: 'short', day: 'numeric' })
 }
 
 export function HistorySessionRow(props: {
@@ -59,7 +60,7 @@ export function HistorySessionRow(props: {
     setDraft(session.title ?? '')
   }
 
-  const title = session.title?.trim() || 'New Chat'
+  const title = session.title?.trim() || t('New Chat', '新对话')
   const relative = formatRelativeDate(session.updatedAt)
   const subtitleParts = [session.preview?.trim(), relative].filter(Boolean)
 
@@ -79,7 +80,7 @@ export function HistorySessionRow(props: {
           'focus-ring mt-0.5 shrink-0 rounded p-0.5 transition-colors',
           session.starred ? 'text-amber-300' : 'text-white/30 hover:text-white/60'
         )}
-        title={session.starred ? 'Unstar' : 'Star'}
+        title={session.starred ? t('Unstar', '取消收藏') : t('Star', '收藏')}
         onClick={(e) => {
           e.stopPropagation()
           onToggleStar()
@@ -128,11 +129,11 @@ export function HistorySessionRow(props: {
           Kept in-row (not a Modal) so it never fights the Popover's dismiss. */}
       {!renaming && confirmingDelete && (
         <div className="flex shrink-0 items-center gap-0.5">
-          <span className="mr-1 text-[11px] text-white/50">Delete?</span>
+          <span className="mr-1 text-[11px] text-white/50">{t('Delete?', '删除？')}</span>
           <button
             type="button"
             className="focus-ring rounded p-1 text-[var(--error)] hover:bg-[var(--error)]/20"
-            title="Confirm delete"
+            title={t('Confirm delete', '确认删除')}
             onClick={(e) => {
               e.stopPropagation()
               setConfirmingDelete(false)
@@ -144,7 +145,7 @@ export function HistorySessionRow(props: {
           <button
             type="button"
             className="focus-ring rounded p-1 text-white/40 hover:bg-white/10 hover:text-white/80"
-            title="Cancel"
+            title={t('Cancel', '取消')}
             onClick={(e) => {
               e.stopPropagation()
               setConfirmingDelete(false)
@@ -161,7 +162,7 @@ export function HistorySessionRow(props: {
           <button
             type="button"
             className="focus-ring rounded p-1 text-white/40 hover:bg-white/10 hover:text-white/80"
-            title="Rename"
+            title={t('Rename', '重命名')}
             onClick={(e) => {
               e.stopPropagation()
               beginRename()
@@ -172,7 +173,7 @@ export function HistorySessionRow(props: {
           <button
             type="button"
             className="focus-ring rounded p-1 text-white/40 hover:bg-[var(--error)]/20 hover:text-[var(--error)]"
-            title="Delete"
+            title={t('Delete', '删除')}
             onClick={(e) => {
               e.stopPropagation()
               setConfirmingDelete(true)

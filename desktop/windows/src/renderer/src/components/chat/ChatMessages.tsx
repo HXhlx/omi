@@ -1,5 +1,6 @@
 import { memo, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { ChatMsg } from '../../hooks/useChat'
 import { RevealMarkdown } from './RevealMarkdown'
 import { ChatAttachmentStrip } from './ChatAttachmentStrip'
@@ -64,8 +65,8 @@ function CopyMessageButton({
     <button
       type="button"
       onClick={copy}
-      aria-label={copied ? 'Copied' : 'Copy message'}
-      title="Copy message"
+        aria-label={copied ? t('Copied', '已复制') : t('Copy message', '复制消息')}
+        title={t('Copy message', '复制消息')}
       className={`focus-ring pointer-events-none absolute bottom-1 ${side} ${
         compact ? 'h-5 w-5' : 'h-6 w-6'
       } flex items-center justify-center rounded-md text-white/50 opacity-0 transition-[opacity,color,background-color] hover:bg-white/10 hover:text-white/90 focus-visible:opacity-100 group-hover/msg:pointer-events-auto group-hover/msg:opacity-100`}

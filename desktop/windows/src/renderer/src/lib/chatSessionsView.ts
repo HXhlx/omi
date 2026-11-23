@@ -3,6 +3,7 @@
 // in the node env and the popover just renders their output.
 
 import type { ChatSession } from '../../../shared/chatSessions'
+import { t } from './i18n'
 import { startOfDayOffset, startOfLocalDay } from './localDay'
 
 /** Normalize a wire timestamp (epoch-ms number OR ISO-8601 string) to epoch ms.
@@ -74,9 +75,9 @@ export function groupSessionsByDate(
   }
 
   const groups: SessionGroup[] = []
-  if (today.length) groups.push({ label: 'Today', sessions: today })
-  if (yesterday.length) groups.push({ label: 'Yesterday', sessions: yesterday })
-  if (thisWeek.length) groups.push({ label: 'This Week', sessions: thisWeek })
-  if (older.length) groups.push({ label: 'Older', sessions: older })
+  if (today.length) groups.push({ label: t('Today', '今天'), sessions: today })
+  if (yesterday.length) groups.push({ label: t('Yesterday', '昨天'), sessions: yesterday })
+  if (thisWeek.length) groups.push({ label: t('This Week', '本周'), sessions: thisWeek })
+  if (older.length) groups.push({ label: t('Older', '更早'), sessions: older })
   return groups
 }

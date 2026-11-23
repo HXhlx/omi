@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { omiApi } from '../../lib/apiClient'
 import { auth, onAuthStateChanged } from '../../lib/firebase'
 import { goalEmoji, DEFAULT_GOAL_EMOJI } from '../../lib/goalEmoji'
+import { t } from '../../lib/i18n'
+import { goalLabel } from '../../lib/goalLabel'
 import { isCompleted, progressColor, progressPct } from '../../lib/goalVisuals'
 import { cache as goalsCache, hydrateGoalsFromDisk, writeCache } from '../../lib/goalsCache'
 import { getCacheUid } from '../../lib/persistentCache'
@@ -153,7 +155,7 @@ export function HomeGoalsChips({ onShowAll, onOpenGoal }: HubHomeWidgetsProps): 
           <span aria-hidden className="shrink-0 text-[12px] leading-none">
             {DEFAULT_GOAL_EMOJI}
           </span>
-          Set a goal
+          {t('Set a goal', '设定目标')}
         </button>
       </div>
     )
@@ -171,14 +173,14 @@ export function HomeGoalsChips({ onShowAll, onOpenGoal }: HubHomeWidgetsProps): 
             key={g.id}
             type="button"
             onClick={() => openGoal(g.id)}
-            title={g.title}
+            title={goalLabel(g.title)}
             className="focus-ring group flex min-w-0 max-w-[150px] shrink items-center gap-1.5 rounded-full border border-home-hairline bg-home-tile/[0.6] px-2.5 py-1 transition-colors duration-150 hover:bg-home-tileHover"
           >
             <span aria-hidden className="shrink-0 text-[12px] leading-none">
               {goalEmoji(g.title)}
             </span>
             <span className="min-w-0 flex-1 truncate text-[11px] font-medium text-home-secondary transition-colors duration-150 group-hover:text-home-ink">
-              {g.title}
+              {goalLabel(g.title)}
             </span>
             {/* Tiny progress bar — same fill grammar as QuickGoalsWidget, colored by
                 the shared discrete progressColor ramp. */}
@@ -197,7 +199,7 @@ export function HomeGoalsChips({ onShowAll, onOpenGoal }: HubHomeWidgetsProps): 
         onClick={showAll}
         className="focus-ring ml-auto shrink-0 rounded-full px-2 py-1 text-[11px] font-medium text-home-muted transition-colors duration-150 hover:text-home-ink"
       >
-        All goals
+        {t('All goals', '全部目标')}
       </button>
     </div>
   )

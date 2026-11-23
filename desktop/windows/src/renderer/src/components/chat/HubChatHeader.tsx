@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { History, Plus } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { useAppState } from '../../state/appState'
 import { useChatSessions } from '../../hooks/useChatSessions'
 import { getPreferences, onPreferencesChange } from '../../lib/preferences'
@@ -73,13 +74,13 @@ function HubChatHeaderInner(): React.JSX.Element {
     <div className="mb-3 flex items-center gap-2">
       {onDefault ? (
         // On the default shared thread: a static synced indicator.
-        <Pill dot="var(--success)" title="Synced with the mobile app">
-          Synced Chat
+        <Pill dot="var(--success)" title={t('Synced with the mobile app', '与手机端同步')}>
+          {t('Synced Chat', '同步对话')}
         </Pill>
       ) : (
         // On a session: a clickable pill to return to the default shared thread.
-        <Pill dot="var(--success)" onClick={() => handleSelect(null)} title="Back to Synced Chat">
-          Synced
+        <Pill dot="var(--success)" onClick={() => handleSelect(null)} title={t('Back to Synced Chat', '返回同步对话')}>
+          {t('Synced', '已同步')}
         </Pill>
       )}
 
@@ -88,7 +89,7 @@ function HubChatHeaderInner(): React.JSX.Element {
       <button
         type="button"
         className="focus-ring rounded-md p-1.5 text-white/55 transition-colors hover:bg-white/10 hover:text-white"
-        title="New chat"
+        title={t('New chat', '新对话')}
         onClick={handleCreate}
       >
         <Plus className="h-4 w-4" />
@@ -99,7 +100,7 @@ function HubChatHeaderInner(): React.JSX.Element {
           <button
             type="button"
             className="focus-ring rounded-md p-1.5 text-white/55 transition-colors hover:bg-white/10 hover:text-white"
-            title="Chat history"
+            title={t('Chat history', '对话历史')}
           >
             <History className="h-4 w-4" />
           </button>

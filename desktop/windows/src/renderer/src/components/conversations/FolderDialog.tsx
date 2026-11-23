@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Check, Loader2, Trash2 } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import type { ConversationFolder } from '../../../../shared/types'
 import { createFolder, updateFolder, deleteFolder } from '../../lib/conversations/folders'
 import { ModalShell } from './ModalShell'
@@ -95,7 +96,7 @@ export function FolderDialog({
         onKeyDown={(e) => {
           if (e.key === 'Enter') void save()
         }}
-        placeholder="Folder name"
+          placeholder={t('Folder name', '文件夹名称')}
         maxLength={60}
         className="input-field mt-1.5"
       />

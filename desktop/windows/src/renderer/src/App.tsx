@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { HOME_PATH } from './routes/manifest'
 import { useAuth } from './hooks/useAuth'
+import { t } from './lib/i18n'
 import { Login } from './pages/Login'
 import { AppChrome } from './components/layout/AppChrome'
 import { MainViews } from './components/layout/MainViews'
@@ -46,6 +47,9 @@ import { BackgroundConsentInterstitial } from './components/consent/BackgroundCo
 import { isSecondaryWindow } from './lib/windowRole'
 import { attachVoiceE2eHook } from './lib/voice/e2eHook'
 import { attachLiveNotesE2eHook } from './lib/liveNotes/e2eHook'
+import { startAiProfileHost } from './lib/aiProfileHost'
+import { startRewindEmbedHost } from './lib/rewindEmbedHost'
+import { startPiMonoAuthHost } from './lib/piMonoAuthHost'
 import { PrimitivesGallery } from './components/ui/__gallery/PrimitivesGallery'
 import { refreshIfStale } from './lib/voice/autoModelSelector'
 import { refreshAboutUserCard, resetAboutUserCard } from './lib/voice/aboutUser'
@@ -298,12 +302,26 @@ function App(): React.JSX.Element {
     }
   }, [])
 
+  // The three idempotent token relays must run from SIGNED-IN, not from the
+  // onboarded shell: the onboarding ask-demo step already drives the chat
+  // engine, and main-side consumers (profile grounding, listen auth, kernel
+  // session) need the relayed token before AppShell ever mounts. Each start*
+  // is a module-level once-guard, so AppShell's useAppLifetimeJobs re-call is
+  // a no-op — moving them here changes WHEN they arm, never how many listeners
+  // exist. Main window only (the relays read this window's Firebase session).
+  useEffect(() => {
+    if (IS_SECONDARY_WINDOW || !user) return
+    startAiProfileHost()
+    startRewindEmbedHost()
+    startPiMonoAuthHost()
+  }, [user])
+
   if (loading) {
     return (
       <div className="app-canvas flex h-full items-center justify-center">
         {!IS_SECONDARY_WINDOW && <TitleBar variant="overlay" />}
         <SandboxBadge />
-        <Spinner label="Loading Omi…" />
+        <Spinner label={t('Loading Omi…', '小蜗加载中…')} />
       </div>
     )
   }
@@ -369,6 +387,15 @@ function App(): React.JSX.Element {
               <AppStateProvider>
                 <TitleBar variant="overlay" />
                 <VoiceHubDriverHost />
+                {/* The chat bridge must be alive here too: the ask-demo step
+                    (step 11) tells the user to TYPE into the expanded bar, but
+                    AppShell's ChatBridgeHost does not exist on this route — a
+                    typed send reached NO listener and died silently (same
+                    missing-host class as the voice driver above). Uses this
+                    route's AppStateProvider, so the demo turn lands in the same
+                    engine the voice demo uses; AppShell's host takes over when
+                    onboarding completes. */}
+                <ChatBridgeHost />
                 <Onboarding />
               </AppStateProvider>
             )

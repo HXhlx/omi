@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FileText } from 'lucide-react'
+import { t } from '../../../../lib/i18n'
 import { toast } from '../../../../lib/toast'
 import { useMemories } from '../../../../hooks/useMemories'
 import { runMemoryExport } from '../../../../lib/memoryExport'
@@ -83,13 +84,13 @@ export function ExportsConnector(): React.JSX.Element {
             <input
               value={notionToken}
               onChange={(e) => setNotionToken(e.target.value)}
-              placeholder="Notion integration token (secret_…)"
+          placeholder={t('Notion integration token (secret_…)', 'Notion 集成令牌（secret_…）')}
               className="input-field text-[13px]"
             />
             <input
               value={notionPage}
               onChange={(e) => setNotionPage(e.target.value)}
-              placeholder="Parent page ID"
+          placeholder={t('Parent page ID', '父页面 ID')}
               className="input-field text-[13px]"
             />
             <PillButton tone="primary" onClick={() => runExport('notion')} disabled={exporting}>
@@ -112,7 +113,7 @@ export function ExportsConnector(): React.JSX.Element {
 
       <ConnectorRow
         icon={FileText}
-        title="Markdown file"
+        title={t('Markdown file', 'Markdown 文件')}
         description="Save your memories as a single Markdown file."
         action={
           <PillButton tone="primary" onClick={() => runExport('file')} disabled={exporting}>

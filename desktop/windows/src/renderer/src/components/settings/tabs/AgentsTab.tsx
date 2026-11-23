@@ -11,6 +11,7 @@
 import { useEffect, useState } from 'react'
 import { Bot, Terminal } from 'lucide-react'
 import { SettingRow } from '../SettingRow'
+import { t } from '../../../lib/i18n'
 import { getPreferences, setPreferences } from '../../../lib/preferences'
 import { useCodingAgents } from '../../../hooks/useCodingAgents'
 import { CLAUDE_SIGN_IN_FAILED } from '../../../lib/claudeSignIn'
@@ -39,26 +40,26 @@ type AgentGuide = {
 
 const EXTERNAL_AGENT_GUIDES: Record<ExternalAgentId, AgentGuide> = {
   openclaw: {
-    description: 'Open-source AI coding assistant with its own gateway and model routing.',
+    description: t('Open-source AI coding assistant with its own gateway and model routing.', '开源 AI 编程助手，自带网关和模型路由。'),
     installCommands: ['npm install -g openclaw@latest'],
     suggestedCommand: 'openclaw acp',
     docsUrl: 'https://docs.openclaw.ai/install',
-    authNote: 'After installing, sign in: run `openclaw onboard` in a terminal.'
+    authNote: t('After installing, sign in: run `openclaw onboard` in a terminal.', '安装后登录：在终端运行 `openclaw onboard`。')
   },
   hermes: {
-    description: "Nous Research's Hermes agent, connected over its ACP server mode.",
+    description: t("Nous Research's Hermes agent, connected over its ACP server mode.", 'Nous Research 的 Hermes 智能体，通过其 ACP 服务模式连接。'),
     installCommands: [],
-    installNote: 'Install the Hermes CLI from its documentation.',
+    installNote: t('Install the Hermes CLI from its documentation.', '按 Hermes 文档安装 CLI。'),
     suggestedCommand: 'hermes acp',
     docsUrl: 'https://hermes-agent.nousresearch.com/docs',
-    authNote: 'After installing, sign in: run `hermes login` in a terminal.'
+    authNote: t('After installing, sign in: run `hermes login` in a terminal.', '安装后登录：在终端运行 `hermes login`。')
   },
   codex: {
-    description: "OpenAI's Codex agent, driven through the official codex-acp bridge.",
+    description: t("OpenAI's Codex agent, driven through the official codex-acp bridge.", 'OpenAI 的 Codex 智能体，通过官方 codex-acp 桥接驱动。'),
     installCommands: ['npm install -g @openai/codex'],
     suggestedCommand: 'npx -y @agentclientprotocol/codex-acp',
     docsUrl: 'https://github.com/agentclientprotocol/codex-acp',
-    authNote: 'Sign in with `codex login`, or add your OpenAI API key below.',
+    authNote: t('Sign in with `codex login`, or add your OpenAI API key below.', '用 `codex login` 登录，或在下方填入 OpenAI API 密钥。'),
     supportsApiKey: true
   }
 }
@@ -229,15 +230,15 @@ export function AgentsTab(): React.JSX.Element {
           input: '',
           saving: false,
           result: r.ok
-            ? { ok: true, msg: r.warning ?? 'Key saved and verified.' }
-            : { ok: false, msg: r.error ?? 'Could not save the key.' }
+            ? { ok: true, msg: r.warning ?? t('Key saved and verified.', '密钥已保存并验证。') }
+            : { ok: false, msg: r.error ?? t('Could not save the key.', '无法保存密钥。') }
         })
       })
       .catch(() =>
         setCodexKey((k) => ({
           ...k,
           saving: false,
-          result: { ok: false, msg: 'Could not save the key.' }
+          result: { ok: false, msg: t('Could not save the key.', '无法保存密钥。') }
         }))
       )
   }
@@ -251,7 +252,7 @@ export function AgentsTab(): React.JSX.Element {
           hasKey: r.hasKey,
           input: '',
           saving: false,
-          result: { ok: true, msg: 'Key removed.' }
+          result: { ok: true, msg: t('Key removed.', '密钥已移除。') }
         })
       )
       .catch(() => setCodexKey((k) => ({ ...k, saving: false })))
@@ -262,11 +263,11 @@ export function AgentsTab(): React.JSX.Element {
     if (!state?.verdict) return null
     return state.verdict === 'ok' ? (
       <div className="mt-2 text-sm text-emerald-400">
-        Connected — the agent answered the handshake.
+        {t('Connected — the agent answered the handshake.', '已连接 —— 智能体应答了握手。')}
       </div>
     ) : (
       <div className="mt-2 text-sm text-amber-400">
-        {state.detail ?? "Couldn't reach the agent."}
+        {state.detail ?? t("Couldn't reach the agent.", '无法连接到智能体。')}
       </div>
     )
   }
@@ -294,10 +295,10 @@ export function AgentsTab(): React.JSX.Element {
           det ? (
             installed ? (
               <span className="text-sm text-emerald-400">
-                CLI installed{det.version ? ` · v${det.version}` : ''}
+                {t(`CLI installed${det.version ? ` · v${det.version}` : ''}`, `CLI 已安装${det.version ? ` · v${det.version}` : ''}`)}
               </span>
             ) : (
-              <span className="text-sm text-text-tertiary">CLI not found on PATH</span>
+              <span className="text-sm text-text-tertiary">{t('CLI not found on PATH', 'PATH 中未找到 CLI')}</span>
             )
           ) : null
         }
@@ -309,10 +310,10 @@ export function AgentsTab(): React.JSX.Element {
                 disabled={busy}
                 className="btn-ghost disabled:opacity-40"
               >
-                {busy ? 'Testing…' : 'Test'}
+                {busy ? t('Testing…', '测试中…') : t('Test', '测试')}
               </button>
               <button onClick={() => disconnect(id)} className="btn-ghost">
-                Disconnect
+                {t('Disconnect', '断开')}
               </button>
             </div>
           ) : (
@@ -321,7 +322,7 @@ export function AgentsTab(): React.JSX.Element {
               disabled={busy}
               className="btn-ghost disabled:opacity-40"
             >
-              {busy ? 'Connecting…' : 'Connect'}
+              {busy ? t('Connecting…', '连接中…') : t('Connect', '连接')}
             </button>
           )
         }
@@ -329,7 +330,7 @@ export function AgentsTab(): React.JSX.Element {
         {/* Install guidance when the CLI isn't detected. */}
         {!installed && (
           <div className="mb-3 rounded-lg bg-white/[0.04] p-3 text-sm text-text-tertiary">
-            <div className="mb-1 font-medium text-text-secondary">Install {displayName}</div>
+            <div className="mb-1 font-medium text-text-secondary">{t(`Install ${displayName}`, `安装 ${displayName}`)}</div>
             {guide.installCommands.map((cmd) => (
               <code key={cmd} className="mb-1 block font-mono text-xs text-text-secondary">
                 {cmd}
@@ -339,7 +340,7 @@ export function AgentsTab(): React.JSX.Element {
             <div className="mt-2 flex items-center gap-4">
               {guide.installCommands.length > 0 && (
                 <button onClick={() => copyInstall(id)} className="text-xs underline">
-                  {copied[id] ? 'Copied' : 'Copy install command'}
+                  {copied[id] ? t('Copied', '已复制') : t('Copy install command', '复制安装命令')}
                 </button>
               )}
               <a
@@ -348,7 +349,7 @@ export function AgentsTab(): React.JSX.Element {
                 rel="noreferrer"
                 className="text-xs underline"
               >
-                Setup guide
+                {t('Setup guide', '安装指南')}
               </a>
             </div>
           </div>
@@ -360,11 +361,11 @@ export function AgentsTab(): React.JSX.Element {
         {/* Codex-only: paste-your-OpenAI-key lane (validated, no browser sign-in). */}
         {guide.supportsApiKey && (
           <div className="mb-3 rounded-lg bg-white/[0.04] p-3">
-            <div className="mb-1 text-sm font-medium text-text-secondary">OpenAI API key</div>
+            <div className="mb-1 text-sm font-medium text-text-secondary">{t('OpenAI API key', 'OpenAI API 密钥')}</div>
             <div className="mb-2 text-xs text-text-tertiary">
               {codexKey.hasKey
-                ? 'A key is saved — Codex will use it to authenticate.'
-                : "Paste your OpenAI API key and we'll validate it — no browser sign-in needed."}
+                ? t('A key is saved — Codex will use it to authenticate.', '已保存密钥 —— Codex 将用它鉴权。')
+                : t("Paste your OpenAI API key and we'll validate it — no browser sign-in needed.", '粘贴你的 OpenAI API 密钥，我们会验证 —— 无需浏览器登录。')}
             </div>
             <div className="flex items-center gap-2">
               <input
@@ -377,7 +378,7 @@ export function AgentsTab(): React.JSX.Element {
                     saveCodexKey()
                   }
                 }}
-                placeholder={codexKey.hasKey ? '•••••••••••• (saved)' : 'sk-…'}
+                placeholder={codexKey.hasKey ? t('•••••••••••• (saved)', '••••••••••••（已保存）') : 'sk-…'}
                 className="glass-subtle w-full rounded-lg px-4 py-3 font-mono text-sm text-text-secondary focus:outline-none"
                 spellCheck={false}
                 autoComplete="off"
@@ -387,7 +388,7 @@ export function AgentsTab(): React.JSX.Element {
                 disabled={codexKey.saving || !codexKey.input.trim()}
                 className="btn-ghost shrink-0 disabled:opacity-40"
               >
-                {codexKey.saving ? 'Saving…' : 'Save'}
+                {codexKey.saving ? t('Saving…', '保存中…') : t('Save', '保存')}
               </button>
               {codexKey.hasKey && (
                 <button
@@ -395,7 +396,7 @@ export function AgentsTab(): React.JSX.Element {
                   disabled={codexKey.saving}
                   className="btn-ghost shrink-0 disabled:opacity-40"
                 >
-                  Remove
+                  {t('Remove', '移除')}
                 </button>
               )}
             </div>
@@ -414,7 +415,7 @@ export function AgentsTab(): React.JSX.Element {
           onClick={() => setAdvancedOpen((s) => ({ ...s, [id]: !s[id] }))}
           className="text-xs text-text-tertiary underline"
         >
-          {advancedOpen[id] ? 'Hide advanced' : 'Advanced: custom launch command'}
+          {advancedOpen[id] ? t('Hide advanced', '收起高级') : t('Advanced: custom launch command', '高级：自定义启动命令')}
         </button>
         {advancedOpen[id] && (
           <div className="mt-2 flex items-center gap-2">
@@ -427,12 +428,12 @@ export function AgentsTab(): React.JSX.Element {
                   saveCommand(id)
                 }
               }}
-              placeholder={`Launch command, e.g. ${guide.suggestedCommand}`}
+              placeholder={t(`Launch command, e.g. ${guide.suggestedCommand}`, `启动命令，例如 ${guide.suggestedCommand}`)}
               className="glass-subtle w-full rounded-lg px-4 py-3 font-mono text-sm text-text-secondary focus:outline-none"
               spellCheck={false}
             />
             <button onClick={() => saveCommand(id)} className="btn-ghost shrink-0">
-              Save
+              {t('Save', '保存')}
             </button>
           </div>
         )}
@@ -444,10 +445,10 @@ export function AgentsTab(): React.JSX.Element {
   return (
     <div>
       <p className="mb-2 text-sm text-text-tertiary">
-        Ask for an agent by name in chat or push-to-talk — “ask Codex to fix the failing test”, “use
-        Claude Code to add a readme” — and Omi hands the task over, streaming the agent’s progress
-        into the conversation. If the agent you named is down, Omi falls back to the next connected
-        one.
+        {t(
+          'Ask for an agent by name in chat or push-to-talk — “ask Codex to fix the failing test”, “use Claude Code to add a readme” — and Omi hands the task over, streaming the agent’s progress into the conversation. If the agent you named is down, Omi falls back to the next connected one.',
+          '在聊天或长按说话时点名智能体 —— 「让 Codex 修复失败的测试」「用 Claude Code 加个 readme」——小蜗会把任务移交过去，并把智能体的进度流式呈现到对话里。点名的智能体不可用时，小蜗会回退到下一个已连接的。'
+        )}
       </p>
 
       <SettingRow
@@ -455,8 +456,8 @@ export function AgentsTab(): React.JSX.Element {
         title="Claude Code"
         subtitle={
           claudeConnected
-            ? 'Built in — signed in with your Claude account.'
-            : 'Built in — no install needed. Sign in with your Claude account to use it.'
+            ? t('Built in — signed in with your Claude account.', '内置 —— 已用你的 Claude 账户登录。')
+            : t('Built in — no install needed. Sign in with your Claude account to use it.', '内置 —— 无需安装。用你的 Claude 账户登录即可使用。')
         }
         keywords="claude code anthropic coding agent builtin sign in login authenticate"
         dot={claudeConnected ? 'on' : 'off'}
@@ -468,10 +469,10 @@ export function AgentsTab(): React.JSX.Element {
                 disabled={tests.acp?.running}
                 className="btn-ghost disabled:opacity-40"
               >
-                {tests.acp?.running ? 'Testing…' : 'Test'}
+                {tests.acp?.running ? t('Testing…', '测试中…') : t('Test', '测试')}
               </button>
               <button onClick={signOutOfClaude} className="btn-ghost">
-                Disconnect
+                {t('Disconnect', '断开')}
               </button>
             </div>
           ) : (
@@ -480,14 +481,14 @@ export function AgentsTab(): React.JSX.Element {
               disabled={claudeAuth.busy || claudeAuth.status === null}
               className="btn-ghost disabled:opacity-40"
             >
-              {claudeAuth.busy ? 'Signing in…' : 'Sign in to Claude'}
+              {claudeAuth.busy ? t('Signing in…', '登录中…') : t('Sign in to Claude', '登录 Claude')}
             </button>
           )
         }
       >
         {claudeAuth.busy && (
           <div className="mt-2 text-sm text-text-tertiary">
-            Finish signing in in your browser, then come back here.
+            {t('Finish signing in in your browser, then come back here.', '在浏览器中完成登录，然后回到这里。')}
           </div>
         )}
         {claudeAuth.error && <div className="mt-2 text-sm text-amber-400">{claudeAuth.error}</div>}

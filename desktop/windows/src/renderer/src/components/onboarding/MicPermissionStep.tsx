@@ -55,7 +55,7 @@ export function MicPermissionStep({
         err.name === 'NotAllowedError'
           ? t(
               'Windows blocked microphone access. Open Settings → Privacy & security → Microphone, allow this app, then come back — Omi will pick it up automatically.',
-              'Windows 阻止了麦克风访问。请打开 设置 → 隐私和安全性 → 麦克风，允许本应用，然后返回 —— Omi 会自动检测到。'
+              'Windows 阻止了麦克风访问。请打开 设置 → 隐私和安全性 → 麦克风，允许本应用，然后返回 ——小蜗会自动检测到。'
             )
           : t(`Microphone access failed: ${err.message}`, `麦克风访问失败：${err.message}`)
       )
@@ -81,8 +81,8 @@ export function MicPermissionStep({
       totalSteps={totalSteps}
       aside={aside}
       eyebrow={t('PERMISSION', '权限')}
-      title={t('Let Omi use your mic', '让 Omi 使用你的麦克风')}
-      subtitle={t('This lets Omi transcribe meetings and voice notes', '让 Omi 转写会议与语音笔记')}
+      title={t('Let Omi use your mic', '让小蜗使用你的麦克风')}
+      subtitle={t('This lets Omi transcribe meetings and voice notes', '让小蜗转写会议与语音笔记')}
       icon={<Mic className="h-5 w-5 text-white/60" />}
       cardLabel={t('Microphone', '麦克风')}
       statusText={{

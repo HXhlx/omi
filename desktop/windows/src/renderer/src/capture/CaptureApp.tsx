@@ -5,6 +5,7 @@ import { AudioSessionHost } from './AudioSessionHost'
 import { PttCaptureHost } from './PttCaptureHost'
 import { ScreenSessionHost } from './ScreenSessionHost'
 import { MeetingSessionHost } from './MeetingSessionHost'
+import { WakeMicHost } from './WakeMicHost'
 import { installCaptureE2EHooks } from './e2eHooks'
 import { auth } from '../lib/firebase'
 
@@ -56,6 +57,8 @@ export function CaptureApp(): React.JSX.Element {
       <PttCaptureHost />
       <ScreenSessionHost />
       <MeetingSessionHost />
+      {/* LOCAL ADAPT (XiaoWo): always-on wake-word mic tee → main's KWS spotter. */}
+      <WakeMicHost />
     </>
   )
 }

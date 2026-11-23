@@ -175,7 +175,7 @@ export function Sidebar(): React.JSX.Element {
               collapsed ? 'pointer-events-none w-0 opacity-0' : 'w-auto opacity-100'
             )}
           >
-            omi
+            {t('omi', '小蜗')}
           </span>
         </div>
         <button

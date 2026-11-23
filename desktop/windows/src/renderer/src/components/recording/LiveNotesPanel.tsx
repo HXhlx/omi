@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Sparkles, Pencil, Trash2, Loader2, Plus, X, Check, NotebookPen } from 'lucide-react'
+import { t } from '../../lib/i18n'
 import { liveNotesMonitor } from '../../lib/liveNotes/liveNotesMonitor'
 import { Toggle } from '../settings/Toggle'
 import type { LiveNote } from '../../../../shared/types'
@@ -76,7 +77,7 @@ function NoteRow({ note }: { note: LiveNote }): React.JSX.Element {
           <>
             <button
               onClick={commit}
-              title="Save"
+            title={t('Save', '保存')}
               className="text-emerald-400 hover:text-emerald-300"
             >
               <Check className="h-3.5 w-3.5" />
@@ -92,7 +93,7 @@ function NoteRow({ note }: { note: LiveNote }): React.JSX.Element {
             </button>
             <button
               onClick={() => void liveNotesMonitor.deleteNote(note.id)}
-              title="Delete"
+            title={t('Delete', '删除')}
               className="text-white/40 hover:text-red-400"
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -140,7 +141,7 @@ export function LiveNotesPanel(): React.JSX.Element {
           <Toggle
             on={aiEnabled}
             onChange={(v) => liveNotesMonitor.setAiEnabled(v)}
-            label="AI notes"
+        label={t('AI notes', 'AI 笔记')}
           />
           {generating && <Loader2 className="h-3.5 w-3.5 animate-spin text-white/45" />}
         </div>
@@ -172,13 +173,13 @@ export function LiveNotesPanel(): React.JSX.Element {
           onKeyDown={(e) => {
             if (e.key === 'Enter') addNote()
           }}
-          placeholder="Add a note…"
+          placeholder={t('Add a note…', '添加笔记…')}
           className="min-w-0 flex-1 bg-transparent text-sm text-white/85 placeholder:text-white/35 outline-none"
         />
         <button
           onClick={addNote}
           disabled={!draft.trim()}
-          title="Add note"
+          title={t('Add note', '添加笔记')}
           className={`shrink-0 transition-colors ${draft.trim() ? `${AI_ACCENT} hover:brightness-125` : 'text-white/25'}`}
         >
           <Plus className="h-5 w-5" />

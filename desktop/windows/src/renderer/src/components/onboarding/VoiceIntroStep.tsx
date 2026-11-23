@@ -151,12 +151,12 @@ export function VoiceIntroStep({
   const problem = micBlocked
     ? t(
         'Windows is blocking Omi’s microphone, so voice can’t work yet. You can fix this later in Settings → Privacy.',
-        'Windows 正在阻止 Omi 使用麦克风，语音暂时无法工作。你可以稍后在 设置 → 隐私 中解决。'
+        'Windows 正在阻止小蜗使用麦克风，语音暂时无法工作。你可以稍后在 设置 → 隐私 中解决。'
       )
     : failure
 
   const subtitle = captured
-    ? t('That’s it — Omi heard you.', '就是这样 —— Omi 听到你了。')
+    ? t('That’s it — Omi heard you.', '就是这样 ——小蜗听到你了。')
     : t(
         `Hold ${hotkeyTokens.join(' + ')}, ask a question, then let go.`,
         `按住 ${hotkeyTokens.join(' + ')}，问一个问题，然后松开。`
@@ -166,7 +166,7 @@ export function VoiceIntroStep({
     <StepScaffold
       stepIndex={stepIndex}
       totalSteps={totalSteps}
-      title={t('Talk to Omi', '和 Omi 对话')}
+      title={t('Talk to Omi', '和小蜗对话')}
       subtitle={subtitle}
       subtitleClassName="text-white"
       align="center"
@@ -204,7 +204,7 @@ export function VoiceIntroStep({
           counterpart, since no chat UI exists during onboarding. */}
       {transcript ? (
         <p className="mt-4 max-w-[420px] text-sm text-white/85">
-          {t('Omi heard:', 'Omi 听到：')}
+          {t('Omi heard:', '小蜗听到：')}
           <span className="text-white">「{transcript}」</span>
         </p>
       ) : null}
@@ -217,7 +217,7 @@ export function VoiceIntroStep({
         <p className="mt-4 max-w-[420px] text-sm text-white/55">
           {t(
             'Keep the keys held down while you speak — a quick press just opens Omi. Let go when you’re done.',
-            '说话时请一直按住按键 —— 快速按一下只会打开 Omi。说完后松开即可。'
+            '说话时请一直按住按键 —— 快速按一下只会打开小蜗。说完后松开即可。'
           )}
         </p>
       ) : waited && !captured ? (

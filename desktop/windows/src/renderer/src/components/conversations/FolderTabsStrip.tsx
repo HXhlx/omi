@@ -97,7 +97,7 @@ export function FolderTabsStrip({
 
       <button
         onClick={onCreate}
-        aria-label="New folder"
+        aria-label={t('New folder', '新建文件夹')}
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/60 transition-colors hover:border-white/20 hover:bg-white/5 hover:text-white"
       >
         <Plus className="h-4 w-4" />
