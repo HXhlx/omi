@@ -72,6 +72,7 @@ class LocalDb {
       id TEXT PRIMARY KEY,
       title TEXT,
       status TEXT,
+      desired_outcome TEXT,
       created_at TEXT,
       updated_at TEXT
     );
@@ -85,6 +86,15 @@ class LocalDb {
       date TEXT,
       content TEXT,
       created_at TEXT
+    );
+    CREATE TABLE IF NOT EXISTS folders (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      color TEXT,
+      description TEXT,
+      icon TEXT,
+      created_at TEXT,
+      updated_at TEXT
     );
     CREATE TABLE IF NOT EXISTS voice_prefs (
       key TEXT PRIMARY KEY,

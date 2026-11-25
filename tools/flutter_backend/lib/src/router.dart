@@ -14,6 +14,7 @@ import 'store.dart';
 import 'stt_client.dart';
 import 'tts.dart';
 import 'tts_client.dart';
+import 'user_store.dart';
 
 const _uuid = Uuid();
 
@@ -26,7 +27,8 @@ class Api {
   Api(this._db, {TtsClient? tts, SttClient? stt, LlmClient? llm})
       : _conversations = ConversationStore(_db),
         _chat = ChatStore(_db),
-        _knowledge = KnowledgeStore(_db) {
+        _knowledge = KnowledgeStore(_db),
+        _users = UserStore(_db) {
     _tts = tts ?? TtsClient();
     _stt = stt ?? SttClient();
     _llm = llm ?? LlmClient();
@@ -38,6 +40,7 @@ class Api {
   final ConversationStore _conversations;
   final ChatStore _chat;
   final KnowledgeStore _knowledge;
+  final UserStore _users;
   late final TtsClient _tts;
   late final SttClient _stt;
   late final LlmClient _llm;
@@ -114,6 +117,154 @@ class Api {
       } on TtsException catch (e) {
         return _json({'detail': 'tts unavailable: ${e.message}'}, status: 503);
       }
+    }
+
+    // ---- users / profile ----
+    if (path == 'v1/users/profile' && method == 'GET') {
+      return _json(_users.profile());
+    }
+    if ((path == 'v1/users/me' || path == 'v1/users/me/profile') && method == 'GET') {
+      return _json(_users.profile());
+    }
+    if (path == 'v1/users/ai-profile') {
+      if (method == 'GET') return _json(_users.aiProfile());
+      if (method == 'PATCH') {
+        return _json(_users.setAiProfile(await _body(req)));
+      }
+      if (method == 'POST') {
+        return _json(_users.setAiProfile(await _body(req)));
+      }
+      if (method == 'DELETE') {
+        _users.deleteAiProfile();
+        return Response(204);
+      }
+    }
+    if (path == 'v1/users/ai-profile/refresh' && method == 'POST') {
+      return _json(_users.setAiProfile({'profile_text': '基于本地对话自动生成'}));
+    }
+    if (path == 'v1/users/language' && method == 'PATCH') {
+      final body = await _body(req);
+      return _json({'language': body['language'] ?? 'zh'});
+    }
+    if (path == 'v1/users/people') {
+      if (method == 'GET') return _json(_users.listPeople());
+      if (method == 'POST') {
+        final body = await _body(req);
+        final id = _uuid.v4();
+        _users.upsertPerson(id, body['name'] as String? ?? '');
+        return _json({'id': id, 'name': body['name']});
+      }
+    }
+    final personId = _match(path, 'v1/users/people/');
+    if (personId != null && !personId.contains('/') && method == 'DELETE') {
+      _users.deletePerson(personId);
+      return Response(204);
+    }
+    if (path == 'v1/users/daily-summaries') {
+      if (method == 'GET') {
+        final q = req.url.queryParameters;
+        return _json({
+          'summaries': _users.listDailySummaries(
+              limit: int.tryParse(q['limit'] ?? '') ?? 30,
+              offset: int.tryParse(q['offset'] ?? '') ?? 0),
+        });
+      }
+      if (method == 'POST') {
+        final body = await _body(req);
+        final date = body['date'] as String? ?? '${DateTime.now()}'.substring(0, 10);
+        final summary = _users.buildDailySummary(date);
+        _users.upsertDailySummary(summary);
+        return _json(summary);
+      }
+    }
+    if (path.startsWith('v1/users/daily-summaries/') && method == 'GET') {
+      final date = path.substring('v1/users/daily-summaries/'.length);
+      final summary = _users.buildDailySummary(date);
+      return _json(summary);
+    }
+    if (path == 'v1/flags' && method == 'GET') {
+      return _json(_users.flags());
+    }
+
+    // ---- goals ----
+    if (path == 'v1/goals' && method == 'GET') {
+      return _json(_users.currentGoal());
+    }
+    if (path == 'v1/goals/all' && method == 'GET') {
+      return _json(_users.listGoals());
+    }
+    if (path == 'v1/goals' && method == 'POST') {
+      final body = await _body(req);
+      final id = _uuid.v4();
+      _users.upsertGoal({
+        'id': id,
+        'title': body['title'] ?? '',
+        'desired_outcome': body['desired_outcome'] ?? '',
+        'status': 'active',
+      });
+      return _json(_users.getGoal(id));
+    }
+    final goalId = _match(path, 'v1/goals/');
+    if (goalId != null && !goalId.contains('/')) {
+      final g = _users.getGoal(goalId);
+      if (method == 'GET') {
+        return g == null ? _json({'detail': 'Not Found'}, status: 404) : _json(g);
+      }
+      if (method == 'PATCH' || method == 'DELETE') {
+        if (g == null) return _json({'detail': 'Not Found'}, status: 404);
+        if (method == 'DELETE') {
+          _users.deleteGoal(goalId);
+          return Response(204);
+        }
+        final body = await _body(req);
+        _users.upsertGoal({
+          'id': goalId,
+          'title': body['title'] ?? g['title'],
+          'desired_outcome': body['desired_outcome'] ?? g['desired_outcome'],
+          'status': body['status'] ?? g['status'],
+          'created_at': g['created_at'],
+        });
+        return _json(_users.getGoal(goalId));
+      }
+    }
+
+    // ---- folders ----
+    if (path == 'v1/folders') {
+      if (method == 'GET') return _json(_users.listFolders());
+      if (method == 'POST') {
+        final body = await _body(req);
+        final id = _uuid.v4();
+        _users.upsertFolder({
+          'id': id,
+          'name': body['name'] ?? '未命名文件夹',
+          'color': body['color'],
+          'description': body['description'],
+          'icon': body['icon'],
+        });
+        return _json(_users.getFolder(id));
+      }
+    }
+    final folderId = _match(path, 'v1/folders/');
+    if (folderId != null && !folderId.contains('/')) {
+      final f = _users.getFolder(folderId);
+      if (method == 'PATCH') {
+        if (f == null) return _json({'detail': 'Not Found'}, status: 404);
+        final body = await _body(req);
+        _users.upsertFolder({
+          'id': folderId,
+          'name': body['name'] ?? f['name'],
+          'color': body['color'] ?? f['color'],
+          'description': body['description'] ?? f['description'],
+          'icon': body['icon'] ?? f['icon'],
+          'created_at': f['created_at'],
+        });
+        return _json(_users.getFolder(folderId));
+      }
+      if (method == 'DELETE') {
+        _users.deleteFolder(folderId);
+        return Response(204);
+      }
+      if (method == 'GET' && f != null) return _json(f);
     }
 
     // ---- memories ----
