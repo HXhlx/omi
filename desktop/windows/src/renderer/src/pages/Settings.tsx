@@ -12,9 +12,7 @@ import { NotificationsTab } from '../components/settings/tabs/NotificationsTab'
 import { PrivacyTab } from '../components/settings/tabs/PrivacyTab'
 import { AccountTab } from '../components/settings/tabs/AccountTab'
 import { AdvancedTab } from '../components/settings/tabs/AdvancedTab'
-import { AgentsTab } from '../components/settings/tabs/AgentsTab'
 import { TranscriptionTab } from '../components/settings/tabs/TranscriptionTab'
-import { PlanUsageTab } from '../components/settings/tabs/PlanUsageTab'
 import { ShortcutsTab } from '../components/settings/tabs/ShortcutsTab'
 import { AboutTab } from '../components/settings/tabs/AboutTab'
 import { Memories } from './Memories'
@@ -24,13 +22,11 @@ import { Memories } from './Memories'
 // separately below and is intentionally absent from this map.
 const TAB_COMPONENTS: Partial<Record<SettingsTabId, () => React.JSX.Element>> = {
   general: GeneralTab,
-  agents: AgentsTab,
   transcription: TranscriptionTab,
   rewind: RewindTab,
   notifications: NotificationsTab,
   privacy: PrivacyTab,
   account: AccountTab,
-  'plan-usage': PlanUsageTab,
   shortcuts: ShortcutsTab,
   advanced: AdvancedTab,
   about: AboutTab

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { AudioWaveform, Gift, MessageCircle, Mic, Scan, Settings } from 'lucide-react'
+import { AudioWaveform, Mic, Scan, Settings } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { getPreferences, onPreferencesChange, setPreferences } from '../../../lib/preferences'
 import { cn } from '../../../lib/utils'
@@ -17,9 +17,6 @@ import type { RewindSettings } from '../../../../../shared/types'
 //
 // Mac reveals a listening-MODE sub-control on hover. Windows has no
 // listening-mode concept, so that sub-control is omitted rather than invented.
-
-const REFER_URL = 'https://affiliate.omi.me'
-const DISCORD_URL = 'https://discord.com/invite/8MP3b9ymvx'
 
 // Shared pill states. Mac also has a `blocked` (red) state for a denied capture
 // permission; Windows screen capture has no permission gate (RewindSettings
@@ -100,10 +97,6 @@ function GearMenu(): React.JSX.Element {
           sideOffset={8}
           className="z-50 w-[190px] rounded-xl border border-home-hairline bg-home-panel p-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.5)]"
         >
-          {/* External links go through main's shell.openExternal bridge, so they
-              open in the user's real browser rather than an Electron window. */}
-          {row(Gift, t('Refer a Friend', '推荐给朋友'), () => void window.omi?.openExternalUrl?.(REFER_URL))}
-          {row(MessageCircle, 'Discord', () => void window.omi?.openExternalUrl?.(DISCORD_URL))}
           <DropdownMenu.Separator className="my-1.5 h-px bg-home-hairline" />
           {row(Settings, t('Settings', '设置'), () => navigate('/settings'))}
         </DropdownMenu.Content>

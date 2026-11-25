@@ -18,11 +18,9 @@ import '@fontsource-variable/jetbrains-mono/wght-italic.css'
 // dead weight in the bundle (font-synthesis:none only bites where italics are used).
 import '@fontsource-variable/newsreader/opsz.css'
 import './styles/globals.css'
-// Side-effect: registers the Connections panel as the Hub's Connect-stage content.
-// The register module is tiny and registers a React.lazy factory, so the connections
-// component graph is only fetched when the main window first opens Connect — never
-// in secondary windows. Runs before createRoot; the registration itself is cheap.
-import './components/home/hub/connections/register'
+// LOCAL ADAPT: the 小蜗 build does not import the Connections panel, so the whole
+// connectors graph (Calendar, Sticky Notes, X, paste/export, MCP) stays out of the
+// bundle and the Hub's Connect stage renders nothing.
 // Side-effect: registers the focused-goals chip row as the resting Hub's widget
 // row. Eager + tiny (deps already in the main bundle); the widget only fetches
 // when the main window's hub actually mounts it.

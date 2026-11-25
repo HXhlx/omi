@@ -31,7 +31,7 @@ export type AboutUserData = {
 export function renderAboutUserCard({ name, facts, overdue, dueToday }: AboutUserData): string {
   const lines = ['<about_user>']
   if (name) lines.push(`Name: ${name}`)
-  lines.push('What Omi knows about them:')
+  lines.push('What 小蜗 knows about them:')
   if (facts.length === 0) lines.push('- Nothing saved yet.')
   else for (const fact of facts) lines.push(`- ${fact}`)
   lines.push(

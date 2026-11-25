@@ -31,9 +31,9 @@ describe('buildDesktopChatSystemPrompt', () => {
     expect(prompt.match(/spawn_agent/g)).toHaveLength(1)
   })
 
-  it('establishes the Omi persona and keeps normal replies conversational', () => {
+  it('establishes the 小蜗 persona and keeps normal replies conversational', () => {
     const prompt = buildDesktopChatSystemPrompt()
-    expect(prompt).toContain('You are Omi')
+    expect(prompt).toContain('You are 小蜗')
     // Response-style guidance keeps ordinary questions as short text answers — the
     // regression guard that a system prompt does not turn every message into a spawn.
     expect(prompt).toContain('<response_style>')
@@ -52,7 +52,7 @@ describe('buildDesktopChatSystemPrompt', () => {
     expect(prompt).toContain('<critical_accuracy_rules>')
     expect(prompt).toContain('never from plausible invention')
     expect(prompt).toContain(
-      "The # Current Time block prefixed to each request is Omi's authoritative clock"
+      "The # Current Time block prefixed to each request is 小蜗's authoritative clock"
     )
   })
 

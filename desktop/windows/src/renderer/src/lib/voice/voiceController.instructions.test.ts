@@ -51,11 +51,11 @@ describe('startVoiceSession — system instruction', () => {
     await startVoiceSession('openai')
     expect(startOpenAiSession).toHaveBeenCalledTimes(1)
     const { instructions } = startOpenAiSession.mock.calls[0][0]
-    expect(instructions).toContain('You are Omi, a fast spoken-voice assistant')
+    expect(instructions).toContain('You are 小蜗, a fast spoken-voice assistant')
     expect(instructions).toContain('Current local datetime:')
     // Nothing cached yet → no card, rather than a card that falsely claims Omi
     // knows nothing about the user. (The routing rule still names the tag.)
-    expect(instructions).not.toContain('What Omi knows about them:')
+    expect(instructions).not.toContain('What 小蜗 knows about them:')
   })
 
   it('feeds the cached card and the voice-language preference to BOTH lanes', async () => {

@@ -46,7 +46,7 @@ describe('renderAboutUserCard — exact template', () => {
       [
         '<about_user>',
         'Name: Ada',
-        'What Omi knows about them:',
+        'What 小蜗 knows about them:',
         '- Ships fast.',
         '- Has a dog.',
         'Right now: 2 overdue, 3 due today.',
@@ -60,7 +60,7 @@ describe('renderAboutUserCard — exact template', () => {
     expect(renderAboutUserCard({ name: '', facts: [], overdue: 0, dueToday: 0 })).toBe(
       [
         '<about_user>',
-        'What Omi knows about them:',
+        'What 小蜗 knows about them:',
         '- Nothing saved yet.',
         'Right now: nothing overdue or due today.',
         '(This is a quick snapshot — for the exact or current list, call get_action_items.)',

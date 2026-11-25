@@ -451,7 +451,7 @@ describe('runMainChatTurn', () => {
       'Work needing more than ~30 seconds of tool calls or research: start a background agent with spawn_agent'
     )
     // Persona is present too — this is the Omi desktop chat prompt, not pi's default.
-    expect(systemPrompt).toContain('You are Omi')
+    expect(systemPrompt).toContain('You are 小蜗')
   })
 
   it('prepends the authoritative current time to each dispatched turn', async () => {

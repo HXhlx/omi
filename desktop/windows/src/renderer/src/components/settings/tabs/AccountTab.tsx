@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { User, LogOut } from 'lucide-react'
-import { auth, signOutUser } from '../../../lib/firebase'
+import { User } from 'lucide-react'
 import { getPreferences, setPreferences } from '../../../lib/preferences'
 import { setDisplayName } from '../../../lib/userProfile'
 import { toast } from '../../../lib/toast'
@@ -39,17 +38,6 @@ export function AccountTab(): React.JSX.Element {
           </button>
         </div>
       </SettingRow>
-      <SettingRow
-        icon={LogOut}
-        title={t('Signed in', '已登录')}
-        subtitle={auth.currentUser?.email ?? t('(not signed in)', '（未登录）')}
-        keywords="account email sign out logout"
-        control={
-          <button onClick={signOutUser} className="btn-ghost">
-            {t('Sign out', '退出登录')}
-          </button>
-        }
-      />
     </>
   )
 }

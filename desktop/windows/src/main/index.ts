@@ -87,7 +87,6 @@ import { maybeGetWhatsNew, releaseNotesUrl } from './whatsNew'
 import { registerMeetingHandlers } from './ipc/meeting'
 import { startMeetingMonitor, stopMeetingMonitor, meetingDebug } from './meeting/meetingMonitor'
 import { registerAutomationHandlers } from './ipc/automation'
-import { registerCodingAgentHandlers } from './ipc/codingAgent'
 import { initClaudeAgentConfigDir } from './codingAgent/agentConfigDir'
 import { registerMainChatHandlers } from './ipc/mainChat'
 import { registerAgentCardHandlers } from './ipc/agentCards'
@@ -160,7 +159,7 @@ import {
   destroyTray,
   isTrayCreated
 } from './tray'
-import { initAutoUpdater, getPendingUpdate, checkForUpdatesNow, installUpdateNow } from './updater'
+import { getPendingUpdate, checkForUpdatesNow, installUpdateNow } from './updater'
 import {
   registerRecordShortcut,
   setRecordAcceleratorForced,
@@ -991,9 +990,8 @@ app.whenReady().then(async () => {
   // (sign-in / sign-out) or any agent spawn can touch it. userData is already
   // final here (sandbox override runs at module load, before whenReady).
   initClaudeAgentConfigDir(app.getPath('userData'))
-  // Coding-agent task IPC (cheap handler registration; adapter subprocesses spawn
-  // only when a task actually runs).
-  registerCodingAgentHandlers()
+  // LOCAL ADAPT: the 小蜗 build ships without Omi's coding-agent integrations
+  // (Claude Code, Codex, OpenClaw, Hermes), so no coding-agent IPC is registered.
   // Main-chat (kernel-routed pi-mono) IPC. DARK: the door exists but nothing in the
   // renderer calls it yet; default typed chat still routes through /v2/messages.
   registerMainChatHandlers()
@@ -1128,8 +1126,9 @@ app.whenReady().then(async () => {
   setTrayScreenCapture(getAppSettings().screenAnalysisEnabled)
   onAppSettingsChanged((s) => setTrayScreenCapture(s.screenAnalysisEnabled))
 
-  // Auto-update (packaged builds only; see updater.ts). Never crashes the app.
-  initAutoUpdater(() => mainWindow)
+  // LOCAL ADAPT: the 小蜗 build does not use Omi's native update feed
+  // (/v2/desktop/update-feed/windows), so the updater is never started. The tray /
+  // Settings checks then report "unsupported" instead of contacting Omi.
 
   // E2E hook (only when OMI_E2E=1; never in prod): expose the main-process facts
   // the lifecycle harness asserts via electronApp.evaluate.

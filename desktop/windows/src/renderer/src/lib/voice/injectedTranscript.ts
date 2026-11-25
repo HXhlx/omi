@@ -6,7 +6,7 @@
 
 import type { TranscriptLine } from '../../../../shared/types'
 
-export const ASSISTANT_SPEAKER = 'Omi'
+export const ASSISTANT_SPEAKER = '小蜗'
 
 /** Line-id prefix for every injected assistant line (realtime AND TTS — TTS
  *  utterance ids arrive as 'tts-N' and become 'omi-voice-tts-N'). */

@@ -68,7 +68,7 @@ export async function startOpenAiSession(args: {
 
   const mediaStream = await acquireMicStream()
   const transport = new OpenAIRealtimeWebRTC({ mediaStream, audioElement })
-  const agent = new RealtimeAgent({ name: 'Omi', instructions: args.instructions })
+  const agent = new RealtimeAgent({ name: '小蜗', instructions: args.instructions })
   const session = new RealtimeSession(agent, {
     transport,
     model: OPENAI_REALTIME_MODEL,

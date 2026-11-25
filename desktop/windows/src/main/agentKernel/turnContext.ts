@@ -586,7 +586,7 @@ export function getVoiceSeedSnapshot(
     }
     const interrupted = metadata.interrupted === true
     const attribution = turnSourceAttribution(turn)
-    const role = turn.role === 'user' ? 'User' : interrupted ? 'Omi (interrupted)' : 'Omi'
+    const role = turn.role === 'user' ? 'User' : interrupted ? '小蜗 (interrupted)' : '小蜗'
     const prefix = `${attribution} ${role}: `
     const contentBudget = Math.max(0, remaining - prefix.length)
     if (contentBudget <= 0) break

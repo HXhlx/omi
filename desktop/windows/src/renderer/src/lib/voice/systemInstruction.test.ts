@@ -48,7 +48,7 @@ describe('currentCalendarContext', () => {
 })
 
 describe('buildVoiceSystemInstruction', () => {
-  const card = '<about_user>\nName: Ada\nWhat Omi knows about them:\n- Ships fast.\n</about_user>'
+  const card = '<about_user>\nName: Ada\nWhat 小蜗 knows about them:\n- Ships fast.\n</about_user>'
 
   it('emits the sections in macOS order', () => {
     const text = buildVoiceSystemInstruction({
@@ -58,7 +58,7 @@ describe('buildVoiceSystemInstruction', () => {
       timeZone: 'UTC'
     })
     const order = [
-      'You are Omi, a fast spoken-voice assistant',
+      'You are 小蜗, a fast spoken-voice assistant',
       'The user speaks ONLY these languages',
       '<about_user>',
       'Current local datetime:',
@@ -73,7 +73,7 @@ describe('buildVoiceSystemInstruction', () => {
   it('omits the about_user block entirely when no card is cached', () => {
     const text = buildVoiceSystemInstruction({ aboutUser: '' })
     // The routing rule still names the tag; the CARD itself must be absent.
-    expect(text).not.toContain('What Omi knows about them:')
+    expect(text).not.toContain('What 小蜗 knows about them:')
     expect(text).not.toContain('</about_user>')
     expect(text).toContain('Current local datetime:')
   })

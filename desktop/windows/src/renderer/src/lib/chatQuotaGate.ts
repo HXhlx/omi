@@ -1,5 +1,6 @@
 import type { ChatUsageQuota } from './omiApi.generated'
 import { fetchChatQuota } from './billing'
+import { LOCAL_FORK } from './localFork'
 
 // The bar's pre-send chat-quota gate — a port of macOS FloatingBarUsageLimiter
 // (Desktop/Sources/FloatingControlBar/FloatingBarUsageLimiter.swift). The bar
@@ -110,6 +111,19 @@ export function createChatQuotaGate(
   coldStartTimeoutMs: number = COLD_START_SYNC_TIMEOUT_MS,
   minSyncIntervalMs: number = MIN_SYNC_INTERVAL_MS
 ): ChatQuotaGate {
+  // LOCAL ADAPT: the 小蜗 build has no plans or message limits, so every gate is
+  // permissive and the quota endpoint is never probed.
+  if (LOCAL_FORK) {
+    return {
+      sync: async (): Promise<void> => {},
+      check: async (): Promise<QuotaVerdict> => ({ blocked: false }),
+      checkSync: (): QuotaVerdict => ({ blocked: false }),
+      recordQuery: (): void => {},
+      applyQuota: (): void => {},
+      isLimitReached: (): boolean => false
+    }
+  }
+
   let quota: ChatUsageQuota | null = null
   let optimisticDelta = 0
   // Dedupe concurrent syncs (a reveal-refresh racing a cold-start send fetch).

@@ -1,0 +1,11 @@
+{
+  "changes": [
+    "Removed third-party connectors (Calendar, Sticky Notes, X, paste/export, MCP) and the Hub's Connect entry point.",
+    "Removed the Agents settings tab and the Claude Code, Codex, OpenClaw and Hermes coding-agent integrations.",
+    "Removed the Refer a Friend and Discord menu entries.",
+    "Removed the sign-in / sign-out row from Settings → Account.",
+    "Removed Plans & Usage, usage-limit popups and chat/voice quota enforcement.",
+    "Disabled Omi's native Windows update feed; update checks now report unsupported.",
+    "Rebranded the assistant persona in chat and voice prompts to 小蜗."
+  ]
+}

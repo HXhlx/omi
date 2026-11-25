@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { ArrowUp, Link as LinkIcon, Loader2, Paperclip } from 'lucide-react'
 import { cn } from '../../../lib/utils'
 import { t } from '../../../lib/i18n'
+import { LOCAL_FORK } from '../../../lib/localFork'
 import {
   addAttachments,
   removeAttachment,
@@ -242,7 +243,7 @@ export function HubAskBar(props: {
           >
             <ArrowUp className="h-[13px] w-[13px]" strokeWidth={2.75} />
           </button>
-        ) : focused ? null : (
+        ) : focused || LOCAL_FORK ? null : (
           <button
             type="button"
             onClick={onToggleConnect}
