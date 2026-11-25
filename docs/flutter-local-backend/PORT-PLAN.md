@@ -1,5 +1,11 @@
 # Flutter Local Backend — Port Plan
 
+> **Status (2026-11-25): implemented.** All 10 build steps below landed as
+> `tools/flutter_backend/` on branch `feature/flutter-local-backend`
+> (commits d7a5cfe → da7b7c2). 59 tests pass, `dart analyze` clean, live smoke
+> green. See `tools/flutter_backend/README.md` for the run surface and the
+> unimplemented cloud-only list.
+
 Goal. Replace the Omi Python backend (`backend/`, 188k LOC / 793 endpoints) with a
 Dart/Flutter local service that speaks the same HTTP/WebSocket wire contract, so the
 **desktop and mobile native apps run unchanged** against `http://127.0.0.1:8100`
