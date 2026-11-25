@@ -98,7 +98,14 @@ class Api {
           return _transcribeStreamSocket(req);
         }
         try {
-          return await _dispatch(req);
+          final res = await _dispatch(req);
+          if (res.statusCode == 404) {
+            // Param routes that named a static sub-resource (ids, canonical,
+            // live, reorder, …) fall here; the long-tail table claims them.
+            final extra = await _extra.handle(req, () => _body(req));
+            if (extra != null) return extra;
+          }
+          return res;
         } catch (e) {
           return _json({'detail': 'Internal error: $e'}, status: 500);
         }
@@ -995,10 +1002,6 @@ class Api {
         return _json({'status': 'ok', 'starred': body['starred'] ?? false});
       }
     }
-
-    // Long tail of client-called routes + well-formed stubs.
-    final extra = await _extra.handle(req, () => _body(req));
-    if (extra != null) return extra;
 
     return _json({'detail': 'Not Found', 'path': path}, status: 404);
   }

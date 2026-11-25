@@ -92,6 +92,9 @@ class ExtraRoutes {
       final id = convSub.$1;
       final tail = convSub.$2;
       if (tail.isEmpty) return null; // handled by Api
+      // These return a 404 when the conversation is missing and are already
+      // handled by Api for the found case; don't mask that here.
+      if (tail == 'finalize' || tail == 'reprocess') return null;
       switch (tail) {
         case 'summary':
           if (m == 'GET' || m == 'PATCH') {
