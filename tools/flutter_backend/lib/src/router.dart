@@ -7,7 +7,9 @@ import 'package:uuid/uuid.dart';
 import 'chat.dart';
 import 'conversation.dart';
 import 'db.dart';
+import 'knowledge.dart';
 import 'llm_client.dart';
+import 'pipeline.dart';
 import 'store.dart';
 import 'stt_client.dart';
 import 'tts.dart';
@@ -23,18 +25,23 @@ const kLocalUserId = 'local-dev-user';
 class Api {
   Api(this._db, {TtsClient? tts, SttClient? stt, LlmClient? llm})
       : _conversations = ConversationStore(_db),
-        _chat = ChatStore(_db) {
+        _chat = ChatStore(_db),
+        _knowledge = KnowledgeStore(_db) {
     _tts = tts ?? TtsClient();
     _stt = stt ?? SttClient();
     _llm = llm ?? LlmClient();
+    _pipeline = ConversationPipeline(
+        conversations: _conversations, knowledge: _knowledge, llm: _llm);
   }
 
   final LocalDb _db;
   final ConversationStore _conversations;
   final ChatStore _chat;
+  final KnowledgeStore _knowledge;
   late final TtsClient _tts;
   late final SttClient _stt;
   late final LlmClient _llm;
+  late final ConversationPipeline _pipeline;
 
   Handler get handler => (Request req) async {
         try {
@@ -106,6 +113,149 @@ class Api {
         return Response.ok(mp3, headers: {'content-type': 'audio/mpeg'});
       } on TtsException catch (e) {
         return _json({'detail': 'tts unavailable: ${e.message}'}, status: 503);
+      }
+    }
+
+    // ---- memories ----
+    if (path == 'v3/memories') {
+      final q = req.url.queryParameters;
+      if (method == 'GET') {
+        final list = _knowledge.listMemories(
+            limit: int.tryParse(q['limit'] ?? '') ?? 50,
+            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+        return _json(list.map((m) => m.toWire()).toList());
+      }
+      if (method == 'POST') {
+        final body = await _body(req);
+        final m = Memory(
+          id: _uuid.v4(),
+          content: (body['content'] as String? ?? '').trim(),
+          category: body['category'] as String? ?? 'interesting',
+          createdAt: DateTime.now(),
+        );
+        if (m.content.isEmpty) {
+          return _json({'detail': 'content must not be empty'}, status: 400);
+        }
+        _knowledge.upsertMemory(m);
+        return _json(m.toWire());
+      }
+      if (method == 'DELETE') {
+        _knowledge.clearMemories();
+        return _json({'status': 'ok'});
+      }
+    }
+    if (path == 'v3/memories/batch' && method == 'POST') {
+      final body = await _body(req);
+      final items = (body['memories'] as List? ?? body as List? ?? const []);
+      var n = 0;
+      for (final raw in items) {
+        final map = raw as Map;
+        final content = (map['content'] as String? ?? '').trim();
+        if (content.isEmpty) continue;
+        _knowledge.upsertMemory(Memory(
+            id: _uuid.v4(), content: content, createdAt: DateTime.now()));
+        n++;
+      }
+      return _json({'created': n});
+    }
+    final memId = _match(path, 'v3/memories/');
+    if (memId != null && !memId.contains('/')) {
+      if (method == 'PATCH') {
+        final body = await _body(req);
+        final existing = _knowledge.getMemory(memId);
+        if (existing == null) return _json({'detail': 'Not Found'}, status: 404);
+        final m = Memory(
+          id: existing.id,
+          content: body['content'] as String? ?? existing.content,
+          category: body['category'] as String? ?? existing.category,
+          createdAt: existing.createdAt,
+        );
+        _knowledge.upsertMemory(m);
+        return _json(m.toWire());
+      }
+      if (method == 'DELETE') {
+        _knowledge.deleteMemory(memId);
+        return _json({'status': 'ok'});
+      }
+    }
+    if (path == 'memory/search' && method == 'GET') {
+      final query = req.url.queryParameters['query'] ?? '';
+      final limit = int.tryParse(req.url.queryParameters['limit'] ?? '') ?? 10;
+      if (query.isEmpty) return _json({'items': <Object>[]});
+      final hits = _knowledge.searchMemories(query, limit: limit);
+      return _json({
+        'items': hits.map((m) => m.toWire()).toList(),
+        'query': query,
+      });
+    }
+    if (path == 'memory/vector/search' && method == 'POST') {
+      final body = await _body(req);
+      final query = (body['query'] as String? ?? '').trim();
+      if (query.isEmpty) return _json({'items': <Object>[]});
+      final hits = _knowledge.searchMemories(
+          query, limit: int.tryParse('${body['limit'] ?? 10}') ?? 10);
+      return _json({'items': hits.map((m) => m.toWire()).toList()});
+    }
+
+    // ---- action items ----
+    if (path == 'v1/action-items') {
+      final q = req.url.queryParameters;
+      if (method == 'GET') {
+        final list = _knowledge.listActionItems(
+            limit: int.tryParse(q['limit'] ?? '') ?? 50,
+            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+        return _json({
+          'action_items': list.map((a) => a.toWire()).toList(),
+          'has_more': false,
+          'truncated': false,
+        });
+      }
+      if (method == 'POST') {
+        final body = await _body(req);
+        final desc =
+            (body['description'] as String? ?? body['text'] as String? ?? '').trim();
+        if (desc.isEmpty) {
+          return _json({'detail': 'description must not be empty'}, status: 400);
+        }
+        final a = ActionItem(
+          id: _uuid.v4(),
+          description: desc,
+          createdAt: DateTime.now(),
+          conversationId: body['conversation_id'] as String?,
+          source: body['source'] as String?,
+        );
+        _knowledge.upsertActionItem(a);
+        return _json(a.toWire());
+      }
+    }
+    final aiId = _match(path, 'v1/action-items/');
+    if (aiId != null && !aiId.contains('/')) {
+      final existing = _knowledge.getActionItem(aiId);
+      if (method == 'GET') {
+        return existing == null
+            ? _json({'detail': 'Not Found'}, status: 404)
+            : _json(existing.toWire());
+      }
+      if (method == 'PATCH') {
+        if (existing == null) return _json({'detail': 'Not Found'}, status: 404);
+        final body = await _body(req);
+        final a = ActionItem(
+          id: existing.id,
+          description: body['description'] as String? ?? existing.description,
+          completed: body['completed'] as bool? ?? existing.completed,
+          createdAt: existing.createdAt,
+          completedAt: (body['completed'] as bool? ?? existing.completed)
+              ? (existing.completedAt ?? DateTime.now())
+              : null,
+          conversationId: existing.conversationId,
+          dueAt: existing.dueAt,
+        );
+        _knowledge.upsertActionItem(a);
+        return _json(a.toWire());
+      }
+      if (method == 'DELETE') {
+        _knowledge.deleteActionItem(aiId);
+        return Response(204);
       }
     }
 
@@ -267,7 +417,26 @@ class Api {
       if (tail == 'finalize' && method == 'POST') {
         final c = _conversations.get(id);
         if (c == null) return _json({'detail': 'Conversation not found'}, status: 404);
-        return _json(_conversations.toWire(id));
+        final result = await _pipeline.process(id);
+        return _json({
+          ..._conversations.toWire(id),
+          'pipeline': {
+            'processed': result.processed,
+            'memories': result.memories,
+            'action_items': result.actionItems,
+          },
+        });
+      }
+      if (tail == 'reprocess' && method == 'POST') {
+        final result = await _pipeline.process(id);
+        if (!result.processed) {
+          return _json({'detail': 'Conversation not found'}, status: 404);
+        }
+        return _json({
+          'status': 'ok',
+          'memories': result.memories,
+          'action_items': result.actionItems,
+        });
       }
       if (tail == 'title' && method == 'PATCH') {
         final body = await _body(req);
