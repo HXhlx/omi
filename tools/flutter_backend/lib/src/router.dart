@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:shelf/shelf.dart';
 import 'package:uuid/uuid.dart';
 
+import 'chat.dart';
 import 'conversation.dart';
 import 'db.dart';
+import 'llm_client.dart';
 import 'store.dart';
 import 'stt_client.dart';
 import 'tts.dart';
@@ -19,16 +21,20 @@ const kLocalUserId = 'local-dev-user';
 /// Routes so far. Each new domain adds a branch; unknown paths fall
 /// through to a JSON 404 that mimics FastAPI's `{"detail": "Not Found"}`.
 class Api {
-  Api(this._db, {TtsClient? tts, SttClient? stt})
-      : _conversations = ConversationStore(_db) {
+  Api(this._db, {TtsClient? tts, SttClient? stt, LlmClient? llm})
+      : _conversations = ConversationStore(_db),
+        _chat = ChatStore(_db) {
     _tts = tts ?? TtsClient();
     _stt = stt ?? SttClient();
+    _llm = llm ?? LlmClient();
   }
 
   final LocalDb _db;
   final ConversationStore _conversations;
+  final ChatStore _chat;
   late final TtsClient _tts;
   late final SttClient _stt;
+  late final LlmClient _llm;
 
   Handler get handler => (Request req) async {
         try {
@@ -100,6 +106,109 @@ class Api {
         return Response.ok(mp3, headers: {'content-type': 'audio/mpeg'});
       } on TtsException catch (e) {
         return _json({'detail': 'tts unavailable: ${e.message}'}, status: 503);
+      }
+    }
+
+    // ---- chat: desktop completions ----
+    if (path == 'v2/chat/completions' && method == 'POST') {
+      final body = await _body(req);
+      final messages = ((body['messages'] as List?) ?? const [])
+          .map((e) => _roleContent(e as Map))
+          .toList();
+      final stream = body['stream'] == true;
+      try {
+        if (stream) {
+          final chunks = _llm.stream(messages, model: body['model'] as String?);
+          return Response.ok(
+            chunks.map(_sseDataChunk),
+            headers: {'content-type': 'text/event-stream; charset=utf-8'},
+          );
+        }
+        final reply =
+            await _llm.complete(messages, model: body['model'] as String?);
+        return _json({
+          'id': 'chatcmpl-${_uuid.v4()}',
+          'object': 'chat.completion',
+          'model': reply.model ?? body['model'] ?? 'deepseek-flash',
+          'choices': [
+            {
+              'index': 0,
+              'message': {'role': 'assistant', 'content': reply.content},
+              'finish_reason': 'stop',
+            }
+          ],
+        });
+      } on LlmException catch (e) {
+        return _json({'error': {'message': e.message}}, status: 502);
+      }
+    }
+
+    // ---- chat: mobile v2/messages (SSE) ----
+    if (path == 'v2/messages') {
+      final q = req.url.queryParameters;
+      if (method == 'GET') {
+        final list = _chat.messages(
+            chatSessionId: q['chat_session_id'],
+            limit: int.tryParse(q['limit'] ?? '') ?? 50,
+            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+        return _json(list.map((m) => m.toWire()).toList());
+      }
+      if (method == 'DELETE') {
+        _chat.clearMessages(chatSessionId: q['chat_session_id']);
+        return Response(204);
+      }
+      if (method == 'POST') {
+        return _sendChatMessage(req);
+      }
+    }
+
+    // ---- chat sessions ----
+    if (path == 'v2/chat-sessions') {
+      final q = req.url.queryParameters;
+      if (method == 'GET') {
+        final list = _chat.listSessions(
+            limit: int.tryParse(q['limit'] ?? '') ?? 50,
+            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+        return _json(list.map((s) => s.toWire()).toList());
+      }
+      if (method == 'POST') {
+        final body = await _body(req);
+        final s = ChatSession(
+          id: _uuid.v4(),
+          createdAt: DateTime.now(),
+          title: body['title'] as String?,
+          appId: body['app_id'] as String?,
+        );
+        _chat.upsertSession(s);
+        return _json(s.toWire());
+      }
+    }
+    final sessId = _match(path, 'v2/chat-sessions/');
+    if (sessId != null && !sessId.contains('/')) {
+      if (method == 'GET') {
+        final s = _chat.getSession(sessId);
+        return s == null
+            ? _json({'detail': 'Not Found'}, status: 404)
+            : _json(s.toWire());
+      }
+      if (method == 'PATCH') {
+        final body = await _body(req);
+        final s = _chat.getSession(sessId);
+        if (s == null) return _json({'detail': 'Not Found'}, status: 404);
+        final updated = ChatSession(
+          id: s.id,
+          createdAt: s.createdAt,
+          title: body['title'] as String? ?? s.title,
+          appId: s.appId,
+          starred: body['starred'] as bool? ?? s.starred,
+          preview: s.preview,
+        );
+        _chat.upsertSession(updated);
+        return _json(updated.toWire());
+      }
+      if (method == 'DELETE') {
+        _chat.deleteSession(sessId);
+        return Response(204);
       }
     }
 
@@ -236,6 +345,80 @@ class Api {
     }
     return builder.takeBytes();
   }
+
+  /// Persists the user turn, streams the LLM answer as Omi SSE frames
+  /// (`data: <delta>`, then `message:` / `done:` with the full wire message),
+  /// and stores the assistant turn.
+  Future<Response> _sendChatMessage(Request req) async {
+    final q = req.url.queryParameters;
+    final sessionId = q['chat_session_id'];
+    final data = await _body(req);
+    final text = (data['text'] as String? ?? '').trim();
+    if (text.isEmpty) return _json({'detail': 'text must not be empty'}, status: 400);
+
+    final messageId = _uuid.v4();
+    _chat.insertMessage(ChatMessage(
+        id: messageId, role: 'user', text: text, createdAt: DateTime.now(),
+        chatSessionId: sessionId));
+
+    final messages = [
+      {'role': 'system', 'content': _systemPrompt()},
+      ..._chat.contextMessages(chatSessionId: sessionId),
+    ];
+
+    late StringBuffer full;
+    Stream<String> emit() async* {
+      full = StringBuffer();
+      try {
+        await for (final delta in _llm.stream(messages)) {
+          full.write(delta);
+          yield _sseLine('data: ', delta.replaceAll('\n', '__CRLF__'));
+        }
+      } on LlmException catch (e) {
+        yield _sseLine('error: ', e.message);
+        return;
+      }
+      final aiText = full.toString();
+      final aiMessage = ChatMessage(
+          id: _uuid.v4(), role: 'ai', text: aiText, createdAt: DateTime.now(),
+          chatSessionId: sessionId);
+      _chat.insertMessage(aiMessage);
+      final wire = _jsonEncode(aiMessage.toWire());
+      yield _sseLine('message: ', base64Encode(utf8.encode(wire)));
+      yield _sseLine('done: ', base64Encode(utf8.encode(wire)));
+    }
+
+    return Response.ok(
+      emit().map((line) => utf8.encode(line)),
+      headers: {'content-type': 'text/event-stream; charset=utf-8'},
+    );
+  }
+
+  static Map<String, String> _roleContent(Map e) => {
+        'role': e['role'] as String? ?? 'user',
+        'content': (e['content'] ?? '').toString(),
+      };
+
+  static String _systemPrompt() =>
+      '你是「小蜗」，一位面向无障碍场景的随身对话与记忆助手。回答简洁、友好，'
+      '在需要时主动给出可执行的建议。';
+
+  static Stream<String> _sseDataChunk(String delta) =>
+      Stream.value(_sseLine('data: ', jsonEncode({
+            'id': 'chatcmpl-local',
+            'object': 'chat.completion.chunk',
+            'choices': [
+              {
+                'index': 0,
+                'delta': {'content': delta},
+                'finish_reason': null,
+              }
+            ],
+          })));
+
+  static String _sseLine(String prefix, String payload) => '$prefix$payload\n\n';
+
+  static String _jsonEncode(Object o) => jsonEncode(o);
 
   Future<Map<String, dynamic>> _body(Request req) async {
     final raw = await req.readAsString();
