@@ -6,19 +6,24 @@ import 'package:uuid/uuid.dart';
 import 'conversation.dart';
 import 'db.dart';
 import 'store.dart';
+import 'tts.dart';
+import 'tts_client.dart';
 
 const _uuid = Uuid();
 
 /// Single local user. Any Firebase-shaped Bearer maps here.
 const kLocalUserId = 'local-dev-user';
 
-/// Routes implemented so far. Each new domain adds a branch; unknown paths fall
+/// Routes so far. Each new domain adds a branch; unknown paths fall
 /// through to a JSON 404 that mimics FastAPI's `{"detail": "Not Found"}`.
 class Api {
-  Api(this._db) : _conversations = ConversationStore(_db);
+  Api(this._db, {TtsClient? tts}) : _conversations = ConversationStore(_db) {
+    _tts = tts ?? TtsClient();
+  }
 
   final LocalDb _db;
   final ConversationStore _conversations;
+  late final TtsClient _tts;
 
   Handler get handler => (Request req) async {
         try {
@@ -43,6 +48,46 @@ class Api {
     }
     if (path == '_internal/boot') {
       return _json({'booted': _db.getSetting('booted'), 'uid': kLocalUserId});
+    }
+
+    // ---- tts ----
+    if (path == 'v1/tts/voices' && method == 'GET') {
+      return _json({
+        'voices': kTtsVoices,
+        'default_voice_id': kDefaultAssistantVoice,
+      });
+    }
+    if (path == 'v1/users/voice') {
+      if (method == 'GET') {
+        return _json({'voice_id': _userVoice()});
+      }
+      if (method == 'PATCH') {
+        final body = await _body(req);
+        final vid = body['voice_id'] as String?;
+        if (vid != null) _db.setSetting('assistant_voice', vid);
+        return _json({'voice_id': _userVoice()});
+      }
+    }
+    if ((path == 'v2/tts/synthesize' || path == 'v1/tts/synthesize') &&
+        method == 'POST') {
+      final reqBody = await _body(req);
+      final text = (reqBody['text'] as String? ?? '').trim();
+      if (text.isEmpty) {
+        return _json({'detail': 'text must not be empty'}, status: 400);
+      }
+      if (text.length > 5000) {
+        return _json(
+            {'detail': 'text exceeds maximum length of 5000 characters'},
+            status: 400);
+      }
+      final voiceId = reqBody['voice_id'] as String? ?? _userVoice();
+      try {
+        final mp3 = await _tts.synthesize(
+            TtsRequest(text, voiceId: voiceId));
+        return Response.ok(mp3, headers: {'content-type': 'audio/mpeg'});
+      } on TtsException catch (e) {
+        return _json({'detail': 'tts unavailable: ${e.message}'}, status: 503);
+      }
     }
 
     // ---- conversations ----
@@ -135,6 +180,8 @@ class Api {
 
   static String? _match(String path, String prefix) =>
       path.startsWith(prefix) ? path.substring(prefix.length) : null;
+
+  String _userVoice() => _db.getSetting('assistant_voice') ?? kDefaultAssistantVoice;
 
   Future<Map<String, dynamic>> _body(Request req) async {
     final raw = await req.readAsString();
