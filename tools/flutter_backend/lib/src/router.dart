@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'chat.dart';
 import 'conversation.dart';
 import 'db.dart';
+import 'extra_routes.dart';
 import 'knowledge.dart';
 import 'llm_client.dart';
 import 'pipeline.dart';
@@ -68,6 +69,12 @@ class Api {
     _llm = llm ?? LlmClient();
     _pipeline = ConversationPipeline(
         conversations: _conversations, knowledge: _knowledge, llm: _llm);
+    _extra = ExtraRoutes(
+      conversations: _conversations,
+      knowledge: _knowledge,
+      users: _users,
+      llm: _llm,
+    );
   }
 
   final LocalDb _db;
@@ -79,6 +86,7 @@ class Api {
   late final SttClient _stt;
   late final LlmClient _llm;
   late final ConversationPipeline _pipeline;
+  late final ExtraRoutes _extra;
 
   Handler get handler => (Request req) async {
         final path = req.url.path;
@@ -987,6 +995,10 @@ class Api {
         return _json({'status': 'ok', 'starred': body['starred'] ?? false});
       }
     }
+
+    // Long tail of client-called routes + well-formed stubs.
+    final extra = await _extra.handle(req, () => _body(req));
+    if (extra != null) return extra;
 
     return _json({'detail': 'Not Found', 'path': path}, status: 404);
   }
