@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
 import 'package:uuid/uuid.dart';
@@ -6,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'conversation.dart';
 import 'db.dart';
 import 'store.dart';
+import 'stt_client.dart';
 import 'tts.dart';
 import 'tts_client.dart';
 
@@ -17,13 +19,16 @@ const kLocalUserId = 'local-dev-user';
 /// Routes so far. Each new domain adds a branch; unknown paths fall
 /// through to a JSON 404 that mimics FastAPI's `{"detail": "Not Found"}`.
 class Api {
-  Api(this._db, {TtsClient? tts}) : _conversations = ConversationStore(_db) {
+  Api(this._db, {TtsClient? tts, SttClient? stt})
+      : _conversations = ConversationStore(_db) {
     _tts = tts ?? TtsClient();
+    _stt = stt ?? SttClient();
   }
 
   final LocalDb _db;
   final ConversationStore _conversations;
   late final TtsClient _tts;
+  late final SttClient _stt;
 
   Handler get handler => (Request req) async {
         try {
@@ -48,6 +53,14 @@ class Api {
     }
     if (path == '_internal/boot') {
       return _json({'booted': _db.getSetting('booted'), 'uid': kLocalUserId});
+    }
+
+    // ---- stt ----
+    if (path == 'v2/voice-message/transcribe' && method == 'POST') {
+      return _transcribe(req);
+    }
+    if (path == 'v1/stt/transcribe' && method == 'POST') {
+      return _transcribe(req);
     }
 
     // ---- tts ----
@@ -182,6 +195,47 @@ class Api {
       path.startsWith(prefix) ? path.substring(prefix.length) : null;
 
   String _userVoice() => _db.getSetting('assistant_voice') ?? kDefaultAssistantVoice;
+
+  /// Handles both client shapes the Omi backend accepts:
+  /// - `application/octet-stream` raw PCM (desktop PTT), query `sample_rate`,
+  ///   `channels`, `language`;
+  /// - `multipart/form-data` with a `file` part (mobile), forwarded as-is.
+  Future<Response> _transcribe(Request req) async {
+    final contentType = req.headers['content-type'] ?? '';
+    final bytes = await _readAll(req);
+    if (bytes.isEmpty) {
+      return _json({'detail': 'No audio data provided'}, status: 400);
+    }
+    try {
+      SttResult result;
+      if (contentType.contains('application/octet-stream')) {
+        final q = req.url.queryParameters;
+        result = await _stt.transcribePcm(
+          bytes,
+          sampleRate: int.tryParse(q['sample_rate'] ?? '') ?? 16000,
+          channels: int.tryParse(q['channels'] ?? '') ?? 1,
+          language: q['language'],
+        );
+      } else {
+        result = await _stt.transcribeMultipart(bytes, contentType);
+      }
+      return _json({
+        'transcript': result.text,
+        'language': result.language,
+        'segments': result.segments.map((s) => s.toJson()).toList(),
+      });
+    } on SttException catch (e) {
+      return _json({'detail': 'stt unavailable: ${e.message}'}, status: 503);
+    }
+  }
+
+  static Future<Uint8List> _readAll(Request req) async {
+    final builder = BytesBuilder(copy: false);
+    await for (final chunk in req.read()) {
+      builder.add(chunk);
+    }
+    return builder.takeBytes();
+  }
 
   Future<Map<String, dynamic>> _body(Request req) async {
     final raw = await req.readAsString();
