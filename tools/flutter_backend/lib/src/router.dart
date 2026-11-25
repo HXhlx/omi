@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
+import 'package:shelf_web_socket/shelf_web_socket.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:uuid/uuid.dart';
 
 import 'chat.dart';
@@ -17,6 +19,38 @@ import 'tts_client.dart';
 import 'user_store.dart';
 
 const _uuid = Uuid();
+
+/// First-party app catalog served to both clients in the local build. The
+/// marketplace is offline, so apps comes from this small seeded list (matching
+/// Omi category shapes) instead of a store network call.
+const List<Map<String, dynamic>> _localApps = [
+  {
+    'id': 'meeting_summarizer',
+    'name': '会议纪要',
+    'category': 'productivity',
+    'author': '小蜗',
+    'description': '自动生成会议纪要、行动项与待办。',
+    'image': '',
+    'capabilities': ['conversation_processing'],
+    'enabled': true,
+    'approved': true,
+    'official': true,
+    'installs': 0,
+  },
+  {
+    'id': 'persona-小蜗管家',
+    'name': '小蜗管家',
+    'category': 'persona',
+    'author': '小蜗',
+    'description': '贴在身边的管家：日程提醒、待办与家居控制入口。',
+    'image': '',
+    'capabilities': ['persona'],
+    'enabled': true,
+    'approved': true,
+    'official': true,
+    'installs': 0,
+  },
+];
 
 /// Single local user. Any Firebase-shaped Bearer maps here.
 const kLocalUserId = 'local-dev-user';
@@ -47,12 +81,125 @@ class Api {
   late final ConversationPipeline _pipeline;
 
   Handler get handler => (Request req) async {
+        final path = req.url.path;
+        // ---- live transcription websocket: /v4/listen (+ web alias) ----
+        if (path == 'v4/listen' || path == 'v4/web/listen') {
+          return _listenSocket(req);
+        }
+        if (path == 'v2/voice-message/transcribe-stream') {
+          return _transcribeStreamSocket(req);
+        }
         try {
           return await _dispatch(req);
         } catch (e) {
           return _json({'detail': 'Internal error: $e'}, status: 500);
         }
       };
+
+  /// `/v4/listen`: client streams PCM16/other audio frames; the server batches
+  /// them and transcribes through the local worker, emitting Omi's segment
+  /// array frames (`[{text,start,end,speaker,is_user}]`). Finalization happens
+  /// when the client sends `{'type':'finalization_reason'...}` or closes.
+  Future<Response> _listenSocket(Request req) async {
+    final q = req.url.queryParameters;
+    final sampleRate = int.tryParse(q['sample_rate'] ?? '') ?? 16000;
+    final language = q['language'];
+    final handler = webSocketHandler((WebSocketChannel channel, _) {
+      final pcm = BytesBuilder(copy: false);
+      var conversationId = _uuid.v4();
+      var lastStart = 0.0;
+
+      Future<void> flush() async {
+        if (pcm.length < sampleRate * 2 * 0.5) return; // <0.5s: nothing useful
+        final bytes = pcm.takeBytes();
+        try {
+          final result = await _stt.transcribePcm(bytes,
+              sampleRate: sampleRate, language: language);
+          final segs = <Map<String, dynamic>>[];
+          for (final s in result.segments) {
+            segs.add({
+              'text': s.text,
+              'start': lastStart + s.start,
+              'end': lastStart + s.end,
+              'speaker': 'SPEAKER_00',
+              'is_user': true,
+            });
+          }
+          if (segs.isNotEmpty) {
+            lastStart = segs.last['end'] as double;
+            channel.sink.add(jsonEncode(segs));
+          }
+        } on SttException {
+          // worker unavailable: keep the collector alive, no frames this batch.
+        }
+      }
+
+      channel.stream.listen((Object? frame) async {
+        if (frame is List<int>) {
+          pcm.add(frame);
+          if (pcm.length >= sampleRate * 2 * 6) {
+            await flush(); // bounded batch (≤6s) to keep latency low
+          }
+          return;
+        }
+        if (frame is String) {
+          Map<String, dynamic>? msg;
+          try {
+            msg = jsonDecode(frame) as Map<String, dynamic>;
+          } catch (_) {
+            return;
+          }
+          final type = msg['type']?.toString();
+          if (type == 'stop' ||
+              type == 'finalization_reason' ||
+              (msg['finalization_reason'] != null)) {
+            await flush();
+            channel.sink.add(jsonEncode({
+              'type': 'conversation_processing_completed',
+              'conversation_id': conversationId,
+            }));
+          }
+          if (msg['client_conversation_id'] != null) {
+            conversationId = msg['client_conversation_id'] as String;
+          }
+        }
+      }, onDone: () async {
+        await flush();
+        await channel.sink.close();
+      });
+    });
+    return handler(req);
+  }
+
+  /// `/v2/voice-message/transcribe-stream`: one-shot PTT stream; hand back the
+  /// transcript as segment arrays after each bounded batch (no conversation).
+  Future<Response> _transcribeStreamSocket(Request req) async {
+    final q = req.url.queryParameters;
+    final sampleRate = int.tryParse(q['sample_rate'] ?? '') ?? 16000;
+    final handler = webSocketHandler((WebSocketChannel channel, _) {
+      final pcm = BytesBuilder(copy: false);
+      channel.stream.listen((Object? frame) async {
+        if (frame is! List<int>) return;
+        pcm.add(frame);
+        if (pcm.length >= sampleRate * 2 * 4) {
+          final bytes = pcm.takeBytes();
+          try {
+            final result = await _stt.transcribePcm(bytes,
+                sampleRate: sampleRate, language: q['language']);
+            channel.sink.add(jsonEncode([
+              for (final s in result.segments)
+                {'text': s.text, 'start': s.start, 'end': s.end, 'speaker': 'SPEAKER_00'},
+            ]));
+          } on SttException {
+            // no worker: ignore this batch.
+          }
+        }
+      }, onDone: () async {
+        await channel.sink.close();
+      });
+    });
+    return handler(req);
+  }
 
   Future<Response> _dispatch(Request req) async {
     final path = req.url.path;
@@ -265,6 +412,230 @@ class Api {
         return Response(204);
       }
       if (method == 'GET' && f != null) return _json(f);
+    }
+
+    // ---- sync: capture manifest / end ----
+    if (path == 'v2/sync-capture-manifest' && method == 'POST') {
+      final body = await _body(req);
+      final convId = body['conversation_id'] as String? ?? _uuid.v4();
+      final files = (body['files'] as List?) ?? const [];
+      final manifest = {
+        'version': 1,
+        'conversation_id': convId,
+        'accepted_files': files.length,
+        'blobs': <Object>[],
+      };
+      _db.db.execute(
+        'INSERT INTO sync_ledger (id, kind, created_at, payload) VALUES (?, ?, ?, ?) '
+        'ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',
+        [convId, 'manifest', DateTime.now().toIso8601String(), jsonEncode(manifest)],
+      );
+      return _json({'manifest': jsonEncode(manifest)});
+    }
+    if (path == 'v2/sync-capture-end' && method == 'POST') {
+      final body = await _body(req);
+      _db.db.execute(
+        'INSERT INTO sync_ledger (id, kind, created_at, payload) VALUES (?, ?, ?, ?) '
+        'ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',
+        [
+          'end-${_uuid.v4()}',
+          'capture_end',
+          DateTime.now().toIso8601String(),
+          jsonEncode(body),
+        ],
+      );
+      return _json({'accepted': true, 'retry': false});
+    }
+    if (path == 'v2/sync-local-files' && method == 'POST') {
+      return _json({'job_id': 'sync-${_uuid.v4()}', 'status': 'queued'});
+    }
+    if (path.startsWith('v2/sync-local-files/') && method == 'GET') {
+      return _json({'status': 'completed', 'processed': 0});
+    }
+
+    // ---- desktop messages (durable chat persistence, separate from v2/messages) ----
+    if (path == 'v2/desktop/messages') {
+      final q = req.url.queryParameters;
+      if (method == 'GET') {
+        return _json(_chat
+            .messages(chatSessionId: q['chat_session_id'], limit: 100)
+            .map((m) => m.toWire())
+            .toList());
+      }
+      if (method == 'POST') {
+        final body = await _body(req);
+        final text = (body['text'] as String? ?? '').trim();
+        if (text.isEmpty) {
+          return _json({'detail': 'text must not be empty'}, status: 400);
+        }
+        final m = ChatMessage(
+          id: _uuid.v4(),
+          role: body['sender'] as String? ?? 'user',
+          text: text,
+          createdAt: DateTime.now(),
+          chatSessionId: body['chat_session_id'] as String?,
+        );
+        _chat.insertMessage(m);
+        return _json(m.toWire());
+      }
+      if (method == 'DELETE') {
+        _chat.clearMessages(chatSessionId: q['chat_session_id']);
+        return Response(204);
+      }
+    }
+
+    // ---- misc desktop: prompts, subscription, model pick, updates feed ----
+    if (path == 'v2/desktop/prompts' && method == 'GET') {
+      return _json({'version': 'local', 'prompts': <Object>[]});
+    }
+    if (path == 'v1/users/me/subscription' && method == 'GET') {
+      return _json({
+        'plan': 'local',
+        'status': 'active',
+        'is_paid': false,
+        'features': <Object>[],
+      });
+    }
+    if (path == 'v1/users/me/usage-quota' && method == 'GET') {
+      return _json({'used': 0, 'limit': null, 'unlimited': true});
+    }
+    if (path == 'v1/users/me/trial' && method == 'GET') {
+      return _json({'eligible': false, 'active': false});
+    }
+    if (path == 'v1/auto/model-pick' && method == 'GET') {
+      return _json({'provider': 'local', 'model': 'deepseek-flash'});
+    }
+    if (path.startsWith('v2/desktop/update-feed') && method == 'GET') {
+      return _json({'feed_url': '', 'channel': 'local', 'version': 'local'});
+    }
+    if (path == 'v1/users/fcm-token' && method == 'POST') {
+      return _json({'status': 'ok'});
+    }
+    if (path == 'v1/users/time-zone' && method == 'PUT') {
+      return _json({'status': 'ok'});
+    }
+
+    // ---- desktop glue / realtime ----
+    if (path == 'v2/realtime/session' && method == 'POST') {
+      // Ephemeral realtime token mint: a local build has no hanging realtime
+      // provider. Return an inert session the client treats as usable-soon;
+      // the desktop voice hub degrades when its provider is unreachable.
+      return _json({
+        'session_id': 'realtime-${_uuid.v4()}',
+        'provider': req.url.queryParameters['provider'] ?? 'local',
+        'client_secret': {'value': _uuid.v4().replaceAll('-', '')},
+        'expires_at': DateTime.now().add(const Duration(minutes: 10)).toIso8601String(),
+      });
+    }
+    if (path == 'v3/speech-profile/stt-availability' && method == 'GET') {
+      return _json({'available': true, 'provider': 'local'});
+    }
+    if (path.startsWith('v1/proxy/gemini')) {
+      // Desktop Gemini proxy: route generateContent/embedContent to the local
+      // LLM. Most call sites tolerate an OpenAI-shaped reply; embed batching
+      // is stubbed with a dimension-consistent zero vector.
+      if (method == 'POST') {
+        final body = await _body(req);
+        if (path.contains('embed')) {
+          return _json(_embedReply(body));
+        }
+        final messages = _geminiMessages(body);
+        try {
+          final reply = await _llm.complete(messages);
+          return _json(_geminiContentReply(reply.content));
+        } on LlmException catch (e) {
+          return _json({'error': {'message': e.message}}, status: 502);
+        }
+      }
+    }
+
+    // ---- search overview ----
+    if (path == 'v1/search/overview' && method == 'GET') {
+      return _json({
+        'memories': _knowledge.listMemories().length,
+        'people': _users.listPeople().length,
+        'folders': _users.listFolders(),
+        'places': 0,
+        'recaps': 0,
+        'starred': 0,
+      });
+    }
+
+    // ---- apps / personas ----
+    if (path == 'v2/apps' && method == 'GET') {
+      return _json({
+        'data': _apps(),
+        'count': _apps().length,
+        'has_more': false,
+        'offset': 0,
+        'limit': 0,
+      });
+    }
+    if ((path == 'v1/apps' || path == 'v1/apps/enabled') && method == 'GET') {
+      if (path == 'v1/apps/enabled') {
+        return _json(_apps().map((a) => a['id']).toList());
+      }
+      return _json(_apps());
+    }
+    if (path == 'v1/personas' && method == 'GET') {
+      return _json(_apps().firstWhere((a) => a['category'] == 'persona',
+          orElse: () => <String, dynamic>{}));
+    }
+    final appId = _match(path, 'v1/apps/');
+    if (appId != null && !appId.contains('/')) {
+      if (method == 'GET') {
+        final app = _apps().where((a) => a['id'] == appId).firstOrNull;
+        return app == null
+            ? _json({'detail': 'Not Found'}, status: 404)
+            : _json(app);
+      }
+      if (method == 'POST') {
+        // enable/disable use query (not body); reviews post under {id}/review.
+        return _json({'status': 'ok'});
+      }
+    }
+    if (path.startsWith('v1/apps/unapproved') && method == 'GET') {
+      return _json(<Object>[]);
+    }
+
+    // ---- memories extract ----
+    if (path == 'v1/memories/extract' && method == 'POST') {
+      final body = await _body(req);
+      final text = (body['text'] as String? ?? '').trim();
+      if (text.isEmpty) {
+        return _json({'detail': 'text must not be empty'}, status: 400);
+      }
+      try {
+        final reply = await _llm.complete([
+          {'role': 'system', 'content': _memoryExtractPrompt},
+          {'role': 'user', 'content': text},
+        ], temperature: 0.1);
+        final facts = _memoryFromReply(reply.content);
+        final created = <Map<String, dynamic>>[];
+        for (final f in facts) {
+          final m = Memory(id: _uuid.v4(), content: f, createdAt: DateTime.now());
+          _knowledge.upsertMemory(m);
+          created.add(m.toWire());
+        }
+        return _json({'memories': created});
+      } on LlmException catch (e) {
+        return _json({'detail': e.message}, status: 502);
+      }
+    }
+
+    // ---- home feed ----
+    if (path == 'v1/home/feed' && method == 'GET') {
+      final limit = int.tryParse(req.url.queryParameters['limit'] ?? '') ?? 20;
+      final items = _knowledge.listMemories(limit: limit)
+          .map((m) => {'kind': 'memory', 'content': m.content})
+          .toList();
+      return _json({
+        'generation': 'local',
+        'items': items,
+        'has_more': false,
+        'next_cursor': '',
+        'truncated': false,
+      });
     }
 
     // ---- memories ----
@@ -739,6 +1110,76 @@ class Api {
   static String _sseLine(String prefix, String payload) => '$prefix$payload\n\n';
 
   static String _jsonEncode(Object o) => jsonEncode(o);
+
+  static const _memoryExtractPrompt =
+      '从下面文本中抽取值得长期记住的事实，输出严格的 JSON 数组 ["事实1","事实2"]。'
+      '若没有，输出 []。只输出 JSON。';
+
+  static List<Map<String, dynamic>> _apps() =>
+      _localApps.map((a) => Map<String, dynamic>.from(a)).toList();
+
+  static List<String> _memoryFromReply(String raw) {
+    final start = raw.indexOf('[');
+    final end = raw.lastIndexOf(']');
+    if (start < 0 || end <= start) return const [];
+    try {
+      final decoded = jsonDecode(raw.substring(start, end + 1));
+      return decoded is List ? decoded.map((e) => e.toString()).toList() : const [];
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  /// Gemini `{contents:[{parts:[{text}]}]}` → OpenAI role/content pairs.
+  static List<Map<String, String>> _geminiMessages(Map<String, dynamic> body) {
+    final contents = body['contents'] as List?;
+    if (contents == null) {
+      final prompt = body['prompt'] as String?;
+      return [
+        {'role': 'user', 'content': prompt ?? ''},
+      ];
+    }
+    return contents.map((c) {
+      final m = c as Map;
+      final role = m['role'] as String? ?? 'user';
+      final text = ((m['parts'] as List?) ?? const [])
+          .map((p) => (p as Map)['text']?.toString() ?? '')
+          .join('\n');
+      return {'role': role == 'model' ? 'assistant' : 'user', 'content': text};
+    }).toList();
+  }
+
+  /// Gemini `generateContent` reply: `{candidates:[{content:{parts:[{text}]}}]}`.
+  static Map<String, dynamic> _geminiContentReply(String text) => {
+        'candidates': [
+          {
+            'content': {
+              'parts': [
+                {'text': text},
+              ],
+              'role': 'model',
+            },
+            'finishReason': 'STOP',
+          }
+        ],
+      };
+
+  /// Gemini `embedContent`/`batchEmbedContents` reply with a fixed 1024-dim
+  /// zero vector — enough shape for the desktop's cosine code to run without a
+  /// real embedding provider.
+  static Map<String, dynamic> _embedReply(Map<String, dynamic> body) {
+    const dim = 1024;
+    final zero = List<double>.filled(dim, 0);
+    if (body['requests'] is List) {
+      final n = (body['requests'] as List).length;
+      return {
+        'embeddings': List.generate(n, (_) => {'values': zero}),
+      };
+    }
+    return {
+      'embedding': {'values': zero},
+    };
+  }
 
   Future<Map<String, dynamic>> _body(Request req) async {
     final raw = await req.readAsString();
