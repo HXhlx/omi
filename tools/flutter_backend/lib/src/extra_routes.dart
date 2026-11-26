@@ -721,7 +721,22 @@ class ExtraRoutes {
     }
     if (path == 'v1/home/feed/prepare' && m == 'POST') return _json({'status': 'ok'});
     if (path == 'v1/account/cutover/control' && m == 'GET') {
-      return _json({'enabled': false});
+      // Full legacy-default projection: the client parses these fields
+      // strictly (AccountCutoverControl.fromJson) and gates the whole app on
+      // a complete document — `{"enabled": false}` reads as
+      // "incomplete cutover control projection" and blocks the home screen.
+      return _json({
+        'state': 'legacy',
+        'account_generation': 0,
+        'ui_generation': 0,
+        'api_generation': 0,
+        'client_action': 'none',
+        'offline_queue_instruction': 'none',
+        'stranded_new_data': false,
+        'legacy_writes_allowed': true,
+        'product_traffic_allowed': true,
+        'auth_bootstrap_reachable': true,
+      });
     }
     if (path == 'v1/workflow-migrations/task-goal-links' && m == 'POST') {
       return _json({'status': 'ok', 'linked': 0});

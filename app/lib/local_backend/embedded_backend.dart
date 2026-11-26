@@ -37,12 +37,17 @@ class EmbeddedLocalBackend {
     // synthetic session so [AuthService.isSignedIn] and every authenticated
     // HTTP client resolve before the first request, with no Auth emulator, no
     // network, and no account lifecycle on the wire.
-    if (AuthService.instance.getFirebaseUser() == null && !AuthService.instance.isSignedIn()) {
-      SharedPreferencesUtil().uid = kLocalDevUid;
-      SharedPreferencesUtil().authToken = kLocalDevUid; // opaque Bearer, embeds the uid
-      SharedPreferencesUtil().tokenExpirationTime = DateTime.now().millisecondsSinceEpoch;
-      AuthService.installLocalHarnessTokenGateway(_StaticTokenGateway());
-    }
+    //
+    // Unconditional in the embedded build. A previously-installed session can
+    // leave a persisted Firebase user behind (an emulator-minted one from an
+    // earlier harness run); gating on "no current Firebase user" then skips
+    // the gateway, every token refresh dials real Firebase, times out after
+    // 8s, and the home feed dies behind an error screen even though the
+    // in-process backend is serving 200s.
+    SharedPreferencesUtil().uid = kLocalDevUid;
+    SharedPreferencesUtil().authToken = kLocalDevUid; // opaque Bearer, embeds the uid
+    SharedPreferencesUtil().tokenExpirationTime = DateTime.now().millisecondsSinceEpoch;
+    AuthService.installLocalHarnessTokenGateway(_StaticTokenGateway());
 
     final support = await getApplicationSupportDirectory();
     // On-device inference: the local-stt / local-tts provider cards run
