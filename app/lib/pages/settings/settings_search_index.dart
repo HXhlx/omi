@@ -1,3 +1,4 @@
+import 'package:omi/env/local_fork.dart' as env;
 import 'package:omi/pages/phone_calls/phone_calls_feature.dart';
 import 'package:omi/l10n/app_localizations.dart';
 
@@ -50,6 +51,24 @@ enum SettingsDestination {
   referral,
   signOut,
 }
+
+/// LOCAL ADAPT: destinations the 小蜗 mobile build does not expose.
+const Set<SettingsDestination> localForkHiddenDestinations = {
+  SettingsDestination.profile,
+  SettingsDestination.planAndUsage,
+  SettingsDestination.upgrade,
+  SettingsDestination.referral,
+  SettingsDestination.integrations,
+  SettingsDestination.taskIntegrations,
+  SettingsDestination.connectAgent,
+  SettingsDestination.signOut,
+  SettingsDestination.deleteAccount,
+};
+
+/// Whether [destination] is hidden for this build. The flag is a parameter so
+/// the default build and the local fork both stay testable.
+bool settingsDestinationHidden(SettingsDestination destination, {required bool localFork}) =>
+    localFork && localForkHiddenDestinations.contains(destination);
 
 /// Which conditional rows are on screen right now. A search result only exists while its row does.
 class SettingsSearchScope {
@@ -327,12 +346,18 @@ final List<SettingsSearchEntry> settingsSearchEntries = [
 
 /// The entries whose rows are on screen for [scope] and whose title contains [query]
 /// (case-insensitive). An empty query matches nothing.
-List<SettingsSearchEntry> searchSettings(AppLocalizations l10n, String query, SettingsSearchScope scope) {
+List<SettingsSearchEntry> searchSettings(
+  AppLocalizations l10n,
+  String query,
+  SettingsSearchScope scope, {
+  bool localFork = env.localFork,
+}) {
   final q = query.trim().toLowerCase();
   if (q.isEmpty) return const [];
   final seen = <String>{};
   final results = <SettingsSearchEntry>[];
   for (final entry in settingsSearchEntries) {
+    if (settingsDestinationHidden(entry.destination, localFork: localFork)) continue;
     if (entry.visible != null && !entry.visible!(scope)) continue;
     final title = entry.title(l10n);
     final aliases = entry.aliases?.call(l10n) ?? const <String>[];
