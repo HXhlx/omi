@@ -15670,4 +15670,57 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => 'Vom Server gemeldete Arbeit';
+
+  @override
+  String get providerCards => 'Anbieterkarten';
+
+  @override
+  String get providerCardsSubtitle =>
+      'Jede Karte listet alle Dienste dieses Anbieters. Standardmäßig ist das neueste Modell gewählt.';
+
+  @override
+  String get providerUnifiedChannel => 'Einheitlicher Kanal';
+
+  @override
+  String get providerUnifiedChannelSubtitle =>
+      'Wähle den Anbieter für jeden Dienst. Es werden nur aktivierte Anbieter aufgeführt.';
+
+  @override
+  String get providerAddCard => 'Anbieterkarte hinzufügen';
+
+  @override
+  String get providerCapabilityAsr => 'Sprache zu Text';
+
+  @override
+  String get providerCapabilityTts => 'Text zu Sprache';
+
+  @override
+  String get providerCapabilityLlm => 'Sprachmodell';
+
+  @override
+  String get providerCapabilityRealtime => 'Echtzeit-Sprache';
+
+  @override
+  String get providerCapabilityVision => 'Bildverständnis';
+
+  @override
+  String get providerCapabilityVideo => 'Videoverständnis';
+
+  @override
+  String get providerApiKeyHint => 'API-Schlüssel';
+
+  @override
+  String get providerKeySaved => 'Aktiviert';
+
+  @override
+  String get providerKeyMissing => 'Nicht aktiviert';
+
+  @override
+  String get providerNoActiveProviders => 'Noch kein aktivierter Anbieter unterstützt diesen Dienst.';
+
+  @override
+  String get providerSaved => 'Anbietereinstellungen gespeichert';
+
+  @override
+  String get providerSaveFailed => 'Anbietereinstellungen konnten nicht gespeichert werden.';
 }

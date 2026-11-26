@@ -4685,5 +4685,22 @@
     "downloadNow": "التنزيل الآن",
     "onWifiLater": "لاحقًا عبر Wi-Fi",
     "conversationWritingSummary": "جارٍ كتابة ملخصك…",
-    "onTheWayServerWork": "عمل أبلغ عنه الخادم"
+    "onTheWayServerWork": "عمل أبلغ عنه الخادم",
+    "providerCards": "بطاقات المزوّدين",
+    "providerCardsSubtitle": "تسرد كل بطاقة جميع الخدمات التي يوفّرها هذا المزوّد. يُختار أحدث نموذج افتراضيًا.",
+    "providerUnifiedChannel": "قناة موحّدة",
+    "providerUnifiedChannelSubtitle": "اختر المزوّد لكل خدمة. تُعرض المزوّدون المفعّلون فقط.",
+    "providerAddCard": "إضافة بطاقة مزوّد",
+    "providerCapabilityAsr": "تحويل الكلام إلى نص",
+    "providerCapabilityTts": "تحويل النص إلى كلام",
+    "providerCapabilityLlm": "نموذج لغوي",
+    "providerCapabilityRealtime": "صوت فوري",
+    "providerCapabilityVision": "فهم الصور",
+    "providerCapabilityVideo": "فهم الفيديو",
+    "providerApiKeyHint": "مفتاح API",
+    "providerKeySaved": "مفعّل",
+    "providerKeyMissing": "غير مفعّل",
+    "providerNoActiveProviders": "لا يوجد بعد مزوّد مفعّل يدعم هذه الخدمة.",
+    "providerSaved": "تم حفظ إعدادات المزوّدين",
+    "providerSaveFailed": "تعذّر حفظ إعدادات المزوّدين."
 }

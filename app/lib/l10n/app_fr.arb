@@ -4720,5 +4720,22 @@
     "downloadNow": "Télécharger",
     "onWifiLater": "Plus tard en Wi-Fi",
     "conversationWritingSummary": "Rédaction de votre résumé…",
-    "onTheWayServerWork": "Traitement signalé par le serveur"
+    "onTheWayServerWork": "Traitement signalé par le serveur",
+    "providerCards": "Cartes de fournisseur",
+    "providerCardsSubtitle": "Chaque carte liste tous les services de ce fournisseur. Le modèle le plus récent est sélectionné par défaut.",
+    "providerUnifiedChannel": "Canal unifié",
+    "providerUnifiedChannelSubtitle": "Choisissez le fournisseur de chaque service. Seuls les fournisseurs activés sont listés.",
+    "providerAddCard": "Ajouter une carte de fournisseur",
+    "providerCapabilityAsr": "Parole vers texte",
+    "providerCapabilityTts": "Texte vers parole",
+    "providerCapabilityLlm": "Modèle de langage",
+    "providerCapabilityRealtime": "Voix en temps réel",
+    "providerCapabilityVision": "Compréhension des images",
+    "providerCapabilityVideo": "Compréhension des vidéos",
+    "providerApiKeyHint": "Clé API",
+    "providerKeySaved": "Activé",
+    "providerKeyMissing": "Non activé",
+    "providerNoActiveProviders": "Aucun fournisseur activé ne prend encore en charge ce service.",
+    "providerSaved": "Paramètres des fournisseurs enregistrés",
+    "providerSaveFailed": "Impossible d'enregistrer les paramètres des fournisseurs."
 }

@@ -15467,4 +15467,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => 'عمل أبلغ عنه الخادم';
+
+  @override
+  String get providerCards => 'بطاقات المزوّدين';
+
+  @override
+  String get providerCardsSubtitle =>
+      'تسرد كل بطاقة جميع الخدمات التي يوفّرها هذا المزوّد. يُختار أحدث نموذج افتراضيًا.';
+
+  @override
+  String get providerUnifiedChannel => 'قناة موحّدة';
+
+  @override
+  String get providerUnifiedChannelSubtitle => 'اختر المزوّد لكل خدمة. تُعرض المزوّدون المفعّلون فقط.';
+
+  @override
+  String get providerAddCard => 'إضافة بطاقة مزوّد';
+
+  @override
+  String get providerCapabilityAsr => 'تحويل الكلام إلى نص';
+
+  @override
+  String get providerCapabilityTts => 'تحويل النص إلى كلام';
+
+  @override
+  String get providerCapabilityLlm => 'نموذج لغوي';
+
+  @override
+  String get providerCapabilityRealtime => 'صوت فوري';
+
+  @override
+  String get providerCapabilityVision => 'فهم الصور';
+
+  @override
+  String get providerCapabilityVideo => 'فهم الفيديو';
+
+  @override
+  String get providerApiKeyHint => 'مفتاح API';
+
+  @override
+  String get providerKeySaved => 'مفعّل';
+
+  @override
+  String get providerKeyMissing => 'غير مفعّل';
+
+  @override
+  String get providerNoActiveProviders => 'لا يوجد بعد مزوّد مفعّل يدعم هذه الخدمة.';
+
+  @override
+  String get providerSaved => 'تم حفظ إعدادات المزوّدين';
+
+  @override
+  String get providerSaveFailed => 'تعذّر حفظ إعدادات المزوّدين.';
 }

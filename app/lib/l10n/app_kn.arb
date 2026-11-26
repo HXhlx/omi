@@ -12242,5 +12242,22 @@
     "downloadNow": "ಈಗ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
     "onWifiLater": "ನಂತರ Wi-Fi ನಲ್ಲಿ",
     "conversationWritingSummary": "ನಿಮ್ಮ ಸಾರಾಂಶವನ್ನು ಬರೆಯಲಾಗುತ್ತಿದೆ…",
-    "onTheWayServerWork": "ಸರ್ವರ್ ವರದಿ ಮಾಡಿದ ಕೆಲಸ"
+    "onTheWayServerWork": "ಸರ್ವರ್ ವರದಿ ಮಾಡಿದ ಕೆಲಸ",
+    "providerCards": "Provider cards",
+    "providerCardsSubtitle": "Each card lists every service this provider offers. The newest model is chosen by default.",
+    "providerUnifiedChannel": "Unified channel",
+    "providerUnifiedChannelSubtitle": "Pick the provider used for each service. Only activated providers are listed.",
+    "providerAddCard": "Add a provider card",
+    "providerCapabilityAsr": "Speech to text",
+    "providerCapabilityTts": "Text to speech",
+    "providerCapabilityLlm": "Language model",
+    "providerCapabilityRealtime": "Realtime voice",
+    "providerCapabilityVision": "Image understanding",
+    "providerCapabilityVideo": "Video understanding",
+    "providerApiKeyHint": "API key",
+    "providerKeySaved": "Activated",
+    "providerKeyMissing": "Not activated",
+    "providerNoActiveProviders": "No activated provider supports this service yet.",
+    "providerSaved": "Provider settings saved",
+    "providerSaveFailed": "Could not save provider settings."
 }

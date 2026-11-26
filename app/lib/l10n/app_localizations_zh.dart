@@ -15304,4 +15304,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => '服务器报告的任务';
+
+  @override
+  String get providerCards => '供应商卡片';
+
+  @override
+  String get providerCardsSubtitle => '每张卡片列出该供应商支持的全部服务，默认选择最新的模型。';
+
+  @override
+  String get providerUnifiedChannel => '统一通道';
+
+  @override
+  String get providerUnifiedChannelSubtitle => '为每种服务选择供应商。这里只列出已激活的供应商。';
+
+  @override
+  String get providerAddCard => '添加供应商卡片';
+
+  @override
+  String get providerCapabilityAsr => '语音转文字';
+
+  @override
+  String get providerCapabilityTts => '文字转语音';
+
+  @override
+  String get providerCapabilityLlm => '语言模型';
+
+  @override
+  String get providerCapabilityRealtime => '实时语音';
+
+  @override
+  String get providerCapabilityVision => '图像理解';
+
+  @override
+  String get providerCapabilityVideo => '视频理解';
+
+  @override
+  String get providerApiKeyHint => 'API 密钥';
+
+  @override
+  String get providerKeySaved => '已激活';
+
+  @override
+  String get providerKeyMissing => '未激活';
+
+  @override
+  String get providerNoActiveProviders => '尚无已激活的供应商支持此项服务。';
+
+  @override
+  String get providerSaved => '供应商设置已保存';
+
+  @override
+  String get providerSaveFailed => '供应商设置保存失败。';
 }

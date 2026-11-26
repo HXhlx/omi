@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import 'knowledge.dart';
 import 'llm_client.dart';
+import 'provider_surfaces.dart';
 import 'store.dart';
 import 'user_store.dart';
 
@@ -21,16 +22,16 @@ class ExtraRoutes {
     required ConversationStore conversations,
     required KnowledgeStore knowledge,
     required UserStore users,
-    required LlmClient llm,
-  })  : _conversations = conversations,
-        _knowledge = knowledge,
-        _users = users,
-        _llm = llm;
+    required LlmSurface llm,
+  }) : _conversations = conversations,
+       _knowledge = knowledge,
+       _users = users,
+       _llm = llm;
 
   final ConversationStore _conversations;
   final KnowledgeStore _knowledge;
   final UserStore _users;
-  final LlmClient _llm;
+  final LlmSurface _llm;
 
   Future<Response?> handle(Request req, Future<Map<String, dynamic>> Function() readBody) async {
     final path = req.url.path;
@@ -62,14 +63,8 @@ class ExtraRoutes {
       if (conv == null) return _json({'topic': ''});
       try {
         final reply = await _llm.complete([
-          {
-            'role': 'system',
-            'content': '用不超过10个字概括这段对话的主题，只输出主题本身。',
-          },
-          {
-            'role': 'user',
-            'content': (conv.transcript ?? const []).map((s) => s.text).join('\n'),
-          },
+          {'role': 'system', 'content': '用不超过10个字概括这段对话的主题，只输出主题本身。'},
+          {'role': 'user', 'content': (conv.transcript ?? const []).map((s) => s.text).join('\n')},
         ], temperature: 0.2);
         return _json({'topic': reply.content.trim()});
       } on LlmException {
@@ -132,10 +127,7 @@ class ExtraRoutes {
           }
           return _json({'status': 'ok'});
         case 'action-items/count':
-          final n = _knowledge
-              .listActionItems()
-              .where((a) => a.conversationId == id)
-              .length;
+          final n = _knowledge.listActionItems().where((a) => a.conversationId == id).length;
           return _json({'count': n});
         case 'recording':
           return _json({'has_recording': false});
@@ -413,16 +405,10 @@ class ExtraRoutes {
         final body = await readBody();
         final needle = (body['query'] ?? '').toString();
         if (path.contains('memories')) {
-          return _json({
-            'data': _knowledge.searchMemories(needle).map((x) => x.toWire()).toList(),
-          });
+          return _json({'data': _knowledge.searchMemories(needle).map((x) => x.toWire()).toList()});
         }
         return _json({
-          'data': _conversations
-              .list()
-              .where((c) => (c.title ?? '').contains(needle))
-              .map((c) => c.toJson())
-              .toList(),
+          'data': _conversations.list().where((c) => (c.title ?? '').contains(needle)).map((c) => c.toJson()).toList(),
         });
       }
       return _json({'data': <Object>[]});
@@ -472,7 +458,9 @@ class ExtraRoutes {
       return _json({'used': 0, 'limit': null, 'unlimited': true});
     }
     if (path == 'v1/users/available-languages' && m == 'GET') {
-      return _json({'languages': ['zh', 'en']});
+      return _json({
+        'languages': ['zh', 'en'],
+      });
     }
     if (path == 'v1/users/onboarding') {
       if (m == 'GET') return _json({'completed': true, 'step': 'done'});
@@ -702,9 +690,7 @@ class ExtraRoutes {
         return _json(_knowledge.listMemories().map((x) => x.toWire()).toList());
       }
       if (path.contains('action-items') && m == 'GET') {
-        return _json({
-          'action_items': _knowledge.listActionItems().map((a) => a.toWire()).toList(),
-        });
+        return _json({'action_items': _knowledge.listActionItems().map((a) => a.toWire()).toList()});
       }
       if (path.contains('goals') && m == 'GET') return _json(_users.listGoals());
       if (path.contains('folders') && m == 'GET') return _json(_users.listFolders());
@@ -754,13 +740,10 @@ class ExtraRoutes {
   }
 }
 
-Response _json(Object? data, {int status = 200}) => Response(
-      status,
-      body: jsonEncode(data),
-      headers: {'content-type': 'application/json'},
-    );
+Response _json(Object? data, {int status = 200}) =>
+    Response(status, body: jsonEncode(data), headers: {'content-type': 'application/json'});
 
 Response _sse(String body) => Response.ok(
-      Stream<List<int>>.value(utf8.encode(body)),
-      headers: {'content-type': 'text/event-stream; charset=utf-8'},
-    );
+  Stream<List<int>>.value(utf8.encode(body)),
+  headers: {'content-type': 'text/event-stream; charset=utf-8'},
+);

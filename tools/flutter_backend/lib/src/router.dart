@@ -13,6 +13,10 @@ import 'extra_routes.dart';
 import 'knowledge.dart';
 import 'llm_client.dart';
 import 'pipeline.dart';
+import 'provider_catalog.dart';
+import 'provider_router.dart';
+import 'provider_settings.dart';
+import 'provider_surfaces.dart';
 import 'store.dart';
 import 'stt_client.dart';
 import 'tts.dart';
@@ -59,22 +63,20 @@ const kLocalUserId = 'local-dev-user';
 /// Routes so far. Each new domain adds a branch; unknown paths fall
 /// through to a JSON 404 that mimics FastAPI's `{"detail": "Not Found"}`.
 class Api {
-  Api(this._db, {TtsClient? tts, SttClient? stt, LlmClient? llm})
-      : _conversations = ConversationStore(_db),
-        _chat = ChatStore(_db),
-        _knowledge = KnowledgeStore(_db),
-        _users = UserStore(_db) {
-    _tts = tts ?? TtsClient();
-    _stt = stt ?? SttClient();
-    _llm = llm ?? LlmClient();
-    _pipeline = ConversationPipeline(
-        conversations: _conversations, knowledge: _knowledge, llm: _llm);
-    _extra = ExtraRoutes(
-      conversations: _conversations,
-      knowledge: _knowledge,
-      users: _users,
-      llm: _llm,
-    );
+  Api(this._db, {TtsSurface? tts, SttSurface? stt, LlmSurface? llm, ProviderRouter? providers})
+    : _conversations = ConversationStore(_db),
+      _chat = ChatStore(_db),
+      _knowledge = KnowledgeStore(_db),
+      _users = UserStore(_db) {
+    // Provider cards own the upstream choice: every client call routes through
+    // the card/route chain instead of a single hardcoded upstream.
+    final router = providers ?? ProviderRouter(_db);
+    _providers = router;
+    _tts = tts ?? router.ttsSurface();
+    _stt = stt ?? router.sttSurface();
+    _llm = llm ?? router.llmSurface();
+    _pipeline = ConversationPipeline(conversations: _conversations, knowledge: _knowledge, llm: _llm);
+    _extra = ExtraRoutes(conversations: _conversations, knowledge: _knowledge, users: _users, llm: _llm);
   }
 
   final LocalDb _db;
@@ -82,34 +84,35 @@ class Api {
   final ChatStore _chat;
   final KnowledgeStore _knowledge;
   final UserStore _users;
-  late final TtsClient _tts;
-  late final SttClient _stt;
-  late final LlmClient _llm;
+  late final TtsSurface _tts;
+  late final SttSurface _stt;
+  late final LlmSurface _llm;
+  late final ProviderRouter _providers;
   late final ConversationPipeline _pipeline;
   late final ExtraRoutes _extra;
 
   Handler get handler => (Request req) async {
-        final path = req.url.path;
-        // ---- live transcription websocket: /v4/listen (+ web alias) ----
-        if (path == 'v4/listen' || path == 'v4/web/listen') {
-          return _listenSocket(req);
-        }
-        if (path == 'v2/voice-message/transcribe-stream') {
-          return _transcribeStreamSocket(req);
-        }
-        try {
-          final res = await _dispatch(req);
-          if (res.statusCode == 404) {
-            // Param routes that named a static sub-resource (ids, canonical,
-            // live, reorder, …) fall here; the long-tail table claims them.
-            final extra = await _extra.handle(req, () => _body(req));
-            if (extra != null) return extra;
-          }
-          return res;
-        } catch (e) {
-          return _json({'detail': 'Internal error: $e'}, status: 500);
-        }
-      };
+    final path = req.url.path;
+    // ---- live transcription websocket: /v4/listen (+ web alias) ----
+    if (path == 'v4/listen' || path == 'v4/web/listen') {
+      return _listenSocket(req);
+    }
+    if (path == 'v2/voice-message/transcribe-stream') {
+      return _transcribeStreamSocket(req);
+    }
+    try {
+      final res = await _dispatch(req);
+      if (res.statusCode == 404) {
+        // Param routes that named a static sub-resource (ids, canonical,
+        // live, reorder, …) fall here; the long-tail table claims them.
+        final extra = await _extra.handle(req, () => _body(req));
+        if (extra != null) return extra;
+      }
+      return res;
+    } catch (e) {
+      return _json({'detail': 'Internal error: $e'}, status: 500);
+    }
+  };
 
   /// `/v4/listen`: client streams PCM16/other audio frames; the server batches
   /// them and transcribes through the local worker, emitting Omi's segment
@@ -128,8 +131,7 @@ class Api {
         if (pcm.length < sampleRate * 2 * 0.5) return; // <0.5s: nothing useful
         final bytes = pcm.takeBytes();
         try {
-          final result = await _stt.transcribePcm(bytes,
-              sampleRate: sampleRate, language: language);
+          final result = await _stt.transcribePcm(bytes, sampleRate: sampleRate, language: language);
           final segs = <Map<String, dynamic>>[];
           for (final s in result.segments) {
             segs.add({
@@ -149,39 +151,39 @@ class Api {
         }
       }
 
-      channel.stream.listen((Object? frame) async {
-        if (frame is List<int>) {
-          pcm.add(frame);
-          if (pcm.length >= sampleRate * 2 * 6) {
-            await flush(); // bounded batch (≤6s) to keep latency low
-          }
-          return;
-        }
-        if (frame is String) {
-          Map<String, dynamic>? msg;
-          try {
-            msg = jsonDecode(frame) as Map<String, dynamic>;
-          } catch (_) {
+      channel.stream.listen(
+        (Object? frame) async {
+          if (frame is List<int>) {
+            pcm.add(frame);
+            if (pcm.length >= sampleRate * 2 * 6) {
+              await flush(); // bounded batch (≤6s) to keep latency low
+            }
             return;
           }
-          final type = msg['type']?.toString();
-          if (type == 'stop' ||
-              type == 'finalization_reason' ||
-              (msg['finalization_reason'] != null)) {
-            await flush();
-            channel.sink.add(jsonEncode({
-              'type': 'conversation_processing_completed',
-              'conversation_id': conversationId,
-            }));
+          if (frame is String) {
+            Map<String, dynamic>? msg;
+            try {
+              msg = jsonDecode(frame) as Map<String, dynamic>;
+            } catch (_) {
+              return;
+            }
+            final type = msg['type']?.toString();
+            if (type == 'stop' || type == 'finalization_reason' || (msg['finalization_reason'] != null)) {
+              await flush();
+              channel.sink.add(
+                jsonEncode({'type': 'conversation_processing_completed', 'conversation_id': conversationId}),
+              );
+            }
+            if (msg['client_conversation_id'] != null) {
+              conversationId = msg['client_conversation_id'] as String;
+            }
           }
-          if (msg['client_conversation_id'] != null) {
-            conversationId = msg['client_conversation_id'] as String;
-          }
-        }
-      }, onDone: () async {
-        await flush();
-        await channel.sink.close();
-      });
+        },
+        onDone: () async {
+          await flush();
+          await channel.sink.close();
+        },
+      );
     });
     return handler(req);
   }
@@ -193,25 +195,29 @@ class Api {
     final sampleRate = int.tryParse(q['sample_rate'] ?? '') ?? 16000;
     final handler = webSocketHandler((WebSocketChannel channel, _) {
       final pcm = BytesBuilder(copy: false);
-      channel.stream.listen((Object? frame) async {
-        if (frame is! List<int>) return;
-        pcm.add(frame);
-        if (pcm.length >= sampleRate * 2 * 4) {
-          final bytes = pcm.takeBytes();
-          try {
-            final result = await _stt.transcribePcm(bytes,
-                sampleRate: sampleRate, language: q['language']);
-            channel.sink.add(jsonEncode([
-              for (final s in result.segments)
-                {'text': s.text, 'start': s.start, 'end': s.end, 'speaker': 'SPEAKER_00'},
-            ]));
-          } on SttException {
-            // no worker: ignore this batch.
+      channel.stream.listen(
+        (Object? frame) async {
+          if (frame is! List<int>) return;
+          pcm.add(frame);
+          if (pcm.length >= sampleRate * 2 * 4) {
+            final bytes = pcm.takeBytes();
+            try {
+              final result = await _stt.transcribePcm(bytes, sampleRate: sampleRate, language: q['language']);
+              channel.sink.add(
+                jsonEncode([
+                  for (final s in result.segments)
+                    {'text': s.text, 'start': s.start, 'end': s.end, 'speaker': 'SPEAKER_00'},
+                ]),
+              );
+            } on SttException {
+              // no worker: ignore this batch.
+            }
           }
-        }
-      }, onDone: () async {
-        await channel.sink.close();
-      });
+        },
+        onDone: () async {
+          await channel.sink.close();
+        },
+      );
     });
     return handler(req);
   }
@@ -220,14 +226,67 @@ class Api {
     final path = req.url.path;
     final method = req.method;
 
+    // ---- provider cards / routes ----
+    if (path == 'v1/provider/catalog' && method == 'GET') {
+      return _json({
+        'channels': [for (final d in kProviderCatalog) d.toJson()],
+      });
+    }
+    if (path == 'v1/provider/settings' && method == 'GET') {
+      return _json(_providers.settings.toJson());
+    }
+    if (path == 'v1/provider/settings' && (method == 'PUT' || method == 'POST')) {
+      final body = await _body(req);
+      final next = ProviderSettings.fromJson(body);
+      _providers.save(next);
+      return _json(_providers.settings.toJson());
+    }
+    if (path == 'v1/provider/active' && method == 'GET') {
+      final cap = req.url.queryParameters['capability'];
+      final caps = cap != null
+          ? [capabilityFromName(cap)].whereType<ProviderCapability>().toList()
+          : ProviderCapability.values;
+      return _json({for (final c in caps) c.name: _providers.activatedFor(c)});
+    }
+    if (path == 'v1/provider/key' && method == 'PUT') {
+      final body = await _body(req);
+      final id = body['id'] as String? ?? '';
+      if (id.isEmpty) return _json({'detail': 'id required'}, status: 400);
+      final key = body['key'] as String?;
+      if (key == null) {
+        return _json({'detail': 'key required'}, status: 400);
+      }
+      _providers.keys.setKey(id, key);
+      return _json({'status': 'ok', 'activated': _providers.keys.activated(id)});
+    }
+    if (path == 'v1/provider/discover' && method == 'POST') {
+      final body = await _body(req);
+      final id = body['id'] as String? ?? '';
+      final capName = body['capability'] as String? ?? '';
+      final cap = capabilityFromName(capName);
+      final account = _providers.settings.account(id);
+      final d = descriptorOf(id);
+      if (account == null || d == null || cap == null) {
+        return _json({'detail': 'unknown channel/capability'}, status: 400);
+      }
+      final base = account.baseUrl.trim().isNotEmpty ? account.baseUrl.trim() : d.defaultBase;
+      final urls = modelUrlCandidates(base, d);
+      return _json({
+        'id': id,
+        'capability': cap.name,
+        'candidates': account.candidates(cap),
+        'discoverable': urls.isNotEmpty,
+        'urls': urls,
+      });
+    }
+
     // ---- health ----
     if (path == 'health' || path == 'ready') {
       return _json({'status': 'ok', 'stage': 'offline', 'uid': kLocalUserId});
     }
     if (path == 'v1/health') return _json({'status': 'ok'});
     if (path == 'metrics') {
-      return Response.ok('# flutter_backend\n',
-          headers: {'content-type': 'text/plain; version=0.0.4'});
+      return Response.ok('# flutter_backend\n', headers: {'content-type': 'text/plain; version=0.0.4'});
     }
     if (path == '_internal/boot') {
       return _json({'booted': _db.getSetting('booted'), 'uid': kLocalUserId});
@@ -243,9 +302,19 @@ class Api {
 
     // ---- tts ----
     if (path == 'v1/tts/voices' && method == 'GET') {
+      // Local piper keeps its catalog; any other routed TTS channel advertises
+      // just its configured voice (no cross-provider voice enum exists here).
+      final chain = _providers.resolve(ProviderCapability.tts);
+      final primary = chain.isEmpty ? null : chain.first;
+      if (primary == null || primary.id == 'local-tts') {
+        return _json({'voices': kTtsVoices, 'default_voice_id': _userVoice()});
+      }
+      final voice = primary.voice.isEmpty ? _userVoice() : primary.voice;
       return _json({
-        'voices': kTtsVoices,
-        'default_voice_id': kDefaultAssistantVoice,
+        'voices': [
+          {'id': voice, 'name': voice},
+        ],
+        'default_voice_id': voice,
       });
     }
     if (path == 'v1/users/voice') {
@@ -259,22 +328,18 @@ class Api {
         return _json({'voice_id': _userVoice()});
       }
     }
-    if ((path == 'v2/tts/synthesize' || path == 'v1/tts/synthesize') &&
-        method == 'POST') {
+    if ((path == 'v2/tts/synthesize' || path == 'v1/tts/synthesize') && method == 'POST') {
       final reqBody = await _body(req);
       final text = (reqBody['text'] as String? ?? '').trim();
       if (text.isEmpty) {
         return _json({'detail': 'text must not be empty'}, status: 400);
       }
       if (text.length > 5000) {
-        return _json(
-            {'detail': 'text exceeds maximum length of 5000 characters'},
-            status: 400);
+        return _json({'detail': 'text exceeds maximum length of 5000 characters'}, status: 400);
       }
       final voiceId = reqBody['voice_id'] as String? ?? _userVoice();
       try {
-        final mp3 = await _tts.synthesize(
-            TtsRequest(text, voiceId: voiceId));
+        final mp3 = await _tts.synthesize(TtsRequest(text, voiceId: voiceId));
         return Response.ok(mp3, headers: {'content-type': 'audio/mpeg'});
       } on TtsException catch (e) {
         return _json({'detail': 'tts unavailable: ${e.message}'}, status: 503);
@@ -332,8 +397,9 @@ class Api {
         final q = req.url.queryParameters;
         return _json({
           'summaries': _users.listDailySummaries(
-              limit: int.tryParse(q['limit'] ?? '') ?? 30,
-              offset: int.tryParse(q['offset'] ?? '') ?? 0),
+            limit: int.tryParse(q['limit'] ?? '') ?? 30,
+            offset: int.tryParse(q['offset'] ?? '') ?? 0,
+          ),
         });
       }
       if (method == 'POST') {
@@ -439,12 +505,7 @@ class Api {
       final body = await _body(req);
       final convId = body['conversation_id'] as String? ?? _uuid.v4();
       final files = (body['files'] as List?) ?? const [];
-      final manifest = {
-        'version': 1,
-        'conversation_id': convId,
-        'accepted_files': files.length,
-        'blobs': <Object>[],
-      };
+      final manifest = {'version': 1, 'conversation_id': convId, 'accepted_files': files.length, 'blobs': <Object>[]};
       _db.db.execute(
         'INSERT INTO sync_ledger (id, kind, created_at, payload) VALUES (?, ?, ?, ?) '
         'ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',
@@ -457,12 +518,7 @@ class Api {
       _db.db.execute(
         'INSERT INTO sync_ledger (id, kind, created_at, payload) VALUES (?, ?, ?, ?) '
         'ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',
-        [
-          'end-${_uuid.v4()}',
-          'capture_end',
-          DateTime.now().toIso8601String(),
-          jsonEncode(body),
-        ],
+        ['end-${_uuid.v4()}', 'capture_end', DateTime.now().toIso8601String(), jsonEncode(body)],
       );
       return _json({'accepted': true, 'retry': false});
     }
@@ -477,10 +533,7 @@ class Api {
     if (path == 'v2/desktop/messages') {
       final q = req.url.queryParameters;
       if (method == 'GET') {
-        return _json(_chat
-            .messages(chatSessionId: q['chat_session_id'], limit: 100)
-            .map((m) => m.toWire())
-            .toList());
+        return _json(_chat.messages(chatSessionId: q['chat_session_id'], limit: 100).map((m) => m.toWire()).toList());
       }
       if (method == 'POST') {
         final body = await _body(req);
@@ -509,12 +562,7 @@ class Api {
       return _json({'version': 'local', 'prompts': <Object>[]});
     }
     if (path == 'v1/users/me/subscription' && method == 'GET') {
-      return _json({
-        'plan': 'local',
-        'status': 'active',
-        'is_paid': false,
-        'features': <Object>[],
-      });
+      return _json({'plan': 'local', 'status': 'active', 'is_paid': false, 'features': <Object>[]});
     }
     if (path == 'v1/users/me/usage-quota' && method == 'GET') {
       return _json({'used': 0, 'limit': null, 'unlimited': true});
@@ -523,7 +571,14 @@ class Api {
       return _json({'eligible': false, 'active': false});
     }
     if (path == 'v1/auto/model-pick' && method == 'GET') {
-      return _json({'provider': 'local', 'model': 'deepseek-flash'});
+      // Report the routed LLM channel so desktop/mobile agree with what the
+      // backend will actually call.
+      final chain = _providers.resolve(ProviderCapability.llm);
+      final primary = chain.isEmpty ? null : chain.first;
+      return _json({
+        'provider': primary?.id ?? 'local',
+        'model': (primary == null || primary.model.isEmpty) ? 'deepseek-flash' : primary.model,
+      });
     }
     if (path.startsWith('v2/desktop/update-feed') && method == 'GET') {
       return _json({'feed_url': '', 'channel': 'local', 'version': 'local'});
@@ -564,7 +619,9 @@ class Api {
           final reply = await _llm.complete(messages);
           return _json(_geminiContentReply(reply.content));
         } on LlmException catch (e) {
-          return _json({'error': {'message': e.message}}, status: 502);
+          return _json({
+            'error': {'message': e.message},
+          }, status: 502);
         }
       }
     }
@@ -583,13 +640,7 @@ class Api {
 
     // ---- apps / personas ----
     if (path == 'v2/apps' && method == 'GET') {
-      return _json({
-        'data': _apps(),
-        'count': _apps().length,
-        'has_more': false,
-        'offset': 0,
-        'limit': 0,
-      });
+      return _json({'data': _apps(), 'count': _apps().length, 'has_more': false, 'offset': 0, 'limit': 0});
     }
     if ((path == 'v1/apps' || path == 'v1/apps/enabled') && method == 'GET') {
       if (path == 'v1/apps/enabled') {
@@ -598,16 +649,13 @@ class Api {
       return _json(_apps());
     }
     if (path == 'v1/personas' && method == 'GET') {
-      return _json(_apps().firstWhere((a) => a['category'] == 'persona',
-          orElse: () => <String, dynamic>{}));
+      return _json(_apps().firstWhere((a) => a['category'] == 'persona', orElse: () => <String, dynamic>{}));
     }
     final appId = _match(path, 'v1/apps/');
     if (appId != null && !appId.contains('/')) {
       if (method == 'GET') {
         final app = _apps().where((a) => a['id'] == appId).firstOrNull;
-        return app == null
-            ? _json({'detail': 'Not Found'}, status: 404)
-            : _json(app);
+        return app == null ? _json({'detail': 'Not Found'}, status: 404) : _json(app);
       }
       if (method == 'POST') {
         // enable/disable use query (not body); reviews post under {id}/review.
@@ -646,16 +694,8 @@ class Api {
     // ---- home feed ----
     if (path == 'v1/home/feed' && method == 'GET') {
       final limit = int.tryParse(req.url.queryParameters['limit'] ?? '') ?? 20;
-      final items = _knowledge.listMemories(limit: limit)
-          .map((m) => {'kind': 'memory', 'content': m.content})
-          .toList();
-      return _json({
-        'generation': 'local',
-        'items': items,
-        'has_more': false,
-        'next_cursor': '',
-        'truncated': false,
-      });
+      final items = _knowledge.listMemories(limit: limit).map((m) => {'kind': 'memory', 'content': m.content}).toList();
+      return _json({'generation': 'local', 'items': items, 'has_more': false, 'next_cursor': '', 'truncated': false});
     }
 
     // ---- memories ----
@@ -663,8 +703,9 @@ class Api {
       final q = req.url.queryParameters;
       if (method == 'GET') {
         final list = _knowledge.listMemories(
-            limit: int.tryParse(q['limit'] ?? '') ?? 50,
-            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+          limit: int.tryParse(q['limit'] ?? '') ?? 50,
+          offset: int.tryParse(q['offset'] ?? '') ?? 0,
+        );
         return _json(list.map((m) => m.toWire()).toList());
       }
       if (method == 'POST') {
@@ -694,8 +735,7 @@ class Api {
         final map = raw as Map;
         final content = (map['content'] as String? ?? '').trim();
         if (content.isEmpty) continue;
-        _knowledge.upsertMemory(Memory(
-            id: _uuid.v4(), content: content, createdAt: DateTime.now()));
+        _knowledge.upsertMemory(Memory(id: _uuid.v4(), content: content, createdAt: DateTime.now()));
         n++;
       }
       return _json({'created': n});
@@ -725,17 +765,13 @@ class Api {
       final limit = int.tryParse(req.url.queryParameters['limit'] ?? '') ?? 10;
       if (query.isEmpty) return _json({'items': <Object>[]});
       final hits = _knowledge.searchMemories(query, limit: limit);
-      return _json({
-        'items': hits.map((m) => m.toWire()).toList(),
-        'query': query,
-      });
+      return _json({'items': hits.map((m) => m.toWire()).toList(), 'query': query});
     }
     if (path == 'memory/vector/search' && method == 'POST') {
       final body = await _body(req);
       final query = (body['query'] as String? ?? '').trim();
       if (query.isEmpty) return _json({'items': <Object>[]});
-      final hits = _knowledge.searchMemories(
-          query, limit: int.tryParse('${body['limit'] ?? 10}') ?? 10);
+      final hits = _knowledge.searchMemories(query, limit: int.tryParse('${body['limit'] ?? 10}') ?? 10);
       return _json({'items': hits.map((m) => m.toWire()).toList()});
     }
 
@@ -744,18 +780,14 @@ class Api {
       final q = req.url.queryParameters;
       if (method == 'GET') {
         final list = _knowledge.listActionItems(
-            limit: int.tryParse(q['limit'] ?? '') ?? 50,
-            offset: int.tryParse(q['offset'] ?? '') ?? 0);
-        return _json({
-          'action_items': list.map((a) => a.toWire()).toList(),
-          'has_more': false,
-          'truncated': false,
-        });
+          limit: int.tryParse(q['limit'] ?? '') ?? 50,
+          offset: int.tryParse(q['offset'] ?? '') ?? 0,
+        );
+        return _json({'action_items': list.map((a) => a.toWire()).toList(), 'has_more': false, 'truncated': false});
       }
       if (method == 'POST') {
         final body = await _body(req);
-        final desc =
-            (body['description'] as String? ?? body['text'] as String? ?? '').trim();
+        final desc = (body['description'] as String? ?? body['text'] as String? ?? '').trim();
         if (desc.isEmpty) {
           return _json({'detail': 'description must not be empty'}, status: 400);
         }
@@ -774,9 +806,7 @@ class Api {
     if (aiId != null && !aiId.contains('/')) {
       final existing = _knowledge.getActionItem(aiId);
       if (method == 'GET') {
-        return existing == null
-            ? _json({'detail': 'Not Found'}, status: 404)
-            : _json(existing.toWire());
+        return existing == null ? _json({'detail': 'Not Found'}, status: 404) : _json(existing.toWire());
       }
       if (method == 'PATCH') {
         if (existing == null) return _json({'detail': 'Not Found'}, status: 404);
@@ -804,20 +834,14 @@ class Api {
     // ---- chat: desktop completions ----
     if (path == 'v2/chat/completions' && method == 'POST') {
       final body = await _body(req);
-      final messages = ((body['messages'] as List?) ?? const [])
-          .map((e) => _roleContent(e as Map))
-          .toList();
+      final messages = ((body['messages'] as List?) ?? const []).map((e) => _roleContent(e as Map)).toList();
       final stream = body['stream'] == true;
       try {
         if (stream) {
           final chunks = _llm.stream(messages, model: body['model'] as String?);
-          return Response.ok(
-            chunks.map(_sseDataChunk),
-            headers: {'content-type': 'text/event-stream; charset=utf-8'},
-          );
+          return Response.ok(chunks.map(_sseDataChunk), headers: {'content-type': 'text/event-stream; charset=utf-8'});
         }
-        final reply =
-            await _llm.complete(messages, model: body['model'] as String?);
+        final reply = await _llm.complete(messages, model: body['model'] as String?);
         return _json({
           'id': 'chatcmpl-${_uuid.v4()}',
           'object': 'chat.completion',
@@ -827,11 +851,13 @@ class Api {
               'index': 0,
               'message': {'role': 'assistant', 'content': reply.content},
               'finish_reason': 'stop',
-            }
+            },
           ],
         });
       } on LlmException catch (e) {
-        return _json({'error': {'message': e.message}}, status: 502);
+        return _json({
+          'error': {'message': e.message},
+        }, status: 502);
       }
     }
 
@@ -840,9 +866,10 @@ class Api {
       final q = req.url.queryParameters;
       if (method == 'GET') {
         final list = _chat.messages(
-            chatSessionId: q['chat_session_id'],
-            limit: int.tryParse(q['limit'] ?? '') ?? 50,
-            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+          chatSessionId: q['chat_session_id'],
+          limit: int.tryParse(q['limit'] ?? '') ?? 50,
+          offset: int.tryParse(q['offset'] ?? '') ?? 0,
+        );
         return _json(list.map((m) => m.toWire()).toList());
       }
       if (method == 'DELETE') {
@@ -859,8 +886,9 @@ class Api {
       final q = req.url.queryParameters;
       if (method == 'GET') {
         final list = _chat.listSessions(
-            limit: int.tryParse(q['limit'] ?? '') ?? 50,
-            offset: int.tryParse(q['offset'] ?? '') ?? 0);
+          limit: int.tryParse(q['limit'] ?? '') ?? 50,
+          offset: int.tryParse(q['offset'] ?? '') ?? 0,
+        );
         return _json(list.map((s) => s.toWire()).toList());
       }
       if (method == 'POST') {
@@ -879,9 +907,7 @@ class Api {
     if (sessId != null && !sessId.contains('/')) {
       if (method == 'GET') {
         final s = _chat.getSession(sessId);
-        return s == null
-            ? _json({'detail': 'Not Found'}, status: 404)
-            : _json(s.toWire());
+        return s == null ? _json({'detail': 'Not Found'}, status: 404) : _json(s.toWire());
       }
       if (method == 'PATCH') {
         final body = await _body(req);
@@ -946,9 +972,7 @@ class Api {
       if (tail.isEmpty) {
         if (method == 'GET') {
           final c = _conversations.get(id);
-          return c == null
-              ? _json({'detail': 'Conversation not found'}, status: 404)
-              : _json(c.toJson());
+          return c == null ? _json({'detail': 'Conversation not found'}, status: 404) : _json(c.toJson());
         }
         if (method == 'DELETE') {
           final cascade = req.url.queryParameters['cascade'] == 'true';
@@ -962,11 +986,7 @@ class Api {
         final result = await _pipeline.process(id);
         return _json({
           ..._conversations.toWire(id),
-          'pipeline': {
-            'processed': result.processed,
-            'memories': result.memories,
-            'action_items': result.actionItems,
-          },
+          'pipeline': {'processed': result.processed, 'memories': result.memories, 'action_items': result.actionItems},
         });
       }
       if (tail == 'reprocess' && method == 'POST') {
@@ -974,28 +994,26 @@ class Api {
         if (!result.processed) {
           return _json({'detail': 'Conversation not found'}, status: 404);
         }
-        return _json({
-          'status': 'ok',
-          'memories': result.memories,
-          'action_items': result.actionItems,
-        });
+        return _json({'status': 'ok', 'memories': result.memories, 'action_items': result.actionItems});
       }
       if (tail == 'title' && method == 'PATCH') {
         final body = await _body(req);
         final title = body['title'] as String?;
         final c = _conversations.get(id);
         if (c == null) return _json({'detail': 'Conversation not found'}, status: 404);
-        _conversations.upsert(Conversation(
-          id: c.id,
-          startedAt: c.startedAt,
-          finishedAt: c.finishedAt,
-          status: c.status,
-          source: c.source,
-          language: c.language,
-          title: title,
-          visibility: c.visibility,
-          discarded: c.discarded,
-        ));
+        _conversations.upsert(
+          Conversation(
+            id: c.id,
+            startedAt: c.startedAt,
+            finishedAt: c.finishedAt,
+            status: c.status,
+            source: c.source,
+            language: c.language,
+            title: title,
+            visibility: c.visibility,
+            discarded: c.discarded,
+          ),
+        );
         return _json({'status': 'ok', 'title': title});
       }
       if (tail == 'visibility' && method == 'PATCH') {
@@ -1011,8 +1029,7 @@ class Api {
     return _json({'detail': 'Not Found', 'path': path}, status: 404);
   }
 
-  static String? _match(String path, String prefix) =>
-      path.startsWith(prefix) ? path.substring(prefix.length) : null;
+  static String? _match(String path, String prefix) => path.startsWith(prefix) ? path.substring(prefix.length) : null;
 
   String _userVoice() => _db.getSetting('assistant_voice') ?? kDefaultAssistantVoice;
 
@@ -1068,9 +1085,9 @@ class Api {
     if (text.isEmpty) return _json({'detail': 'text must not be empty'}, status: 400);
 
     final messageId = _uuid.v4();
-    _chat.insertMessage(ChatMessage(
-        id: messageId, role: 'user', text: text, createdAt: DateTime.now(),
-        chatSessionId: sessionId));
+    _chat.insertMessage(
+      ChatMessage(id: messageId, role: 'user', text: text, createdAt: DateTime.now(), chatSessionId: sessionId),
+    );
 
     final messages = [
       {'role': 'system', 'content': _systemPrompt()},
@@ -1091,8 +1108,12 @@ class Api {
       }
       final aiText = full.toString();
       final aiMessage = ChatMessage(
-          id: _uuid.v4(), role: 'ai', text: aiText, createdAt: DateTime.now(),
-          chatSessionId: sessionId);
+        id: _uuid.v4(),
+        role: 'ai',
+        text: aiText,
+        createdAt: DateTime.now(),
+        chatSessionId: sessionId,
+      );
       _chat.insertMessage(aiMessage);
       final wire = _jsonEncode(aiMessage.toWire());
       yield _sseLine('message: ', base64Encode(utf8.encode(wire)));
@@ -1106,26 +1127,30 @@ class Api {
   }
 
   static Map<String, String> _roleContent(Map e) => {
-        'role': e['role'] as String? ?? 'user',
-        'content': (e['content'] ?? '').toString(),
-      };
+    'role': e['role'] as String? ?? 'user',
+    'content': (e['content'] ?? '').toString(),
+  };
 
   static String _systemPrompt() =>
       '你是「小蜗」，一位面向无障碍场景的随身对话与记忆助手。回答简洁、友好，'
       '在需要时主动给出可执行的建议。';
 
-  static Stream<String> _sseDataChunk(String delta) =>
-      Stream.value(_sseLine('data: ', jsonEncode({
-            'id': 'chatcmpl-local',
-            'object': 'chat.completion.chunk',
-            'choices': [
-              {
-                'index': 0,
-                'delta': {'content': delta},
-                'finish_reason': null,
-              }
-            ],
-          })));
+  static Stream<String> _sseDataChunk(String delta) => Stream.value(
+    _sseLine(
+      'data: ',
+      jsonEncode({
+        'id': 'chatcmpl-local',
+        'object': 'chat.completion.chunk',
+        'choices': [
+          {
+            'index': 0,
+            'delta': {'content': delta},
+            'finish_reason': null,
+          },
+        ],
+      }),
+    ),
+  );
 
   static String _sseLine(String prefix, String payload) => '$prefix$payload\n\n';
 
@@ -1135,8 +1160,7 @@ class Api {
       '从下面文本中抽取值得长期记住的事实，输出严格的 JSON 数组 ["事实1","事实2"]。'
       '若没有，输出 []。只输出 JSON。';
 
-  static List<Map<String, dynamic>> _apps() =>
-      _localApps.map((a) => Map<String, dynamic>.from(a)).toList();
+  static List<Map<String, dynamic>> _apps() => _localApps.map((a) => Map<String, dynamic>.from(a)).toList();
 
   static List<String> _memoryFromReply(String raw) {
     final start = raw.indexOf('[');
@@ -1162,27 +1186,25 @@ class Api {
     return contents.map((c) {
       final m = c as Map;
       final role = m['role'] as String? ?? 'user';
-      final text = ((m['parts'] as List?) ?? const [])
-          .map((p) => (p as Map)['text']?.toString() ?? '')
-          .join('\n');
+      final text = ((m['parts'] as List?) ?? const []).map((p) => (p as Map)['text']?.toString() ?? '').join('\n');
       return {'role': role == 'model' ? 'assistant' : 'user', 'content': text};
     }).toList();
   }
 
   /// Gemini `generateContent` reply: `{candidates:[{content:{parts:[{text}]}}]}`.
   static Map<String, dynamic> _geminiContentReply(String text) => {
-        'candidates': [
-          {
-            'content': {
-              'parts': [
-                {'text': text},
-              ],
-              'role': 'model',
-            },
-            'finishReason': 'STOP',
-          }
-        ],
-      };
+    'candidates': [
+      {
+        'content': {
+          'parts': [
+            {'text': text},
+          ],
+          'role': 'model',
+        },
+        'finishReason': 'STOP',
+      },
+    ],
+  };
 
   /// Gemini `embedContent`/`batchEmbedContents` reply with a fixed 1024-dim
   /// zero vector — enough shape for the desktop's cosine code to run without a
@@ -1209,8 +1231,5 @@ class Api {
   }
 }
 
-Response _json(Object? data, {int status = 200}) => Response(
-      status,
-      body: jsonEncode(data),
-      headers: {'content-type': 'application/json'},
-    );
+Response _json(Object? data, {int status = 200}) =>
+    Response(status, body: jsonEncode(data), headers: {'content-type': 'application/json'});

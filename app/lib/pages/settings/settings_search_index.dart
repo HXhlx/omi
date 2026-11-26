@@ -34,6 +34,7 @@ enum SettingsDestination {
   people,
   deleteAccount,
   transcription,
+  providerCards,
   conversationDisplay,
   conversationTimeout,
   phoneCalls,
@@ -167,6 +168,7 @@ final List<SettingsSearchEntry> settingsSearchEntries = [
 
   // Recording & Transcription group
   SettingsSearchEntry('transcription', (l) => l.transcription, SettingsDestination.transcription, _groups),
+  SettingsSearchEntry('providerCards', (l) => l.providerCards, SettingsDestination.providerCards, _groups),
   SettingsSearchEntry('language', (l) => l.language, SettingsDestination.language, _groups),
   SettingsSearchEntry('customVocabulary', (l) => l.customVocabulary, SettingsDestination.customVocabulary, _groups),
   SettingsSearchEntry('speechProfile', (l) => l.speechProfile, SettingsDestination.voiceProfile, _groups),

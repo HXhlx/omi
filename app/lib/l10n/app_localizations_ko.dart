@@ -15334,4 +15334,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => '서버에서 보고한 작업';
+
+  @override
+  String get providerCards => '공급자 카드';
+
+  @override
+  String get providerCardsSubtitle => '각 카드에는 이 공급자가 제공하는 모든 서비스가 표시되며 최신 모델이 기본으로 선택됩니다.';
+
+  @override
+  String get providerUnifiedChannel => '통합 채널';
+
+  @override
+  String get providerUnifiedChannelSubtitle => '서비스별로 사용할 공급자를 선택하세요. 활성화된 공급자만 표시됩니다.';
+
+  @override
+  String get providerAddCard => '공급자 카드 추가';
+
+  @override
+  String get providerCapabilityAsr => '음성 인식';
+
+  @override
+  String get providerCapabilityTts => '음성 합성';
+
+  @override
+  String get providerCapabilityLlm => '언어 모델';
+
+  @override
+  String get providerCapabilityRealtime => '실시간 음성';
+
+  @override
+  String get providerCapabilityVision => '이미지 이해';
+
+  @override
+  String get providerCapabilityVideo => '동영상 이해';
+
+  @override
+  String get providerApiKeyHint => 'API 키';
+
+  @override
+  String get providerKeySaved => '활성화됨';
+
+  @override
+  String get providerKeyMissing => '활성화되지 않음';
+
+  @override
+  String get providerNoActiveProviders => '이 서비스를 지원하는 활성화된 공급자가 아직 없습니다.';
+
+  @override
+  String get providerSaved => '공급자 설정이 저장되었습니다';
+
+  @override
+  String get providerSaveFailed => '공급자 설정을 저장하지 못했습니다.';
 }

@@ -4685,5 +4685,22 @@
     "downloadNow": "Jetzt laden",
     "onWifiLater": "Später über WLAN",
     "conversationWritingSummary": "Deine Zusammenfassung wird geschrieben…",
-    "onTheWayServerWork": "Vom Server gemeldete Arbeit"
+    "onTheWayServerWork": "Vom Server gemeldete Arbeit",
+    "providerCards": "Anbieterkarten",
+    "providerCardsSubtitle": "Jede Karte listet alle Dienste dieses Anbieters. Standardmäßig ist das neueste Modell gewählt.",
+    "providerUnifiedChannel": "Einheitlicher Kanal",
+    "providerUnifiedChannelSubtitle": "Wähle den Anbieter für jeden Dienst. Es werden nur aktivierte Anbieter aufgeführt.",
+    "providerAddCard": "Anbieterkarte hinzufügen",
+    "providerCapabilityAsr": "Sprache zu Text",
+    "providerCapabilityTts": "Text zu Sprache",
+    "providerCapabilityLlm": "Sprachmodell",
+    "providerCapabilityRealtime": "Echtzeit-Sprache",
+    "providerCapabilityVision": "Bildverständnis",
+    "providerCapabilityVideo": "Videoverständnis",
+    "providerApiKeyHint": "API-Schlüssel",
+    "providerKeySaved": "Aktiviert",
+    "providerKeyMissing": "Nicht aktiviert",
+    "providerNoActiveProviders": "Noch kein aktivierter Anbieter unterstützt diesen Dienst.",
+    "providerSaved": "Anbietereinstellungen gespeichert",
+    "providerSaveFailed": "Anbietereinstellungen konnten nicht gespeichert werden."
 }

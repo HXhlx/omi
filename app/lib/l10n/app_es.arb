@@ -4685,5 +4685,22 @@
     "downloadNow": "Descargar ahora",
     "onWifiLater": "Luego con Wi-Fi",
     "conversationWritingSummary": "Escribiendo tu resumen…",
-    "onTheWayServerWork": "Trabajo indicado por el servidor"
+    "onTheWayServerWork": "Trabajo indicado por el servidor",
+    "providerCards": "Tarjetas de proveedor",
+    "providerCardsSubtitle": "Cada tarjeta muestra todos los servicios de este proveedor. Se elige el modelo más reciente por defecto.",
+    "providerUnifiedChannel": "Canal unificado",
+    "providerUnifiedChannelSubtitle": "Elige el proveedor de cada servicio. Solo se muestran los proveedores activados.",
+    "providerAddCard": "Añadir tarjeta de proveedor",
+    "providerCapabilityAsr": "Voz a texto",
+    "providerCapabilityTts": "Texto a voz",
+    "providerCapabilityLlm": "Modelo de lenguaje",
+    "providerCapabilityRealtime": "Voz en tiempo real",
+    "providerCapabilityVision": "Comprensión de imágenes",
+    "providerCapabilityVideo": "Comprensión de vídeo",
+    "providerApiKeyHint": "Clave de API",
+    "providerKeySaved": "Activado",
+    "providerKeyMissing": "No activado",
+    "providerNoActiveProviders": "Ningún proveedor activado admite este servicio todavía.",
+    "providerSaved": "Ajustes de proveedores guardados",
+    "providerSaveFailed": "No se pudieron guardar los ajustes de proveedores."
 }

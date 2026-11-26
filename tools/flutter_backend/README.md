@@ -36,6 +36,10 @@ their contracts:
 When a worker is absent the corresponding route degrades to a documented
 status (STT/TTS 503; embeddings stubbed at 1024 dims) instead of crashing.
 
+Those three URLs are defaults, not the only option: provider cards let the app
+pick a different channel and model per service, and every call resolves through
+that route. See [PROVIDER_CARDS.md](PROVIDER_CARDS.md).
+
 ## Surface
 
 - **conversations**: list/get/create-from-segments/delete/finalize/reprocess/

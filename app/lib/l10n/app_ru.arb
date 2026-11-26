@@ -4720,5 +4720,22 @@
     "downloadNow": "Скачать сейчас",
     "onWifiLater": "Позже по Wi-Fi",
     "conversationWritingSummary": "Пишем ваше резюме…",
-    "onTheWayServerWork": "Работа по данным сервера"
+    "onTheWayServerWork": "Работа по данным сервера",
+    "providerCards": "Карточки провайдеров",
+    "providerCardsSubtitle": "На каждой карточке перечислены все сервисы провайдера. По умолчанию выбрана новейшая модель.",
+    "providerUnifiedChannel": "Единый канал",
+    "providerUnifiedChannelSubtitle": "Выберите провайдера для каждого сервиса. Показаны только активированные провайдеры.",
+    "providerAddCard": "Добавить карточку провайдера",
+    "providerCapabilityAsr": "Речь в текст",
+    "providerCapabilityTts": "Текст в речь",
+    "providerCapabilityLlm": "Языковая модель",
+    "providerCapabilityRealtime": "Голос в реальном времени",
+    "providerCapabilityVision": "Понимание изображений",
+    "providerCapabilityVideo": "Понимание видео",
+    "providerApiKeyHint": "Ключ API",
+    "providerKeySaved": "Активировано",
+    "providerKeyMissing": "Не активировано",
+    "providerNoActiveProviders": "Пока ни один активированный провайдер не поддерживает этот сервис.",
+    "providerSaved": "Настройки провайдеров сохранены",
+    "providerSaveFailed": "Не удалось сохранить настройки провайдеров."
 }
