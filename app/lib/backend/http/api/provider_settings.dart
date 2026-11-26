@@ -42,7 +42,9 @@ class ProviderChannel {
 class ProviderAccount {
   const ProviderAccount({
     required this.id,
+    this.label = '',
     this.baseUrl = '',
+    this.endpointOverrides = const {},
     this.selectedModels = const {},
     this.discoveredModels = const {},
     this.capabilities = const {},
@@ -50,15 +52,40 @@ class ProviderAccount {
   });
 
   final String id;
+  final String label;
   final String baseUrl;
+
+  /// Capability name -> base URL overriding [baseUrl] for that capability.
+  final Map<String, String> endpointOverrides;
   final Map<String, String> selectedModels;
   final Map<String, List<String>> discoveredModels;
   final Set<String> capabilities;
   final String defaultVoice;
 
+  ProviderAccount copyWith({
+    String? label,
+    String? baseUrl,
+    Map<String, String>? endpointOverrides,
+    Map<String, String>? selectedModels,
+    Map<String, List<String>>? discoveredModels,
+    Set<String>? capabilities,
+    String? defaultVoice,
+  }) => ProviderAccount(
+        id: id,
+        label: label ?? this.label,
+        baseUrl: baseUrl ?? this.baseUrl,
+        endpointOverrides: endpointOverrides ?? this.endpointOverrides,
+        selectedModels: selectedModels ?? this.selectedModels,
+        discoveredModels: discoveredModels ?? this.discoveredModels,
+        capabilities: capabilities ?? this.capabilities,
+        defaultVoice: defaultVoice ?? this.defaultVoice,
+      );
+
   factory ProviderAccount.fromJson(Map<String, dynamic> j) => ProviderAccount(
         id: j['id'] as String? ?? '',
+        label: j['label'] as String? ?? '',
         baseUrl: j['baseUrl'] as String? ?? '',
+        endpointOverrides: _stringMap(j['endpointOverrides']),
         selectedModels: _stringMap(j['selectedModels']),
         discoveredModels: _stringListMap(j['discoveredModels']),
         capabilities: (j['capabilities'] as List?)?.whereType<String>().toSet() ?? const {},
@@ -67,7 +94,9 @@ class ProviderAccount {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'label': label,
         'baseUrl': baseUrl,
+        'endpointOverrides': endpointOverrides,
         'selectedModels': selectedModels,
         'discoveredModels': discoveredModels,
         'capabilities': capabilities.toList(),

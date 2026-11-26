@@ -122,13 +122,8 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
     if (draft == null) return;
     final account = draft.account(channelId);
     if (account == null) return;
-    final next = api.ProviderAccount(
-      id: account.id,
-      baseUrl: account.baseUrl,
+    final next = account.copyWith(
       selectedModels: {...account.selectedModels, cap: model},
-      discoveredModels: account.discoveredModels,
-      capabilities: account.capabilities,
-      defaultVoice: account.defaultVoice,
     );
     setState(() => _draft = _withAccount(draft, next));
   }

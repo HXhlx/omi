@@ -49,7 +49,9 @@ void main() {
       'accounts': [
         {
           'id': 'minimax',
+          'label': 'MiniMax',
           'baseUrl': 'https://api.minimax.chat/v1',
+          'endpointOverrides': {'llm': 'https://api.minimax.chat/v1'},
           'selectedModels': {'llm': 'MiniMax-M3.1-Flash'},
           'capabilities': <String>[],
         }
@@ -70,6 +72,8 @@ void main() {
       ProviderSettings.fromJson(Map<String, dynamic>.from(document)),
     );
     expect(saved.account('minimax')!.selectedModels['llm'], 'MiniMax-M3.1-Flash');
+    expect(saved.account('minimax')!.label, 'MiniMax');
+    expect(saved.account('minimax')!.endpointOverrides['llm'], 'https://api.minimax.chat/v1');
     expect(saved.routing['asr']!.primary, 'local-stt');
     expect(saved.routing['asr']!.fallbacks, ['siliconflow']);
     expect(saved.routing['llm']!.fallbacks, ['local-llm']);
