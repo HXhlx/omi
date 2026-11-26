@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:omi/backend/preferences.dart';
 import 'package:omi/env/env.dart';
+import 'package:omi/local_backend/on_device_surfaces.dart';
 import 'package:omi/services/auth/auth_token_result.dart';
 import 'package:omi/services/auth_service.dart';
 
@@ -44,7 +45,19 @@ class EmbeddedLocalBackend {
     }
 
     final support = await getApplicationSupportDirectory();
-    final server = await LocalBackendServer.start(dbPath: '${support.path}/omi_local.db');
+    // On-device inference: the local-stt / local-tts provider cards run
+    // whisper.cpp and the system speech engine in this process. A missing
+    // whisper model only fails those cards' calls (503 with a clear message),
+    // never the backend itself.
+    OnDeviceInferenceSurfaces? onDevice;
+    try {
+      onDevice = await OnDeviceInferenceSurfaces.create();
+    } catch (_) {}
+    final server = await LocalBackendServer.start(
+      dbPath: '${support.path}/omi_local.db',
+      localStt: onDevice?.stt,
+      localTts: onDevice?.tts,
+    );
 
     _server = server;
     // Trailing slash: the app concatenates paths onto this directly.
