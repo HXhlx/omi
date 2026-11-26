@@ -49,6 +49,8 @@ import 'package:omi/env/backend_url_override.dart';
 import 'package:omi/env/dev_env.dart';
 import 'package:omi/env/env.dart';
 import 'package:omi/env/environment_profile.dart';
+import 'package:omi/env/local_fork.dart';
+import 'package:omi/env/local_fork_auth.dart';
 import 'package:omi/env/prod_env.dart';
 import 'package:omi/firebase_options_local.dart' as local;
 import 'package:omi/firebase_options_prod.dart' as prod;
@@ -361,6 +363,10 @@ Future _init() async {
       );
     }
     SharedPreferencesUtil().onboardingCompleted = true;
+  }
+
+  if (localFork) {
+    await PhysicalQualification.startupStage('local_fork_signin', ensureLocalForkSignedIn);
   }
 
   bool isAuth = await PhysicalQualification.startupStage(
