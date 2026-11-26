@@ -15614,4 +15614,57 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => 'A szerver által jelzett munka';
+
+  @override
+  String get providerCards => 'Provider cards';
+
+  @override
+  String get providerCardsSubtitle =>
+      'Each card lists every service this provider offers. The newest model is chosen by default.';
+
+  @override
+  String get providerUnifiedChannel => 'Unified channel';
+
+  @override
+  String get providerUnifiedChannelSubtitle =>
+      'Pick the provider used for each service. Only activated providers are listed.';
+
+  @override
+  String get providerAddCard => 'Add a provider card';
+
+  @override
+  String get providerCapabilityAsr => 'Speech to text';
+
+  @override
+  String get providerCapabilityTts => 'Text to speech';
+
+  @override
+  String get providerCapabilityLlm => 'Language model';
+
+  @override
+  String get providerCapabilityRealtime => 'Realtime voice';
+
+  @override
+  String get providerCapabilityVision => 'Image understanding';
+
+  @override
+  String get providerCapabilityVideo => 'Video understanding';
+
+  @override
+  String get providerApiKeyHint => 'API key';
+
+  @override
+  String get providerKeySaved => 'Activated';
+
+  @override
+  String get providerKeyMissing => 'Not activated';
+
+  @override
+  String get providerNoActiveProviders => 'No activated provider supports this service yet.';
+
+  @override
+  String get providerSaved => 'Provider settings saved';
+
+  @override
+  String get providerSaveFailed => 'Could not save provider settings.';
 }

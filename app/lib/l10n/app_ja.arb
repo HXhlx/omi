@@ -4685,5 +4685,22 @@
     "downloadNow": "今すぐダウンロード",
     "onWifiLater": "後で Wi-Fi で",
     "conversationWritingSummary": "要約を作成しています…",
-    "onTheWayServerWork": "サーバーが報告した処理"
+    "onTheWayServerWork": "サーバーが報告した処理",
+    "providerCards": "プロバイダーカード",
+    "providerCardsSubtitle": "各カードにはこのプロバイダーが提供するすべてのサービスが表示され、最新のモデルが既定で選ばれます。",
+    "providerUnifiedChannel": "統合チャネル",
+    "providerUnifiedChannelSubtitle": "サービスごとに使用するプロバイダーを選択します。有効なプロバイダーのみ表示されます。",
+    "providerAddCard": "プロバイダーカードを追加",
+    "providerCapabilityAsr": "音声認識",
+    "providerCapabilityTts": "音声合成",
+    "providerCapabilityLlm": "言語モデル",
+    "providerCapabilityRealtime": "リアルタイム音声",
+    "providerCapabilityVision": "画像理解",
+    "providerCapabilityVideo": "動画理解",
+    "providerApiKeyHint": "API キー",
+    "providerKeySaved": "有効",
+    "providerKeyMissing": "未有効",
+    "providerNoActiveProviders": "このサービスをサポートする有効なプロバイダーがまだありません。",
+    "providerSaved": "プロバイダー設定を保存しました",
+    "providerSaveFailed": "プロバイダー設定を保存できませんでした。"
 }

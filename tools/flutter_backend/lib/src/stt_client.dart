@@ -3,26 +3,21 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
+import 'provider_surfaces.dart';
+
 const kDefaultSttUpstream = 'http://127.0.0.1:8200';
 
 /// Result shape the local STT worker (`omi_stt_server.py` / `omi_funasr_server.py`)
 /// returns from `POST /v1/transcribe`:
 /// `{text, segments:[{start,end,text,speaker}], detected_language}`.
 class SttResult {
-  SttResult({
-    required this.text,
-    required this.segments,
-    this.language,
-  });
+  SttResult({required this.text, required this.segments, this.language});
 
   factory SttResult.fromJson(Map<String, dynamic> j) => SttResult(
-        text: j['text'] as String? ?? '',
-        segments: (j['segments'] as List?)
-                ?.map((e) => SttSegment.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            const [],
-        language: j['detected_language'] as String?,
-      );
+    text: j['text'] as String? ?? '',
+    segments: (j['segments'] as List?)?.map((e) => SttSegment.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+    language: j['detected_language'] as String?,
+  );
 
   final String text;
   final List<SttSegment> segments;
@@ -30,44 +25,32 @@ class SttResult {
 }
 
 class SttSegment {
-  SttSegment({
-    required this.text,
-    required this.start,
-    required this.end,
-    this.speaker,
-  });
+  SttSegment({required this.text, required this.start, required this.end, this.speaker});
 
   factory SttSegment.fromJson(Map<String, dynamic> j) => SttSegment(
-        text: j['text'] as String? ?? '',
-        start: (j['start'] as num?)?.toDouble() ?? 0,
-        end: (j['end'] as num?)?.toDouble() ?? 0,
-        speaker: j['speaker'] as String?,
-      );
+    text: j['text'] as String? ?? '',
+    start: (j['start'] as num?)?.toDouble() ?? 0,
+    end: (j['end'] as num?)?.toDouble() ?? 0,
+    speaker: j['speaker'] as String?,
+  );
 
   final String text;
   final double start;
   final double end;
   final String? speaker;
 
-  Map<String, dynamic> toJson() => {
-        'text': text,
-        'start': start,
-        'end': end,
-        if (speaker != null) 'speaker': speaker,
-      };
+  Map<String, dynamic> toJson() => {'text': text, 'start': start, 'end': end, if (speaker != null) 'speaker': speaker};
 }
 
 /// Transcribes audio through an adjacent local STT worker. The worker accepts
 /// multipart `file=`, so this client encodes any audio buffer as a WAV part.
-class SttClient {
-  SttClient({http.Client? client, this.upstream = kDefaultSttUpstream})
-      : _client = client ?? http.Client();
+class SttClient implements SttSurface {
+  SttClient({http.Client? client, this.upstream = kDefaultSttUpstream}) : _client = client ?? http.Client();
 
   final http.Client _client;
   final String upstream;
 
-  Future<SttResult> transcribe(Uint8List audio,
-      {String? language, String filename = 'audio.wav'}) async {
+  Future<SttResult> transcribe(Uint8List audio, {String? language, String filename = 'audio.wav'}) async {
     final request = http.MultipartRequest('POST', Uri.parse('$upstream/v1/transcribe'))
       ..files.add(http.MultipartFile.fromBytes('file', audio, filename: filename));
     if (language != null) request.fields['language'] = language;
@@ -81,17 +64,17 @@ class SttClient {
 
   /// Wraps a PCM16 buffer into a minimal RIFF/WAV container so worker decoders
   /// that sniff by suffix see a valid file.
-  Future<SttResult> transcribePcm(
-    Uint8List pcm16, {
-    int sampleRate = 16000,
-    int channels = 1,
-    String? language,
-  }) =>
-      transcribe(_wrapWav(pcm16, sampleRate: sampleRate, channels: channels),
-          language: language, filename: 'audio.wav');
+  @override
+  Future<SttResult> transcribePcm(Uint8List pcm16, {int sampleRate = 16000, int channels = 1, String? language}) =>
+      transcribe(
+        _wrapWav(pcm16, sampleRate: sampleRate, channels: channels),
+        language: language,
+        filename: 'audio.wav',
+      );
 
   /// Forward a client-authored multipart body unchanged (mobile uploads a
   /// `file=` part the worker already understands).
+  @override
   Future<SttResult> transcribeMultipart(Uint8List body, String contentType) async {
     final res = await _client.post(
       Uri.parse('$upstream/v1/transcribe'),
@@ -107,8 +90,7 @@ class SttClient {
   void close() => _client.close();
 
   /// Test seam: expose WAV wrapping so tests assert the container, not a copy.
-  static Uint8List wrapWavForTest(Uint8List pcm,
-          {int sampleRate = 16000, int channels = 1}) =>
+  static Uint8List wrapWavForTest(Uint8List pcm, {int sampleRate = 16000, int channels = 1}) =>
       _wrapWav(pcm, sampleRate: sampleRate, channels: channels);
 
   /// 44-byte canonical RIFF header + PCM16 LE payload.

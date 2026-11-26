@@ -34,6 +34,7 @@ import 'package:omi/pages/settings/people.dart';
 import 'package:omi/pages/settings/permissions_page.dart';
 import 'package:omi/pages/settings/phone_call_settings_page.dart';
 import 'package:omi/pages/settings/profile.dart';
+import 'package:omi/pages/settings/provider_cards_page.dart';
 import 'package:omi/pages/settings/settings_groups.dart';
 import 'package:omi/pages/settings/settings_search_index.dart';
 import 'package:omi/pages/settings/sign_out.dart';
@@ -112,6 +113,9 @@ Future<void> openSettingsDestination(BuildContext context, SettingsDestination d
       await routeToPage(context, const DeleteAccount());
     case SettingsDestination.transcription:
       await routeToPage(context, const TranscriptionSettingsPage());
+    case SettingsDestination.providerCards:
+      PlatformManager.instance.analytics.settingsPageOpened(pageName: 'provider_cards');
+      await routeToPage(context, const ProviderCardsPage());
     case SettingsDestination.conversationDisplay:
       await routeToPage(context, const ConversationDisplaySettings());
     case SettingsDestination.conversationTimeout:

@@ -15327,4 +15327,55 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => 'サーバーが報告した処理';
+
+  @override
+  String get providerCards => 'プロバイダーカード';
+
+  @override
+  String get providerCardsSubtitle => '各カードにはこのプロバイダーが提供するすべてのサービスが表示され、最新のモデルが既定で選ばれます。';
+
+  @override
+  String get providerUnifiedChannel => '統合チャネル';
+
+  @override
+  String get providerUnifiedChannelSubtitle => 'サービスごとに使用するプロバイダーを選択します。有効なプロバイダーのみ表示されます。';
+
+  @override
+  String get providerAddCard => 'プロバイダーカードを追加';
+
+  @override
+  String get providerCapabilityAsr => '音声認識';
+
+  @override
+  String get providerCapabilityTts => '音声合成';
+
+  @override
+  String get providerCapabilityLlm => '言語モデル';
+
+  @override
+  String get providerCapabilityRealtime => 'リアルタイム音声';
+
+  @override
+  String get providerCapabilityVision => '画像理解';
+
+  @override
+  String get providerCapabilityVideo => '動画理解';
+
+  @override
+  String get providerApiKeyHint => 'API キー';
+
+  @override
+  String get providerKeySaved => '有効';
+
+  @override
+  String get providerKeyMissing => '未有効';
+
+  @override
+  String get providerNoActiveProviders => 'このサービスをサポートする有効なプロバイダーがまだありません。';
+
+  @override
+  String get providerSaved => 'プロバイダー設定を保存しました';
+
+  @override
+  String get providerSaveFailed => 'プロバイダー設定を保存できませんでした。';
 }

@@ -4685,5 +4685,22 @@
     "downloadNow": "立即下载",
     "onWifiLater": "稍后通过 Wi-Fi",
     "conversationWritingSummary": "正在撰写你的摘要…",
-    "onTheWayServerWork": "服务器报告的任务"
+    "onTheWayServerWork": "服务器报告的任务",
+    "providerCards": "供应商卡片",
+    "providerCardsSubtitle": "每张卡片列出该供应商支持的全部服务，默认选择最新的模型。",
+    "providerUnifiedChannel": "统一通道",
+    "providerUnifiedChannelSubtitle": "为每种服务选择供应商。这里只列出已激活的供应商。",
+    "providerAddCard": "添加供应商卡片",
+    "providerCapabilityAsr": "语音转文字",
+    "providerCapabilityTts": "文字转语音",
+    "providerCapabilityLlm": "语言模型",
+    "providerCapabilityRealtime": "实时语音",
+    "providerCapabilityVision": "图像理解",
+    "providerCapabilityVideo": "视频理解",
+    "providerApiKeyHint": "API 密钥",
+    "providerKeySaved": "已激活",
+    "providerKeyMissing": "未激活",
+    "providerNoActiveProviders": "尚无已激活的供应商支持此项服务。",
+    "providerSaved": "供应商设置已保存",
+    "providerSaveFailed": "供应商设置保存失败。"
 }

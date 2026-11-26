@@ -15605,4 +15605,57 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => 'Работа по данным сервера';
+
+  @override
+  String get providerCards => 'Карточки провайдеров';
+
+  @override
+  String get providerCardsSubtitle =>
+      'На каждой карточке перечислены все сервисы провайдера. По умолчанию выбрана новейшая модель.';
+
+  @override
+  String get providerUnifiedChannel => 'Единый канал';
+
+  @override
+  String get providerUnifiedChannelSubtitle =>
+      'Выберите провайдера для каждого сервиса. Показаны только активированные провайдеры.';
+
+  @override
+  String get providerAddCard => 'Добавить карточку провайдера';
+
+  @override
+  String get providerCapabilityAsr => 'Речь в текст';
+
+  @override
+  String get providerCapabilityTts => 'Текст в речь';
+
+  @override
+  String get providerCapabilityLlm => 'Языковая модель';
+
+  @override
+  String get providerCapabilityRealtime => 'Голос в реальном времени';
+
+  @override
+  String get providerCapabilityVision => 'Понимание изображений';
+
+  @override
+  String get providerCapabilityVideo => 'Понимание видео';
+
+  @override
+  String get providerApiKeyHint => 'Ключ API';
+
+  @override
+  String get providerKeySaved => 'Активировано';
+
+  @override
+  String get providerKeyMissing => 'Не активировано';
+
+  @override
+  String get providerNoActiveProviders => 'Пока ни один активированный провайдер не поддерживает этот сервис.';
+
+  @override
+  String get providerSaved => 'Настройки провайдеров сохранены';
+
+  @override
+  String get providerSaveFailed => 'Не удалось сохранить настройки провайдеров.';
 }
