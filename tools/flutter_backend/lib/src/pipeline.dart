@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import 'conversation.dart';
 import 'knowledge.dart';
 import 'llm_client.dart';
+import 'provider_surfaces.dart';
 import 'store.dart';
 
 /// Local stand-in for Omi's conversations-v3 processing pipeline (Cloud Tasks
@@ -16,15 +17,15 @@ class ConversationPipeline {
   ConversationPipeline({
     required ConversationStore conversations,
     required KnowledgeStore knowledge,
-    required LlmClient llm,
-  })  : _conversations = conversations,
-        _knowledge = knowledge,
-        _llm = llm;
+    required LlmSurface llm,
+  }) : _conversations = conversations,
+       _knowledge = knowledge,
+       _llm = llm;
 
   // Constructor names stay unprefixed for call-site clarity; fields private.
   final ConversationStore _conversations;
   final KnowledgeStore _knowledge;
-  final LlmClient _llm;
+  final LlmSurface _llm;
   static const _uuid = Uuid();
 
   static const _notesPrompt = '''
@@ -54,17 +55,19 @@ class ConversationPipeline {
     final memories = await _memories(transcript, conversationId);
     final items = _actionItems(notes, conversationId);
 
-    _conversations.upsert(Conversation(
-      id: conv.id,
-      startedAt: conv.startedAt,
-      finishedAt: conv.finishedAt ?? DateTime.now(),
-      status: 'completed',
-      source: conv.source,
-      language: conv.language,
-      title: conv.title ?? notes['title'] as String?,
-      visibility: conv.visibility,
-      discarded: conv.discarded,
-    ));
+    _conversations.upsert(
+      Conversation(
+        id: conv.id,
+        startedAt: conv.startedAt,
+        finishedAt: conv.finishedAt ?? DateTime.now(),
+        status: 'completed',
+        source: conv.source,
+        language: conv.language,
+        title: conv.title ?? notes['title'] as String?,
+        visibility: conv.visibility,
+        discarded: conv.discarded,
+      ),
+    );
 
     return PipelineResult(
       conversationId: conversationId,
@@ -134,9 +137,7 @@ class ConversationPipeline {
   }
 
   static String _transcriptText(Conversation c) =>
-      (c.transcript ?? const [])
-          .map((s) => '${s.isUser ? '用户' : s.speaker}: ${s.text}')
-          .join('\n');
+      (c.transcript ?? const []).map((s) => '${s.isUser ? '用户' : s.speaker}: ${s.text}').join('\n');
 
   /// Tolerates fenced code blocks and surrounding prose: takes the outermost
   /// `{...}`.
@@ -167,12 +168,7 @@ class ConversationPipeline {
 }
 
 class PipelineResult {
-  PipelineResult({
-    required this.conversationId,
-    required this.processed,
-    this.memories = 0,
-    this.actionItems = 0,
-  });
+  PipelineResult({required this.conversationId, required this.processed, this.memories = 0, this.actionItems = 0});
 
   final String conversationId;
   final bool processed;

@@ -4685,5 +4685,22 @@
     "downloadNow": "지금 다운로드",
     "onWifiLater": "나중에 Wi-Fi로",
     "conversationWritingSummary": "요약을 작성하는 중…",
-    "onTheWayServerWork": "서버에서 보고한 작업"
+    "onTheWayServerWork": "서버에서 보고한 작업",
+    "providerCards": "공급자 카드",
+    "providerCardsSubtitle": "각 카드에는 이 공급자가 제공하는 모든 서비스가 표시되며 최신 모델이 기본으로 선택됩니다.",
+    "providerUnifiedChannel": "통합 채널",
+    "providerUnifiedChannelSubtitle": "서비스별로 사용할 공급자를 선택하세요. 활성화된 공급자만 표시됩니다.",
+    "providerAddCard": "공급자 카드 추가",
+    "providerCapabilityAsr": "음성 인식",
+    "providerCapabilityTts": "음성 합성",
+    "providerCapabilityLlm": "언어 모델",
+    "providerCapabilityRealtime": "실시간 음성",
+    "providerCapabilityVision": "이미지 이해",
+    "providerCapabilityVideo": "동영상 이해",
+    "providerApiKeyHint": "API 키",
+    "providerKeySaved": "활성화됨",
+    "providerKeyMissing": "활성화되지 않음",
+    "providerNoActiveProviders": "이 서비스를 지원하는 활성화된 공급자가 아직 없습니다.",
+    "providerSaved": "공급자 설정이 저장되었습니다",
+    "providerSaveFailed": "공급자 설정을 저장하지 못했습니다."
 }

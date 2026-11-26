@@ -201,6 +201,7 @@ class _RecordingGroupPageState extends State<RecordingGroupPage> with _GroupRows
               title: l10n.transcription,
               value: _transcriptionValue(),
             ),
+            row(SettingsDestination.providerCards, icon: FontAwesomeIcons.towerBroadcast, title: l10n.providerCards),
             row(SettingsDestination.language, icon: FontAwesomeIcons.globe, title: l10n.language),
             row(SettingsDestination.customVocabulary, icon: FontAwesomeIcons.book, title: l10n.customVocabulary),
           ],

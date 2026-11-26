@@ -15683,4 +15683,57 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onTheWayServerWork => 'Traitement signalé par le serveur';
+
+  @override
+  String get providerCards => 'Cartes de fournisseur';
+
+  @override
+  String get providerCardsSubtitle =>
+      'Chaque carte liste tous les services de ce fournisseur. Le modèle le plus récent est sélectionné par défaut.';
+
+  @override
+  String get providerUnifiedChannel => 'Canal unifié';
+
+  @override
+  String get providerUnifiedChannelSubtitle =>
+      'Choisissez le fournisseur de chaque service. Seuls les fournisseurs activés sont listés.';
+
+  @override
+  String get providerAddCard => 'Ajouter une carte de fournisseur';
+
+  @override
+  String get providerCapabilityAsr => 'Parole vers texte';
+
+  @override
+  String get providerCapabilityTts => 'Texte vers parole';
+
+  @override
+  String get providerCapabilityLlm => 'Modèle de langage';
+
+  @override
+  String get providerCapabilityRealtime => 'Voix en temps réel';
+
+  @override
+  String get providerCapabilityVision => 'Compréhension des images';
+
+  @override
+  String get providerCapabilityVideo => 'Compréhension des vidéos';
+
+  @override
+  String get providerApiKeyHint => 'Clé API';
+
+  @override
+  String get providerKeySaved => 'Activé';
+
+  @override
+  String get providerKeyMissing => 'Non activé';
+
+  @override
+  String get providerNoActiveProviders => 'Aucun fournisseur activé ne prend encore en charge ce service.';
+
+  @override
+  String get providerSaved => 'Paramètres des fournisseurs enregistrés';
+
+  @override
+  String get providerSaveFailed => 'Impossible d\'enregistrer les paramètres des fournisseurs.';
 }

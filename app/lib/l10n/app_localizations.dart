@@ -27302,6 +27302,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Server-reported work'**
   String get onTheWayServerWork;
+
+  /// Settings row and page title for the provider cards page
+  ///
+  /// In en, this message translates to:
+  /// **'Provider cards'**
+  String get providerCards;
+
+  /// Provider cards page intro
+  ///
+  /// In en, this message translates to:
+  /// **'Each card lists every service this provider offers. The newest model is chosen by default.'**
+  String get providerCardsSubtitle;
+
+  /// Section title: pick one provider per service
+  ///
+  /// In en, this message translates to:
+  /// **'Unified channel'**
+  String get providerUnifiedChannel;
+
+  /// Unified channel section intro
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the provider used for each service. Only activated providers are listed.'**
+  String get providerUnifiedChannelSubtitle;
+
+  /// Button that opens the list of providers to add
+  ///
+  /// In en, this message translates to:
+  /// **'Add a provider card'**
+  String get providerAddCard;
+
+  /// Provider capability label
+  ///
+  /// In en, this message translates to:
+  /// **'Speech to text'**
+  String get providerCapabilityAsr;
+
+  /// Provider capability label
+  ///
+  /// In en, this message translates to:
+  /// **'Text to speech'**
+  String get providerCapabilityTts;
+
+  /// Provider capability label
+  ///
+  /// In en, this message translates to:
+  /// **'Language model'**
+  String get providerCapabilityLlm;
+
+  /// Provider capability label
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime voice'**
+  String get providerCapabilityRealtime;
+
+  /// Provider capability label
+  ///
+  /// In en, this message translates to:
+  /// **'Image understanding'**
+  String get providerCapabilityVision;
+
+  /// Provider capability label
+  ///
+  /// In en, this message translates to:
+  /// **'Video understanding'**
+  String get providerCapabilityVideo;
+
+  /// Text field hint for a provider API key
+  ///
+  /// In en, this message translates to:
+  /// **'API key'**
+  String get providerApiKeyHint;
+
+  /// Provider card status: a key is configured
+  ///
+  /// In en, this message translates to:
+  /// **'Activated'**
+  String get providerKeySaved;
+
+  /// Provider card status: no key configured yet
+  ///
+  /// In en, this message translates to:
+  /// **'Not activated'**
+  String get providerKeyMissing;
+
+  /// Shown when a capability has no activated provider
+  ///
+  /// In en, this message translates to:
+  /// **'No activated provider supports this service yet.'**
+  String get providerNoActiveProviders;
+
+  /// Toast after saving
+  ///
+  /// In en, this message translates to:
+  /// **'Provider settings saved'**
+  String get providerSaved;
+
+  /// Toast when saving fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save provider settings.'**
+  String get providerSaveFailed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
