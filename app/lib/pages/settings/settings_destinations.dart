@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:omi/backend/http/api/announcements.dart';
 import 'package:omi/backend/preferences.dart';
+import 'package:omi/env/local_fork.dart';
 import 'package:omi/pages/announcements/changelog_sheet.dart';
 import 'package:omi/pages/conversations/auto_sync_page.dart';
 import 'package:omi/pages/conversations/sync_page.dart';
@@ -49,6 +50,7 @@ import 'package:omi/utils/platform/platform_manager.dart';
 /// picker, sign out, What's New) run in place. The switch is exhaustive: every
 /// [SettingsDestination] has exactly one way to open it.
 Future<void> openSettingsDestination(BuildContext context, SettingsDestination destination) async {
+  if (settingsDestinationHidden(destination, localFork: localFork)) return;
   switch (destination) {
     case SettingsDestination.profile:
       await routeToPage(context, const ProfilePage());

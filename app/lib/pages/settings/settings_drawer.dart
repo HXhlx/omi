@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:omi/backend/preferences.dart';
+import 'package:omi/env/local_fork.dart';
 import 'package:omi/pages/settings/settings_destinations.dart';
 import 'package:omi/pages/settings/settings_groups.dart';
 import 'package:omi/providers/usage_provider.dart';
@@ -133,46 +134,48 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        OmiSettingsGroup(
-          children: [
-            _row(
-              SettingsDestination.profile,
-              key: 'settings_account',
-              icon: FontAwesomeIcons.solidUser,
-              title: name.isEmpty ? l10n.account : name,
-              subtitle: email.isEmpty ? null : email,
-            ),
-          ],
-        ),
-        const SizedBox(height: OmiSpacing.xl),
-        // Plan, referrals and feedback stay one tap from the sheet (David, 2026-09-24).
-        OmiSettingsGroup(
-          children: [
-            if (showUpgrade)
+        if (!localFork) ...[
+          OmiSettingsGroup(
+            children: [
               _row(
-                SettingsDestination.upgrade,
-                key: 'settings_row_upgrade',
-                icon: FontAwesomeIcons.crown,
-                title: l10n.upgrade,
-                subtitle: l10n.settingsUpgradeTrialSubtitle(7),
+                SettingsDestination.profile,
+                key: 'settings_account',
+                icon: FontAwesomeIcons.solidUser,
+                title: name.isEmpty ? l10n.account : name,
+                subtitle: email.isEmpty ? null : email,
               ),
-            _row(
-              SettingsDestination.planAndUsage,
-              key: 'settings_row_planAndUsage',
-              icon: FontAwesomeIcons.chartLine,
-              title: l10n.planAndUsage,
-              value: planValue,
-            ),
-            _row(
-              SettingsDestination.referral,
-              key: 'settings_row_referral',
-              icon: FontAwesomeIcons.gift,
-              title: l10n.referralProgram,
-              tag: SettingsTag(l10n.newTag, OmiColors.success),
-            ),
-          ],
-        ),
-        const SizedBox(height: OmiSpacing.xl),
+            ],
+          ),
+          const SizedBox(height: OmiSpacing.xl),
+          // Plan, referrals and feedback stay one tap from the sheet (David, 2026-09-24).
+          OmiSettingsGroup(
+            children: [
+              if (showUpgrade)
+                _row(
+                  SettingsDestination.upgrade,
+                  key: 'settings_row_upgrade',
+                  icon: FontAwesomeIcons.crown,
+                  title: l10n.upgrade,
+                  subtitle: l10n.settingsUpgradeTrialSubtitle(7),
+                ),
+              _row(
+                SettingsDestination.planAndUsage,
+                key: 'settings_row_planAndUsage',
+                icon: FontAwesomeIcons.chartLine,
+                title: l10n.planAndUsage,
+                value: planValue,
+              ),
+              _row(
+                SettingsDestination.referral,
+                key: 'settings_row_referral',
+                icon: FontAwesomeIcons.gift,
+                title: l10n.referralProgram,
+                tag: SettingsTag(l10n.newTag, OmiColors.success),
+              ),
+            ],
+          ),
+          const SizedBox(height: OmiSpacing.xl),
+        ],
         OmiSettingsGroup(
           children: [
             _row(
@@ -199,19 +202,21 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
               icon: FontAwesomeIcons.solidBell,
               title: l10n.notificationsAndDisplay,
             ),
-            _row(
-              SettingsDestination.integrations,
-              key: 'settings_group_integrations',
-              icon: FontAwesomeIcons.networkWired,
-              title: l10n.integrations,
-              tag: SettingsTag(l10n.beta, OmiColors.warning),
-            ),
-            _row(
-              SettingsDestination.connectAgent,
-              key: 'settings_row_connect_agent',
-              icon: FontAwesomeIcons.terminal,
-              title: l10n.connectAnAgent,
-            ),
+            if (!localFork)
+              _row(
+                SettingsDestination.integrations,
+                key: 'settings_group_integrations',
+                icon: FontAwesomeIcons.networkWired,
+                title: l10n.integrations,
+                tag: SettingsTag(l10n.beta, OmiColors.warning),
+              ),
+            if (!localFork)
+              _row(
+                SettingsDestination.connectAgent,
+                key: 'settings_row_connect_agent',
+                icon: FontAwesomeIcons.terminal,
+                title: l10n.connectAnAgent,
+              ),
             _row(
               SettingsDestination.privacyGroup,
               key: 'settings_group_privacy',
