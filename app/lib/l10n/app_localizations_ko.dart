@@ -9111,6 +9111,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get syncCustomSttWarningMessage => '직접 설정한 전사 제공자를 사용 중입니다. 이 녹음을 동기화하면 Omi 서버에서 전사되며 요금제의 전사 한도에 포함됩니다.';
 
   @override
+  String get chestCameraTitle => '체스트 카메라';
+
+  @override
+  String get chestCameraDescription => '녹음 중 30초마다 후면 카메라로 소리 없이 한 장의 사진을 찍어 AI 장면 설명에 사용합니다';
+
+  @override
   String get transcribeLaterTitle => '나중에 변환하기';
 
   @override

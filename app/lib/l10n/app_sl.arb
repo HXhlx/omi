@@ -10384,6 +10384,8 @@
     "recapRegenerateNoConversations": "Za ta dan ni pogovorov za povzemanje.",
     "syncCustomSttWarningTitle": "Sinhronizacija uporablja prepis Omi",
     "syncCustomSttWarningMessage": "Uporabljate svojega ponudnika prepisa. Sinhronizacija teh posnetkov jih prepiše na strežnikih Omi in se štejejo v omejitev prepisa vašega paketa.",
+    "chestCameraTitle": "Prsna kamera",
+    "chestCameraDescription": "Med snemanjem vsakih 30 sekund tiho posname eno fotografijo z zadnjo kamero za opis prizora z umetno inteligenco",
     "transcribeLaterTitle": "Prepiši pozneje",
     "transcribeLaterDescription": "Snemajte zdaj, prepišite, ko želite. Do takrat zvok ostane v vašem telefonu.",
     "transcribeLaterNote": "Deluje z mikrofonom telefona ter napravami Omi in Limitless. Zvok ostane v vašem telefonu, dokler ga ne naložite sami.",

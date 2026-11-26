@@ -9276,6 +9276,13 @@ class AppLocalizationsHr extends AppLocalizations {
       'Koristite vlastiti pružatelj transkripcije. Sinkronizacija ovih snimaka transkribira ih na Omijevim poslužiteljima i broje se u ograničenje transkripcije vašeg plana.';
 
   @override
+  String get chestCameraTitle => 'Kamera za prsa';
+
+  @override
+  String get chestCameraDescription =>
+      'Tijekom snimanja svakih 30 sekundi tiho uslikaj jednu fotografiju stražnjom kamerom za AI opis scene';
+
+  @override
   String get transcribeLaterTitle => 'Transkribiraj poslije';
 
   @override

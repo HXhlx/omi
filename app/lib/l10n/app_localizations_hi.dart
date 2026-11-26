@@ -9227,6 +9227,13 @@ class AppLocalizationsHi extends AppLocalizations {
       'आप अपना स्वयं का ट्रांसक्रिप्शन प्रदाता उपयोग करते हैं। इन रिकॉर्डिंग को सिंक करने पर ये Omi के सर्वर पर ट्रांसक्राइब होंगी और आपकी योजना की ट्रांसक्रिप्शन सीमा में गिनी जाएंगी।';
 
   @override
+  String get chestCameraTitle => 'चेस्ट कैमरा';
+
+  @override
+  String get chestCameraDescription =>
+      'रिकॉर्डिंग के दौरान हर 30 सेकंड में रियर कैमरे से चुपचाप एक फोटो लेता है, AI दृश्य विवरण के लिए';
+
+  @override
   String get transcribeLaterTitle => 'बाद में ट्रांसक्राइब करें';
 
   @override

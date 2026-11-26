@@ -2964,6 +2964,8 @@
     "recapRegenerateNoConversations": "لا توجد محادثات لتلخيصها في هذا اليوم.",
     "syncCustomSttWarningTitle": "المزامنة تستخدم خدمة النسخ في Omi",
     "syncCustomSttWarningMessage": "أنت تستخدم مزوّد النسخ الخاص بك. مزامنة هذه التسجيلات تنسخها على خوادم Omi بدلاً من ذلك، وتُحتسب ضمن حد النسخ في باقتك.",
+    "chestCameraTitle": "كاميرا الصدر",
+    "chestCameraDescription": "أثناء التسجيل، التقط صورة صامتة كل 30 ثانية بالكاميرا الخلفية لوصف المشهد بالذكاء الاصطناعي",
     "transcribeLaterTitle": "التفريغ النصي لاحقًا",
     "transcribeLaterDescription": "سجّل الآن وانسخ متى شئت. يبقى الصوت على هاتفك حتى ذلك الحين.",
     "transcribeLaterNote": "يعمل مع ميكروفون الهاتف وأجهزة Omi وLimitless. يبقى الصوت على هاتفك إلى أن تختار رفعه.",

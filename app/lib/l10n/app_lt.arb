@@ -2973,6 +2973,8 @@
     "recapRegenerateNoConversations": "Šiai dienai nėra pokalbių, kuriuos būtų galima apibendrinti.",
     "syncCustomSttWarningTitle": "Sinchronizavimas naudoja Omi transkripciją",
     "syncCustomSttWarningMessage": "Naudojate savo transkripcijos paslaugą. Sinchronizuojant šiuos įrašus jie transkribuojami Omi serveriuose ir įskaičiuojami į jūsų plano transkripcijos limitą.",
+    "chestCameraTitle": "Krūtinės kamera",
+    "chestCameraDescription": "Įrašinėjant kas 30 sekundžių tyliai padaro vieną nuotrauką galine kamera AI scenos aprašymams",
     "transcribeLaterTitle": "Transkribuoti vėliau",
     "transcribeLaterDescription": "Įrašykite dabar, transkribuokite, kai norėsite. Iki tol garsas lieka jūsų telefone.",
     "transcribeLaterNote": "Veikia su telefono mikrofonu bei Omi ir Limitless įrenginiais. Garsas lieka jūsų telefone, kol nuspręsite jį įkelti.",

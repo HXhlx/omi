@@ -2973,6 +2973,8 @@
     "recapRegenerateNoConversations": "이 날짜에 요약할 대화가 없습니다.",
     "syncCustomSttWarningTitle": "동기화는 Omi 전사를 사용합니다",
     "syncCustomSttWarningMessage": "직접 설정한 전사 제공자를 사용 중입니다. 이 녹음을 동기화하면 Omi 서버에서 전사되며 요금제의 전사 한도에 포함됩니다.",
+    "chestCameraTitle": "체스트 카메라",
+    "chestCameraDescription": "녹음 중 30초마다 후면 카메라로 소리 없이 한 장의 사진을 찍어 AI 장면 설명에 사용합니다",
     "transcribeLaterTitle": "나중에 변환하기",
     "transcribeLaterDescription": "지금 녹음하고 원할 때 전사하세요. 그때까지 오디오는 휴대폰에 보관됩니다.",
     "transcribeLaterNote": "휴대폰 마이크, Omi 및 Limitless 기기에서 사용할 수 있습니다. 직접 업로드하기 전까지 오디오는 휴대폰에만 보관됩니다.",

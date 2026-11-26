@@ -10384,6 +10384,8 @@
     "recapRegenerateNoConversations": "Nema razgovora za sažimanje za ovaj dan.",
     "syncCustomSttWarningTitle": "Sinkronizacija koristi Omi transkripciju",
     "syncCustomSttWarningMessage": "Koristite vlastiti provajder transkripcije. Sinkronizacija ovih snimaka transkribuje ih na Omi serverima i broje se u limit transkripcije vašeg plana.",
+    "chestCameraTitle": "Kamera za prsa",
+    "chestCameraDescription": "Tokom snimanja, svakih 30 sekundi tiho uslikaj jednu fotografiju zadnjom kamerom za AI opis scene",
     "transcribeLaterTitle": "Transkripcija kasnije",
     "transcribeLaterDescription": "Snimajte sada, transkribujte kada želite. Do tada zvuk ostaje na vašem telefonu.",
     "transcribeLaterNote": "Radi s mikrofonom telefona te Omi i Limitless uređajima. Zvuk ostaje na vašem telefonu sve dok ga sami ne otpremite.",

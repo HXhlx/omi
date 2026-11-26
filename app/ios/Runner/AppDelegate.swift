@@ -505,6 +505,18 @@ final class QuickActionsIconPatcher: NSObject {
         result(snapshot)
     }
 
+    // Screen keep-on for chest-camera capture: without it the display sleeps
+    // while the phone sits in a pocket and iOS closes the camera.
+    FlutterMethodChannel(name: "com.omi/keep_screen_on", binaryMessenger: messenger)
+      .setMethodCallHandler { call, result in
+        guard call.method == "set", let on = call.arguments as? Bool else {
+          result(FlutterMethodNotImplemented)
+          return
+        }
+        UIApplication.shared.isIdleTimerDisabled = on
+        result(true)
+      }
+
     // TestFlight environment detection
     let envChannel = FlutterMethodChannel(name: "com.omi/environment", binaryMessenger: messenger)
     envChannel.setMethodCallHandler { (call, result) in

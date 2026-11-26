@@ -686,11 +686,13 @@ class _LiveTranscriptViewState extends State<LiveTranscriptView> {
   }
 
   /// Photos reach a live conversation only through camera-capable wearables
-  /// (Ray-Ban Meta, OpenGlass). A phone-mic session has no photo channel, so
-  /// its empty state must not promise one (#14473).
+  /// (Ray-Ban Meta, OpenGlass), or through the phone's own rear camera when
+  /// the chest-camera setting is on (#14473 promise: name only what this
+  /// session can actually produce).
   bool _photoChannelActive(BtDevice? connectedDevice) {
     final type = connectedDevice?.type;
-    return type == DeviceType.raybanMeta || type == DeviceType.openglass;
+    if (type == DeviceType.raybanMeta || type == DeviceType.openglass) return true;
+    return SharedPreferencesUtil().chestCameraEnabled;
   }
 
   /// The live-capture empty state names only what this session can actually

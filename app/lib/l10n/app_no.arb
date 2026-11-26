@@ -2973,6 +2973,8 @@
     "recapRegenerateNoConversations": "Ingen samtaler å oppsummere for denne dagen.",
     "syncCustomSttWarningTitle": "Synkronisering bruker Omi-transkripsjon",
     "syncCustomSttWarningMessage": "Du bruker din egen transkripsjonsleverandør. Synkronisering av disse opptakene transkriberer dem på Omis servere, og de teller mot transkripsjonsgrensen i abonnementet ditt.",
+    "chestCameraTitle": "Brystkamera",
+    "chestCameraDescription": "Tar et stille bilde hvert 30. sekund med bakovervendt kamera under opptak, til AI-scenebeskrivelser",
     "transcribeLaterTitle": "Transkriber senere",
     "transcribeLaterDescription": "Ta opp nå, transkriber når du vil. Frem til da blir lyden på telefonen din.",
     "transcribeLaterNote": "Fungerer med telefonens mikrofon samt Omi- og Limitless-enheter. Lyden blir værende på telefonen til du velger å laste den opp.",

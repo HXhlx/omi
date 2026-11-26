@@ -2973,6 +2973,8 @@
     "recapRegenerateNoConversations": "Šajā dienā nav sarunu, ko apkopot.",
     "syncCustomSttWarningTitle": "Sinhronizācija izmanto Omi transkripciju",
     "syncCustomSttWarningMessage": "Jūs izmantojat savu transkripcijas pakalpojumu. Šo ierakstu sinhronizēšana tos transkribē Omi serveros, un tie tiek ieskaitīti jūsu plāna transkripcijas limitā.",
+    "chestCameraTitle": "Krūšu kamera",
+    "chestCameraDescription": "Ierakstīšanas laikā ik pēc 30 sekundēm klusi uzņem vienu foto ar aizmugurējo kameru AI ainas aprakstiem",
     "transcribeLaterTitle": "Transkribēt vēlāk",
     "transcribeLaterDescription": "Ierakstiet tagad, transkribējiet, kad vēlaties. Līdz tam audio paliek jūsu tālrunī.",
     "transcribeLaterNote": "Darbojas ar tālruņa mikrofonu un Omi un Limitless ierīcēm. Audio paliek jūsu tālrunī, līdz izvēlaties to augšupielādēt.",

@@ -9110,6 +9110,12 @@ class AppLocalizationsJa extends AppLocalizations {
       'ご自身の文字起こしプロバイダーを使用しています。これらの録音を同期すると Omi のサーバーで文字起こしされ、プランの文字起こし上限にカウントされます。';
 
   @override
+  String get chestCameraTitle => 'チェストカメラ';
+
+  @override
+  String get chestCameraDescription => '録音中、30秒ごとにリアカメラで静かに1枚撮影し、AIによるシーン描写に使用します';
+
+  @override
   String get transcribeLaterTitle => '後で文字起こし';
 
   @override

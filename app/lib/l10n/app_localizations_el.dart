@@ -9311,6 +9311,13 @@ class AppLocalizationsEl extends AppLocalizations {
       'Χρησιμοποιείτε δικό σας πάροχο μεταγραφής. Ο συγχρονισμός αυτών των ηχογραφήσεων τις μεταγράφει στους διακομιστές του Omi και προσμετρώνται στο όριο μεταγραφής του προγράμματός σας.';
 
   @override
+  String get chestCameraTitle => 'Κάμερα στήθους';
+
+  @override
+  String get chestCameraDescription =>
+      'Κατά την ηχογράφηση, λαμβάνει αθόρυβη φωτογραφία κάθε 30 δευτερόλεπτα με την πίσω κάμερα για περιγραφές σκηνής με AI';
+
+  @override
   String get transcribeLaterTitle => 'Μεταγραφή αργότερα';
 
   @override

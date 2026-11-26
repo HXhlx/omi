@@ -9237,6 +9237,13 @@ class AppLocalizationsSk extends AppLocalizations {
       'Používate vlastného poskytovateľa prepisu. Synchronizácia týchto nahrávok ich prepíše na serveroch Omi a započítajú sa do limitu prepisu vášho plánu.';
 
   @override
+  String get chestCameraTitle => 'Hrudná kamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Počas nahrávania každých 30 sekúnd potichu odfotí jeden záber zadnou kamerou na popis scény umelou inteligenciou';
+
+  @override
   String get transcribeLaterTitle => 'Prepísať neskôr';
 
   @override

@@ -2964,6 +2964,8 @@
     "recapRegenerateNoConversations": "Keine Konversationen für diesen Tag zum Zusammenfassen.",
     "syncCustomSttWarningTitle": "Synchronisierung nutzt Omi-Transkription",
     "syncCustomSttWarningMessage": "Du verwendest einen eigenen Transkriptionsanbieter. Beim Synchronisieren werden diese Aufnahmen stattdessen auf den Servern von Omi transkribiert und auf das Transkriptionslimit deines Tarifs angerechnet.",
+    "chestCameraTitle": "Brustkamera",
+    "chestCameraDescription": "Nimmt während der Aufnahme alle 30 Sekunden automatisch ein Foto mit der Rückkamera für KI-Szenenbeschreibungen",
     "transcribeLaterTitle": "Später transkribieren",
     "transcribeLaterDescription": "Jetzt aufnehmen, später transkribieren. Bis dahin bleibt das Audio auf deinem Telefon.",
     "transcribeLaterNote": "Funktioniert mit dem Telefonmikrofon sowie Omi- und Limitless-Geräten. Das Audio bleibt auf deinem Smartphone, bis du es hochladen möchtest.",
