@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import 'package:omi/backend/http/api/knowledge_graph_api.dart';
 import 'package:omi/backend/preferences.dart';
+import 'package:omi/env/local_fork.dart';
 import 'package:omi/gen/assets.gen.dart';
 import 'package:omi/pages/home/page.dart';
 import 'package:omi/pages/onboarding/ai_consent_widget.dart';
@@ -287,6 +288,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> with TickerProvid
   /// control, and never when subscription UI is hidden (the router checks that). The `trial` arm
   /// has its placement right after sign-up instead ([_maybeShowSignupPaywall]).
   Future<void> _maybeShowOnboardingPaywall() async {
+    if (localFork) return;
     final config = PaywallExperiment.current;
     if (!mounted || config.isControl || !config.onboardingPaywall) return;
     if (config.variant == PaywallVariant.trial) return;
@@ -298,6 +300,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> with TickerProvid
   bool _signupPaywallPurchased = false;
 
   Future<void> _maybeShowSignupPaywall() async {
+    if (localFork) return;
     if (_signupPaywallShown) return;
     final config = PaywallExperiment.current;
     if (!mounted || config.variant != PaywallVariant.trial || !config.onboardingPaywall) return;

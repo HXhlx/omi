@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:omi/backend/http/api/payment.dart';
 import 'package:omi/backend/http/api_result.dart';
 import 'package:omi/backend/preferences.dart';
+import 'package:omi/env/local_fork.dart';
 import 'package:omi/backend/http/api/users.dart';
 import 'package:omi/models/subscription.dart';
 import 'package:omi/models/user_usage.dart';
@@ -25,6 +26,10 @@ typedef SubscriptionCodeRequest = Future<ApiResult<bool>> Function(String code, 
 typedef UsageRequest = Future<UserUsageResponse?> Function({required String period, required String? timeZone});
 
 typedef ProcessingBacklogRequest = Future<ProcessingBacklog?> Function({required String idempotencyKey});
+
+/// LOCAL ADAPT: one gate for every paywall, usage banner and upgrade row.
+bool showSubscriptionUiFor({required bool localFork, required bool? storefrontFlag}) =>
+    !localFork && (storefrontFlag ?? true);
 
 class UsageProvider with ChangeNotifier {
   UsageProvider({
@@ -121,7 +126,10 @@ class UsageProvider with ChangeNotifier {
 
   /// Defaults to true when the subscription response hasn't loaded yet, so a
   /// network blip doesn't silently hide paid surfaces from real users.
-  bool get showSubscriptionUI => _subscription?.showSubscriptionUi ?? true;
+  bool get showSubscriptionUI => showSubscriptionUiFor(
+        localFork: localFork,
+        storefrontFlag: _subscription?.showSubscriptionUi,
+      );
   UsageStats? _todayUsage;
   int? _todayCacheKey;
   UsageStats? get todayUsage => _todayUsage;
