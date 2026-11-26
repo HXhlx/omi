@@ -19,6 +19,7 @@ import 'package:omi/gen/assets.gen.dart';
 import 'package:omi/pages/home/page.dart';
 import 'package:omi/pages/onboarding/ai_consent_widget.dart';
 import 'package:omi/pages/onboarding/auth.dart';
+import 'package:omi/pages/onboarding/local_fork_connect.dart';
 import 'package:omi/pages/onboarding/found_omi/found_omi_widget.dart';
 import 'package:omi/pages/onboarding/knowledge_graph_step.dart';
 import 'package:omi/pages/onboarding/name/name_widget.dart';
@@ -251,6 +252,27 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> with TickerProvid
     }
     if (context.mounted) {
       routeToPage(context, const HomePageWrapper(), replace: true);
+    }
+  }
+
+  Future<void> _onSignedIn() async {
+    if (!mounted) return;
+    PlatformManager.instance.analytics.onboardingStepCompleted('Auth');
+    context.read<HomeProvider>().setupHasSpeakerProfile();
+    // Refresh subscription on sign-in: AppShell only fetches it on mount,
+    // so an in-session re-login would otherwise leave it null until the
+    // Plan & Usage page is opened (missing Pro badge).
+    context.read<UsageProvider>().fetchSubscription();
+    IntercomManager.instance.loginIdentifiedUser(SharedPreferencesUtil().uid);
+    // Consent is checked first regardless of server-side onboarding
+    // state so a returning user signing in on a fresh install still
+    // sees the consent screen before any AI processing begins.
+    if (!SharedPreferencesUtil().aiConsentGiven) {
+      _controller!.animateTo(kAiConsentPage);
+    } else if (SharedPreferencesUtil().onboardingCompleted) {
+      await _routeWithPermissionsCheck(context);
+    } else {
+      _enterSteps();
     }
   }
 
@@ -579,34 +601,21 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> with TickerProvid
   Widget build(BuildContext context) {
     final index = _controller!.index;
     List<Widget> pages = [
-      AuthComponent(
-        onSignIn: () async {
-          if (!mounted) return;
-          final deletion = await context.read<AuthenticationProvider>().checkAccountDeletion();
-          if (!context.mounted) return;
-          if (deletion is! ApiSuccess<AccountDeletionStatus> || deletion.data.pendingDeletion) {
-            Navigator.of(context).pushAndRemoveUntil(omiPageRoute(builder: (_) => const AppShell()), (_) => false);
-            return;
-          }
-          PlatformManager.instance.analytics.onboardingStepCompleted('Auth');
-          context.read<HomeProvider>().setupHasSpeakerProfile();
-          // Refresh subscription on sign-in: AppShell only fetches it on mount,
-          // so an in-session re-login would otherwise leave it null until the
-          // Plan & Usage page is opened (missing Pro badge).
-          context.read<UsageProvider>().fetchSubscription();
-          IntercomManager.instance.loginIdentifiedUser(SharedPreferencesUtil().uid);
-          // Consent is checked first regardless of server-side onboarding
-          // state so a returning user signing in on a fresh install still
-          // sees the consent screen before any AI processing begins.
-          if (!SharedPreferencesUtil().aiConsentGiven) {
-            _controller!.animateTo(kAiConsentPage);
-          } else if (SharedPreferencesUtil().onboardingCompleted) {
-            await _routeWithPermissionsCheck(context);
-          } else {
-            _enterSteps();
-          }
-        },
-      ),
+      if (localFork)
+        LocalForkConnectView(onConnected: _onSignedIn)
+      else
+        AuthComponent(
+          onSignIn: () async {
+            if (!mounted) return;
+            final deletion = await context.read<AuthenticationProvider>().checkAccountDeletion();
+            if (!context.mounted) return;
+            if (deletion is! ApiSuccess<AccountDeletionStatus> || deletion.data.pendingDeletion) {
+              Navigator.of(context).pushAndRemoveUntil(omiPageRoute(builder: (_) => const AppShell()), (_) => false);
+              return;
+            }
+            await _onSignedIn();
+          },
+        ),
       AiConsentWidget(
         onAgree: () async {
           if (!mounted) return;
@@ -622,6 +631,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> with TickerProvid
           }
         },
         onUseDifferentAccount: _useDifferentAccount,
+        showUseDifferentAccount: !localFork,
       ),
       NameWidget(
         goNext: () {

@@ -15,8 +15,14 @@ import 'package:omi/utils/l10n_extensions.dart';
 class AiConsentWidget extends StatefulWidget {
   final VoidCallback onAgree;
   final FutureOr<void> Function() onUseDifferentAccount;
+  final bool showUseDifferentAccount;
 
-  const AiConsentWidget({super.key, required this.onAgree, required this.onUseDifferentAccount});
+  const AiConsentWidget({
+    super.key,
+    required this.onAgree,
+    required this.onUseDifferentAccount,
+    this.showUseDifferentAccount = true,
+  });
 
   @override
   State<AiConsentWidget> createState() => _AiConsentWidgetState();
@@ -76,13 +82,15 @@ class _AiConsentWidgetState extends State<AiConsentWidget> {
               widget.onAgree();
             },
           ),
-          const SizedBox(height: OmiSpacing.xxs),
-          OmiButton.tertiary(
-            key: const Key('ai_consent_use_different_account'),
-            label: context.l10n.useDifferentAccount,
-            expand: true,
-            onPressed: widget.onUseDifferentAccount,
-          ),
+          if (widget.showUseDifferentAccount) ...[
+            const SizedBox(height: OmiSpacing.xxs),
+            OmiButton.tertiary(
+              key: const Key('ai_consent_use_different_account'),
+              label: context.l10n.useDifferentAccount,
+              expand: true,
+              onPressed: widget.onUseDifferentAccount,
+            ),
+          ],
         ],
       ),
     );
