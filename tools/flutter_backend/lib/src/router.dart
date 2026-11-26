@@ -304,9 +304,14 @@ class Api {
     if (path == 'v1/users/ai-profile/refresh' && method == 'POST') {
       return _json(_users.setAiProfile({'profile_text': '基于本地对话自动生成'}));
     }
-    if (path == 'v1/users/language' && method == 'PATCH') {
-      final body = await _body(req);
-      return _json({'language': body['language'] ?? 'zh'});
+    if (path == 'v1/users/language') {
+      if (method == 'GET') return _json({'language': _db.getSetting('language') ?? 'zh'});
+      if (method == 'PATCH') {
+        final body = await _body(req);
+        final language = body['language'] as String? ?? 'zh';
+        _db.setSetting('language', language);
+        return _json({'language': language, 'status': 'ok', 'single_language_mode': false});
+      }
     }
     if (path == 'v1/users/people') {
       if (method == 'GET') return _json(_users.listPeople());

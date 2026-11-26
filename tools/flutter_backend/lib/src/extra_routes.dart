@@ -438,7 +438,7 @@ class ExtraRoutes {
         return _json({'available': true, 'status': 'ready', 'provider': 'local'});
       }
       if (path.endsWith('/expand')) return _json({'words': <Object>[]});
-      if (m == 'GET') return _json({'words': <Object>[], 'status': 'ready'});
+      if (m == 'GET') return _json({'has_profile': false, 'words': <Object>[], 'status': 'ready'});
       return _json({'status': 'ok'});
     }
     if (path == 'v3/upload-audio' && m == 'POST') {

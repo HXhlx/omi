@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:omi/services/telemetry/client_telemetry.dart';
 import 'package:omi/services/telemetry/client_telemetry_flags.dart';
 import 'package:omi/services/telemetry/client_telemetry_transport.dart';
+import 'package:omi/local_backend/embedded_backend.dart';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -330,6 +331,21 @@ Future _init() async {
   if (!_serviceManagerInitialized) {
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       await const MethodChannel('com.omi/on_device').invokeMethod<void>('awaitBackgroundIdle');
+    }
+    // Single-app deployment: the Dart local backend runs in this process, so it
+    // must be listening (and [Env] overridden) before the service manager
+    // snapshots the base URL for its health probes. A bind failure is not fatal
+    // here: the app then falls through to the configured URL and its normal
+    // offline surfaces, rather than failing startup over a port.
+    if (kEmbeddedLocalBackend) {
+      await PhysicalQualification.startupStage('embedded_backend', () async {
+        try {
+          final base = await EmbeddedLocalBackend.start();
+          Logger.debug('main: embedded local backend at $base');
+        } catch (error) {
+          Logger.debug('main: embedded local backend failed: $error');
+        }
+      });
     }
     await PhysicalQualification.startupStage('service_manager_init', () => ServiceManager.init());
     _serviceManagerInitialized = true;

@@ -58,6 +58,15 @@ dependencies:
   collection: ^1.19.1
   http: ^1.4.0
   intl: ^0.20.2
+  # In-process local backend (tools/flutter_backend): the same shelf handler the
+  # standalone `dart run` server binds, linked as a path dependency so there is
+  # exactly one copy of the source. Started only when the app is built with
+  # `--dart-define=OMI_EMBEDDED_BACKEND=true`.
+  flutter_backend:
+    path: ../tools/flutter_backend
+  # Native libsqlite3 the backend needs on device; without it `sqlite3.open`
+  # throws at first use. Kept next to the backend dep so the pair is obvious.
+  sqlite3_flutter_libs: ^0.5.24
   permission_handler: ^12.0.0+1
   # Must stay >=2.0.0 — 1.x's iOS registration force-unwraps
   # UIApplication.shared.delegate!.window!!.rootViewController!, which is nil under the
