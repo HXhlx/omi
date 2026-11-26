@@ -4,7 +4,14 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'src/db.dart';
+import 'src/provider_router.dart';
+import 'src/provider_surfaces.dart';
 import 'src/router.dart';
+
+export 'src/provider_surfaces.dart';
+export 'src/stt_client.dart' show SttException, SttResult, SttSegment;
+export 'src/tts.dart' show TtsRequest;
+export 'src/tts_client.dart' show TtsException;
 
 /// The same shelf handler `bin/server.dart` binds, started inside a host
 /// process (the Omi Flutter app) instead of a standalone `dart run`.
@@ -22,21 +29,30 @@ class LocalBackendServer {
 
   /// [dbPath] is the caller's to choose: a host app passes a `path_provider`
   /// location, the standalone server passes `FLUTTER_BACKEND_DB`.
-  static Future<LocalBackendServer> start({required String dbPath, int port = 0}) async {
+  ///
+  /// [localStt] / [localTts] are the host's on-device inference surfaces: with
+  /// them the `local-stt` / `local-tts` provider cards run in this process and
+  /// never dial their HTTP worker ports. Null keeps the harness behaviour.
+  static Future<LocalBackendServer> start({
+    required String dbPath,
+    int port = 0,
+    SttSurface? localStt,
+    TtsSurface? localTts,
+  }) async {
     final file = File(dbPath);
     await file.parent.create(recursive: true);
     final db = LocalDb.open(dbPath);
     await db.migrate();
     db.setSetting('booted', DateTime.now().toIso8601String());
 
-    final server = await shelf_io.serve(_handler(db), InternetAddress.loopbackIPv4, port);
+    final server = await shelf_io.serve(_handler(db, localStt: localStt, localTts: localTts), InternetAddress.loopbackIPv4, port);
     return LocalBackendServer._(db, server);
   }
 
-  static Handler _handler(LocalDb db) => const Pipeline()
+  static Handler _handler(LocalDb db, {SttSurface? localStt, TtsSurface? localTts}) => const Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(_cors())
-      .addHandler(Api(db).handler);
+      .addHandler(Api(db, providers: ProviderRouter(db, localStt: localStt, localTts: localTts)).handler);
 
   Future<void> close() async {
     await _server.close(force: true);

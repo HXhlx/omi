@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter_backend/src/db.dart';
 import 'package:flutter_backend/src/provider_catalog.dart';
 import 'package:flutter_backend/src/provider_router.dart';
 import 'package:flutter_backend/src/provider_settings.dart';
+import 'package:flutter_backend/src/provider_surfaces.dart';
 import 'package:flutter_backend/src/router.dart';
+import 'package:flutter_backend/src/stt_client.dart';
+import 'package:flutter_backend/src/tts.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
@@ -214,4 +218,72 @@ void main() {
       expect(jsonEncode(settings['body']), isNot(contains('sk-secret')));
     });
   });
+
+  group('on-device surfaces', () {
+    late LocalDb db;
+
+    setUp(() async {
+      db = LocalDb.inMemory();
+      await db.migrate();
+    });
+
+    tearDown(() => db.close());
+
+    test('local-stt card routes to the injected in-process surface, not HTTP', () async {
+      final calls = <List<Object?>>[];
+      final router = ProviderRouter(
+        db,
+        localStt: _FakeStt(calls),
+      );
+      final result = await router.sttSurface().transcribePcm(
+        Uint8List.fromList([1, 2, 3, 4]),
+        sampleRate: 16000,
+        channels: 1,
+        language: 'zh',
+      );
+      expect(result.text, 'fake transcription');
+      // The fake received the exact call parameters and never dialed a socket.
+      expect(calls, [
+        [16000, 1, 'zh'],
+      ]);
+    });
+
+    test('local-tts card routes to the injected in-process surface, not HTTP', () async {
+      final router = ProviderRouter(db, localTts: _FakeTts());
+      final audio = await router.ttsSurface().synthesize(TtsRequest('你好'));
+      expect(audio, Uint8List.fromList([9, 9, 9]));
+    });
+
+    test('without injected surfaces the cards keep the HTTP chain', () {
+      final router = ProviderRouter(db);
+      expect(router.localStt, isNull);
+      expect(router.localTts, isNull);
+      // Resolution itself is unchanged: the local cards still come first.
+      expect(router.resolve(ProviderCapability.asr).first.id, 'local-stt');
+      expect(router.resolve(ProviderCapability.tts).first.id, 'local-tts');
+    });
+  });
+}
+
+class _FakeStt implements SttSurface {
+  _FakeStt(this.seen);
+  final List<List<Object?>> seen;
+
+  @override
+  Future<SttResult> transcribePcm(Uint8List pcm16, {int sampleRate = 16000, int channels = 1, String? language}) async {
+    seen.add([sampleRate, channels, language]);
+    return SttResult(
+      text: 'fake transcription',
+      segments: const [],
+    );
+  }
+
+  @override
+  Future<SttResult> transcribeMultipart(Uint8List body, String contentType) async =>
+      SttResult(text: 'fake multipart', segments: const []);
+}
+
+class _FakeTts implements TtsSurface {
+  @override
+  Future<Uint8List> synthesize(TtsRequest req) async => Uint8List.fromList([9, 9, 9]);
 }

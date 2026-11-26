@@ -339,8 +339,13 @@ class Api {
       }
       final voiceId = reqBody['voice_id'] as String? ?? _userVoice();
       try {
-        final mp3 = await _tts.synthesize(TtsRequest(text, voiceId: voiceId));
-        return Response.ok(mp3, headers: {'content-type': 'audio/mpeg'});
+        final audio = await _tts.synthesize(TtsRequest(text, voiceId: voiceId));
+        // Workers return MP3; an on-device surface returns the system
+        // engine's RIFF/WAV. Tag by header so clients pick the right decoder.
+        final isWav = audio.length >= 12 &&
+            String.fromCharCodes(audio.take(4)) == 'RIFF' &&
+            String.fromCharCodes(audio.skip(8).take(4)) == 'WAVE';
+        return Response.ok(audio, headers: {'content-type': isWav ? 'audio/wav' : 'audio/mpeg'});
       } on TtsException catch (e) {
         return _json({'detail': 'tts unavailable: ${e.message}'}, status: 503);
       }

@@ -79,7 +79,7 @@ class ResolvedChannel {
 }
 
 class ProviderRouter {
-  ProviderRouter(this._db)
+  ProviderRouter(this._db, {this.localStt, this.localTts})
     : _keys = ProviderKeyStore(_db),
       _settings = ProviderSettings.decode(_db.getSetting(_settingsKey));
 
@@ -87,6 +87,13 @@ class ProviderRouter {
 
   final LocalDb _db;
   final ProviderKeyStore _keys;
+
+  /// In-process on-device inference for the `local-stt` / `local-tts` cards.
+  /// Null (the standalone harness) keeps those cards on their HTTP worker
+  /// ports; a host app passes real on-device surfaces and the cards never
+  /// open a socket.
+  final SttSurface? localStt;
+  final TtsSurface? localTts;
   ProviderSettings _settings;
 
   ProviderSettings get settings => _settings;
@@ -239,11 +246,18 @@ class _RoutingStt implements SttSurface {
   _RoutingStt(this._router);
   final ProviderRouter _router;
 
+  /// The `local-stt` card serves in-process when the host injected an
+  /// on-device surface; otherwise it is the harness's HTTP worker.
+  bool _onDevice(ResolvedChannel c) => c.id == 'local-stt' && _router.localStt != null;
+
   @override
   Future<SttResult> transcribePcm(Uint8List pcm16, {int sampleRate = 16000, int channels = 1, String? language}) async {
     Object? lastErr;
     for (final c in _router.resolve(ProviderCapability.asr)) {
       try {
+        if (_onDevice(c)) {
+          return await _router.localStt!.transcribePcm(pcm16, sampleRate: sampleRate, channels: channels, language: language);
+        }
         final client = _sttClientFor(c);
         try {
           return await client.transcribePcm(pcm16, sampleRate: sampleRate, channels: channels, language: language);
@@ -262,6 +276,9 @@ class _RoutingStt implements SttSurface {
     Object? lastErr;
     for (final c in _router.resolve(ProviderCapability.asr)) {
       try {
+        if (_onDevice(c)) {
+          return await _router.localStt!.transcribeMultipart(body, contentType);
+        }
         final client = _sttClientFor(c);
         try {
           return await client.transcribeMultipart(body, contentType);
@@ -280,11 +297,19 @@ class _RoutingTts implements TtsSurface {
   _RoutingTts(this._router);
   final ProviderRouter _router;
 
+  /// The `local-tts` card serves in-process when the host injected an
+  /// on-device surface.
+  bool _onDevice(ResolvedChannel c) => c.id == 'local-tts' && _router.localTts != null;
+
   @override
   Future<Uint8List> synthesize(TtsRequest req) async {
     Object? lastErr;
     for (final c in _router.resolve(ProviderCapability.tts)) {
       try {
+        if (_onDevice(c)) {
+          // No voiceId: the on-device surface picks the system default voice.
+          return await _router.localTts!.synthesize(TtsRequest(req.text));
+        }
         final client = _ttsClientFor(c);
         try {
           final voice = req.voiceId ?? (c.voice.isEmpty ? null : c.voice);
