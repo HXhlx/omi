@@ -201,13 +201,18 @@ const List<ProviderDescriptor> kProviderCatalog = <ProviderDescriptor>[
     },
     defaultVoice: 'longanqian',
   ),
+  // 云知声 MaaS (maas-api.unisound.com, OpenAI-compatible). U Plan has a free
+  // tier plus a free-token campaign. Key from maas.unisound.com console.
   ProviderDescriptor(
     id: 'unisound',
     label: '云知声',
-    capabilities: {ProviderCapability.asr, ProviderCapability.tts},
+    capabilities: {ProviderCapability.asr, ProviderCapability.tts, ProviderCapability.llm, ProviderCapability.vision},
+    defaultBase: 'https://maas-api.unisound.com/v1',
     staticModels: {
       'asr': ['u2-asr'],
       'tts': ['u2-tts'],
+      'llm': ['u2-flash', 'u2'],
+      'vision': ['u1-ocr'],
     },
     defaultVoice: 'cn_male_chenyu',
   ),
@@ -237,10 +242,12 @@ const List<ProviderDescriptor> kProviderCatalog = <ProviderDescriptor>[
     defaultVoice: 'zh_female_vv_uranus_bigtts',
     discoverable: false,
   ),
+  // 硅基流动: 0元 free models (chat, ASR, embedding, rerank, image) —
+  // cloud.siliconflow.cn key.
   ProviderDescriptor(
     id: 'siliconflow',
     label: '硅基流动',
-    capabilities: {ProviderCapability.asr},
+    capabilities: {ProviderCapability.asr, ProviderCapability.llm, ProviderCapability.embed, ProviderCapability.vision},
     defaultBase: 'https://api.siliconflow.cn/v1',
     staticModels: {
       'asr': [
@@ -248,6 +255,41 @@ const List<ProviderDescriptor> kProviderCatalog = <ProviderDescriptor>[
         'XingChenAGI/XingChenASR-V3.2-Ultra',
         'XingChenAGI/XingChenGSR-V1.0',
       ],
+      // Free chat models (0元 tier).
+      'llm': ['THUDM/GLM-Z1-9B-0414', 'tencent/Hunyuan-MT-7B'],
+      // Free embeddings (BAAI non-Pro tier).
+      'embed': ['BAAI/bge-m3', 'BAAI/bge-large-zh-v1.5'],
+      'vision': ['PaddlePaddle/PaddleOCR-VL-1.5'],
+    },
+  ),
+  // 魔搭社区 ModelScope API-Inference (OpenAI-compatible, free tier with a
+  // ModelScope account token from modelscope.cn → 访问令牌).
+  ProviderDescriptor(
+    id: 'modelscope',
+    label: '魔搭社区',
+    capabilities: {ProviderCapability.llm, ProviderCapability.vision},
+    defaultBase: 'https://api-inference.modelscope.cn/v1',
+    staticModels: {
+      'llm': [
+        'deepseek-ai/DeepSeek-V4-Flash-0731',
+        'Qwen/Qwen3.5-27B',
+        'ZhipuAI/GLM-4.7-Flash',
+        'moonshotai/Kimi-K3.1-Pro',
+      ],
+      'vision': ['OpenGVLab/InternVL3_5-241B-A28B', 'Qwen/Qwen3.5-397B-A17B'],
+    },
+    // /v1/models lists the full 38-model lineup live.
+    discoverable: true,
+  ),
+  // 讯飞 MaaS (spark-api-open.xf-yun.com, OpenAI-style). Free tier covers
+  // Spark LLM chat; embedding/rerank/OCR documented on xfyun.cn console.
+  ProviderDescriptor(
+    id: 'xfyun',
+    label: '讯飞 MaaS',
+    capabilities: {ProviderCapability.llm},
+    defaultBase: 'https://spark-api-open.xf-yun.com/v1',
+    staticModels: {
+      'llm': ['spark-max', 'spark-4.0-ultra', 'spark-lite'],
     },
   ),
   ProviderDescriptor(

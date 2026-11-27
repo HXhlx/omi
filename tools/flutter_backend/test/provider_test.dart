@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_backend/src/db.dart';
+import 'package:flutter_backend/src/embed_client.dart';
 import 'package:flutter_backend/src/provider_catalog.dart';
 import 'package:flutter_backend/src/provider_router.dart';
 import 'package:flutter_backend/src/provider_settings.dart';
@@ -65,12 +66,19 @@ void main() {
   });
 
   group('settings round-trip', () {
-    test('defaults point routes at the local cards; llm stays empty', () {
+    test('defaults: local primaries, domestic free-tier fallbacks', () {
       final s = ProviderSettings.defaults();
       expect(s.routing.asr.primary, 'local-stt');
       expect(s.routing.tts.primary, 'local-tts');
       expect(s.routing.llm.primary, isEmpty);
       expect(s.routing.realtime.primary, isEmpty);
+      // Domestic providers sit ahead of everything else in the fallback
+      // chains: a key-less card is skipped, the first key the user fills
+      // becomes the working route.
+      expect(s.routing.llm.fallbacks, ['modelscope', 'siliconflow', 'unisound', 'xfyun']);
+      expect(s.routing.asr.fallbacks, ['siliconflow', 'unisound']);
+      expect(s.routing.embed!.primary, 'local-embed');
+      expect(s.routing.embed!.fallbacks, ['siliconflow']);
     });
 
     test('encode/decode preserves cards, selection and routes', () {
@@ -247,6 +255,27 @@ void main() {
 
     tearDown(() => db.close());
 
+    test('embed route: on-device surface for local, cloud client for siliconflow', () async {
+      final router = ProviderRouter(db, localEmbed: _FakeEmbed());
+      // local-embed activates once its model row exists.
+      router.keys.setModelState('local-embed', model: 'bge-base-zh-v1.5', sizeBytes: 102517333);
+      final vectors = await router.embedSurface().embed(['你好', 'hello']);
+      expect(vectors.length, 2);
+      expect(vectors.first, [1.0, 2.0]);
+
+      // Without the model row the chain skips local and uses the keyed cloud
+      // card (siliconflow default fallback) — an EmbedException here because
+      // the fake upstream does not exist; proving the chain moved past local.
+      router.keys.clearModelState('local-embed');
+      router.keys.setKey('siliconflow', 'sk-test');
+      try {
+        await router.embedSurface().embed(['hi']);
+        fail('expected EmbedException from the unreachable cloud upstream');
+      } on EmbedException catch (e) {
+        expect(e.toString(), contains('no usable embed channel'));
+      }
+    });
+
     test('local-stt card routes to the injected in-process surface, not HTTP', () async {
       final calls = <List<Object?>>[];
       final router = ProviderRouter(
@@ -328,4 +357,10 @@ class _FakeStt implements SttSurface {
 class _FakeTts implements TtsSurface {
   @override
   Future<Uint8List> synthesize(TtsRequest req) async => Uint8List.fromList([9, 9, 9]);
+}
+
+class _FakeEmbed implements EmbedSurface {
+  @override
+  Future<List<List<double>>> embed(List<String> texts) async =>
+      [for (final _ in texts) [1.0, 2.0]];
 }

@@ -79,7 +79,7 @@ class Api {
       conversations: _conversations,
       knowledge: _knowledge,
       llm: _llm,
-      embed: _providers.localEmbed,
+      embed: _providers.embedSurface(),
     );
     _extra = ExtraRoutes(conversations: _conversations, knowledge: _knowledge, users: _users, llm: _llm);
   }
@@ -660,8 +660,8 @@ class Api {
         final body = await _body(req);
         if (path.contains('embed')) {
           final texts = _embedRequestTexts(body);
-          final surface = _providers.localEmbed;
-          if (surface != null && texts.isNotEmpty) {
+          final surface = _providers.embedSurface();
+          if (texts.isNotEmpty) {
             try {
               final vectors = await surface.embed(texts);
               return _json(_embedReplyVectors(vectors));
@@ -1270,10 +1270,9 @@ class Api {
   /// when the local-embed engine is present so semantic search finds the
   /// memory later. Embedding failure never blocks the write.
   Future<Memory> _withEmbedding(Memory m) async {
-    final surface = _providers.localEmbed;
-    if (surface == null || m.content.isEmpty) return m;
+    if (m.content.isEmpty) return m;
     try {
-      final vectors = await surface.embed([m.content]);
+      final vectors = await _providers.embedSurface().embed([m.content]);
       if (vectors.length == 1) return _copyWithEmbedding(m, vectors.first);
     } catch (_) {}
     return m;
@@ -1292,10 +1291,9 @@ class Api {
   /// the on-device embedding surface is active; plain LIKE otherwise, and as
   /// fallback when no stored memory carries a vector.
   Future<List<Memory>> _searchMemoriesSmart(String query, {int limit = 10}) async {
-    final surface = _providers.localEmbed;
-    if (surface != null && query.trim().isNotEmpty) {
+    if (query.trim().isNotEmpty) {
       try {
-        final vector = (await surface.embed([query])).first;
+        final vector = (await _providers.embedSurface().embed([query])).first;
         final hits = _knowledge.searchMemoriesVector(vector, limit: limit);
         if (hits != null) return hits;
       } catch (_) {

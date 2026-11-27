@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'db.dart';
+import 'embed_client.dart';
 import 'llm_client.dart';
 import 'provider_catalog.dart';
 import 'provider_settings.dart';
@@ -197,6 +198,7 @@ class ProviderRouter {
   LlmSurface llmSurface() => _RoutingLlm(this);
   SttSurface sttSurface() => _RoutingStt(this);
   TtsSurface ttsSurface() => _RoutingTts(this);
+  EmbedSurface embedSurface() => _RoutingEmbed(this);
 }
 
 LlmClient _llmClientFor(ResolvedChannel c) {
@@ -367,5 +369,46 @@ class _RoutingTts implements TtsSurface {
       }
     }
     throw TtsException('no usable TTS channel: $lastErr');
+  }
+}
+
+/// Embedding route: the on-device surface for the `local-embed` card, the
+/// OpenAI `/v1/embeddings` client for cloud cards (siliconflow bge-m3
+/// free tier, modelscope, ...).
+class _RoutingEmbed implements EmbedSurface {
+  _RoutingEmbed(this._router);
+  final ProviderRouter _router;
+
+  @override
+  Future<List<List<double>>> embed(List<String> texts) async {
+    Object? lastErr;
+    for (final c in _router.resolve(ProviderCapability.embed)) {
+      try {
+        if (c.id == 'local-embed') {
+          final surface = _router.localEmbed;
+          if (surface == null) {
+            throw ProviderUnsupported('local-embed: model not installed');
+          }
+          return await surface.embed(texts);
+        }
+        final upstream = c.base.trim();
+        if (upstream.isEmpty) {
+          throw ProviderUnsupported('${c.id}: no embed base');
+        }
+        final client = EmbedClient(
+          upstream: upstream.replaceAll(RegExp(r'/+$'), ''),
+          apiKey: c.key,
+          model: c.model.isEmpty ? 'BAAI/bge-m3' : c.model,
+        );
+        try {
+          return await client.embed(texts);
+        } finally {
+          client.close();
+        }
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw EmbedException('no usable embed channel: $lastErr');
   }
 }

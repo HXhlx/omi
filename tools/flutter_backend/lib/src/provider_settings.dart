@@ -186,13 +186,16 @@ class ProviderRouting {
       ProviderRouting(asr: RouteChain(), tts: RouteChain(), realtime: RouteChain(), llm: RouteChain());
 
   /// Local defaults so a fresh install keeps the single-channel behaviour.
-  /// LLM routes stay empty: no on-device LLM exists — chat activates only
-  /// after the user adds a key on a cloud card.
+  /// LLM primary stays empty (no on-device LLM) with the domestic free-tier
+  /// providers as fallbacks: a card without a key is skipped automatically,
+  /// so the first key the user fills (modelscope / siliconflow / unisound /
+  /// xfyun) becomes the working chat path.
   factory ProviderRouting.localDefaults() => ProviderRouting(
-    asr: RouteChain(primary: 'local-stt'),
-    tts: RouteChain(primary: 'local-tts'),
+    asr: RouteChain(primary: 'local-stt', fallbacks: ['siliconflow', 'unisound']),
+    tts: RouteChain(primary: 'local-tts', fallbacks: ['unisound']),
     realtime: RouteChain(),
-    llm: RouteChain(),
+    llm: RouteChain(fallbacks: ['modelscope', 'siliconflow', 'unisound', 'xfyun']),
+    embed: RouteChain(primary: 'local-embed', fallbacks: ['siliconflow']),
   );
 
   RouteChain chainFor(ProviderCapability cap) => switch (cap) {
