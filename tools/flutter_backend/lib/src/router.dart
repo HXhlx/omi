@@ -776,7 +776,7 @@ class Api {
         if (m.content.isEmpty) {
           return _json({'detail': 'content must not be empty'}, status: 400);
         }
-        _knowledge.upsertMemory(m);
+        _knowledge.upsertMemory(await _withEmbedding(m));
         return _json(m.toWire());
       }
       if (method == 'DELETE') {
@@ -792,7 +792,8 @@ class Api {
         final map = raw as Map;
         final content = (map['content'] as String? ?? '').trim();
         if (content.isEmpty) continue;
-        _knowledge.upsertMemory(Memory(id: _uuid.v4(), content: content, createdAt: DateTime.now()));
+        _knowledge.upsertMemory(await _withEmbedding(
+            Memory(id: _uuid.v4(), content: content, createdAt: DateTime.now())));
         n++;
       }
       return _json({'created': n});
@@ -809,7 +810,7 @@ class Api {
           category: body['category'] as String? ?? existing.category,
           createdAt: existing.createdAt,
         );
-        _knowledge.upsertMemory(m);
+        _knowledge.upsertMemory(await _withEmbedding(m));
         return _json(m.toWire());
       }
       if (method == 'DELETE') {
@@ -1265,6 +1266,28 @@ class Api {
   };
 
   /// Gemini `embedContent`/`batchEmbedContents` reply with a fixed 1024-dim
+  /// Memory creation/edition helper: attach an on-device embedding vector
+  /// when the local-embed engine is present so semantic search finds the
+  /// memory later. Embedding failure never blocks the write.
+  Future<Memory> _withEmbedding(Memory m) async {
+    final surface = _providers.localEmbed;
+    if (surface == null || m.content.isEmpty) return m;
+    try {
+      final vectors = await surface.embed([m.content]);
+      if (vectors.length == 1) return _copyWithEmbedding(m, vectors.first);
+    } catch (_) {}
+    return m;
+  }
+
+  static Memory _copyWithEmbedding(Memory m, List<double> v) => Memory(
+        id: m.id,
+        content: m.content,
+        category: m.category,
+        createdAt: m.createdAt,
+        sourceConversationId: m.sourceConversationId,
+        embedding: v,
+      );
+
   /// Memory search: semantic (embed query, cosine over stored vectors) when
   /// the on-device embedding surface is active; plain LIKE otherwise, and as
   /// fallback when no stored memory carries a vector.
