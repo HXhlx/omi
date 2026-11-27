@@ -130,6 +130,8 @@ dependencies:
   video_player: ^2.8.2
   web_socket_channel: ^3.0.3
   image_picker: ^1.1.2
+  # Silent periodic capture for the chest-camera mode (no picker UI, unlike image_picker).
+  camera: ^0.12.2
   timeago: ^3.7.0
   app_links: ^6.3.2
   flutter_svg: ^2.0.16

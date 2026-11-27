@@ -682,6 +682,22 @@ class SharedPreferencesUtil {
 
   set batchModeEnabled(bool value) => saveBool('batchModeEnabled', value);
 
+  // Chest-mount camera: the phone worn in a chest pocket takes one silent rear-
+  // camera photo every 30 seconds during a live session, feeding the same photo
+  // pipeline a camera-capable wearable would (base64 WS chunks -> backend
+  // describe_image). Effective at the next capture start.
+  bool get chestCameraEnabled => getBool('chestCameraEnabled');
+
+  set chestCameraEnabled(bool value) => saveBool('chestCameraEnabled', value);
+
+  // Chest-mount video mode: the chest camera records one clip per tick instead
+  // of a still; the clip's keyframe rides the photo pipeline (content type
+  // image/jpeg;chest-segment) so the backend can align it by capture time.
+  // Effective at the next capture start.
+  bool get chestCameraVideoMode => getBool('chestCameraVideoMode');
+
+  set chestCameraVideoMode(bool value) => saveBool('chestCameraVideoMode', value);
+
   // Phone-mic batch capture marker. false = explicit Transcribe Later (files
   // named audio_omibatchphone_...), true = automatic offline fallback (files
   // named audio_omibatchphoneauto_...). Read natively as flutter.phoneBatchAuto.

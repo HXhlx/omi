@@ -9246,6 +9246,20 @@ class AppLocalizationsCs extends AppLocalizations {
       'Používáte vlastního poskytovatele přepisu. Synchronizace těchto nahrávek je přepíše na serverech Omi a započítají se do limitu přepisu vašeho tarifu.';
 
   @override
+  String get chestCameraTitle => 'Hrudní kamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Při nahrávání pořídí každých 30 sekund tichý snímek zadní kamerou pro popis scény umělou inteligencí';
+
+  @override
+  String get chestCameraVideoTitle => 'Režim videa';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Místo statických snímků zaznamenává 30sekundový klip pokaždé; první snímek jde jako klíčový s přesným časovým razítkem pro sladění vět';
+
+  @override
   String get transcribeLaterTitle => 'Přepsat později';
 
   @override

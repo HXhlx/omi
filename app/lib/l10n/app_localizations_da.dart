@@ -9234,6 +9234,20 @@ class AppLocalizationsDa extends AppLocalizations {
       'Du bruger din egen transskriptionsudbyder. Synkronisering af disse optagelser transskriberer dem på Omis servere i stedet, og de tæller med i din plans transskriptionsgrænse.';
 
   @override
+  String get chestCameraTitle => 'Brystkamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Tag et stille billede hvert 30. sekund med bagsidenkameraet under optagelse til AI-scenebeskrivelser';
+
+  @override
+  String get chestCameraVideoTitle => 'Videotilstand';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'I stedet for stillbilleder optages en 30-sekunders videoklip hver gang; første billede sendes som keyframe med præcist tidsstempel til sætningsjustering';
+
+  @override
   String get transcribeLaterTitle => 'Transskriber senere';
 
   @override

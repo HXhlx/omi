@@ -9328,6 +9328,20 @@ class AppLocalizationsTl extends AppLocalizations {
       'Gumagamit ka ng sarili mong transcription provider. Kapag in-sync ang mga recording na ito, ita-transcribe ang mga ito sa mga server ng Omi at mabibilang sa limitasyon ng transcription ng iyong plan.';
 
   @override
+  String get chestCameraTitle => 'Camera sa Dibdib';
+
+  @override
+  String get chestCameraDescription =>
+      'Habang nagre-rekord, kumukuha ng isang tahimik na litrato kada 30 segundo gamit ang rear camera para sa paglalarawan ng eksena ng AI';
+
+  @override
+  String get chestCameraVideoTitle => 'Mode ng Video';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Sa halip na mga still photo, nagre-rekord ng 30-segundong video clip kada oras; ang unang frame ay ipinapadala bilang keyframe na may eksaktong timestamp para sa pag-align ng mga pangungusap';
+
+  @override
   String get transcribeLaterTitle => 'I-transcribe Mamaya';
 
   @override

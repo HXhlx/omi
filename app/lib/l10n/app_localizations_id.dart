@@ -9246,6 +9246,20 @@ class AppLocalizationsId extends AppLocalizations {
       'Anda memakai penyedia transkripsi sendiri. Menyinkronkan rekaman ini akan mentranskripsikannya di server Omi dan dihitung dalam batas transkripsi paket Anda.';
 
   @override
+  String get chestCameraTitle => 'Kamera Dada';
+
+  @override
+  String get chestCameraDescription =>
+      'Saat merekam, ambil satu foto secara senyap setiap 30 detik dengan kamera belakang untuk deskripsi adegan oleh AI';
+
+  @override
+  String get chestCameraVideoTitle => 'Mode Video';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Alih-alih foto diam, merekam klip video 30 detik setiap kali; bingkai pertama dikirim sebagai keyframe dengan stempel waktu persis untuk perataan kalimat';
+
+  @override
   String get transcribeLaterTitle => 'Transkripsi Nanti';
 
   @override

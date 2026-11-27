@@ -9175,6 +9175,20 @@ class AppLocalizationsHe extends AppLocalizations {
       'אתה משתמש בספק תמלול משלך. סנכרון ההקלטות האלה יתמלל אותן בשרתי Omi והן ייכללו במגבלת התמלול של התוכנית שלך.';
 
   @override
+  String get chestCameraTitle => 'מצלמת חזה';
+
+  @override
+  String get chestCameraDescription =>
+      'במהלך ההקלטה, מצלם בשקט תמונה אחת כל 30 שניות במצלמה האחורית לתיאורי סצנה של AI';
+
+  @override
+  String get chestCameraVideoTitle => 'מצב וידאו';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'במקום תמונות סטילס, מקליט קליפ של 30 שניות בכל פעם; הפריים הראשון נשלח כפריים מפתח עם חותמת זמן מדויקת ליישור משפטים';
+
+  @override
   String get transcribeLaterTitle => 'תמלול מאוחר יותר';
 
   @override

@@ -9187,6 +9187,20 @@ class AppLocalizationsAr extends AppLocalizations {
       'أنت تستخدم مزوّد النسخ الخاص بك. مزامنة هذه التسجيلات تنسخها على خوادم Omi بدلاً من ذلك، وتُحتسب ضمن حد النسخ في باقتك.';
 
   @override
+  String get chestCameraTitle => 'كاميرا الصدر';
+
+  @override
+  String get chestCameraDescription =>
+      'أثناء التسجيل، التقط صورة صامتة كل 30 ثانية بالكاميرا الخلفية لوصف المشهد بالذكاء الاصطناعي';
+
+  @override
+  String get chestCameraVideoTitle => 'وضع فيديو الصدر';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'بدلاً من الصور الثابتة، سجّل مقطع فيديو مدته 30 ثانية في كل مرة؛ يُرسل الإطار الأول كإطار رئيسي مع طابع زمني دقيق لمحاذاة الجُمل';
+
+  @override
   String get transcribeLaterTitle => 'التفريغ النصي لاحقًا';
 
   @override

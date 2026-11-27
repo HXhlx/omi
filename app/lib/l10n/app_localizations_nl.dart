@@ -9267,6 +9267,20 @@ class AppLocalizationsNl extends AppLocalizations {
       'Je gebruikt je eigen transcriptieprovider. Door deze opnames te synchroniseren worden ze op de servers van Omi getranscribeerd en tellen ze mee voor de transcriptielimiet van je abonnement.';
 
   @override
+  String get chestCameraTitle => 'Borstcamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Neemt tijdens de opname stilletjes elke 30 seconden één foto met de achtercamera voor AI-scènebeschrijvingen';
+
+  @override
+  String get chestCameraVideoTitle => 'Videomodus';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Neemt in plaats van stilstaande beelden elke keer een videoclip van 30 seconden op; het eerste frame gaat als keyframe met exacte tijdstempel voor zinsuitlijning';
+
+  @override
   String get transcribeLaterTitle => 'Later transcriberen';
 
   @override

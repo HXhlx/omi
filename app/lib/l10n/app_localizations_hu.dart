@@ -9286,6 +9286,20 @@ class AppLocalizationsHu extends AppLocalizations {
       'Saját átírási szolgáltatót használsz. Ezek a felvételek szinkronizáláskor az Omi szerverein kerülnek átírásra, és beleszámítanak a csomagod átírási keretébe.';
 
   @override
+  String get chestCameraTitle => 'Mellkamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Felvétel közben 30 másodpercenként csendben készít egy fotót a hátsó kamerával AI jelenetleírásokhoz';
+
+  @override
+  String get chestCameraVideoTitle => 'Videómód';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Állóképek helyett minden alkalommal 30 másodperces videoklipet rögzít; az első képkocka kulcsképként megy pontos időbélyeggel a mondatok igazításához';
+
+  @override
   String get transcribeLaterTitle => 'Átírás később';
 
   @override

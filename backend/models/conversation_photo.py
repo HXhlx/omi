@@ -60,7 +60,79 @@ class ConversationPhoto(BaseModel):
                         timestamp_str = f'[{format_instant(p.created_at, clock)}] '
                     else:
                         timestamp_str = f"[{p.created_at.strftime('%H:%M:%S')}] "
-                descriptions.append(f'- {timestamp_str}"{p.description}"')
+                kind = ''
+                # A recorded chest-camera segment keyframe: labels the item as a clip
+                # keyframe so the model reads "segment start", not a lone still.
+                content_type = (p.content_type or '').lower()
+                if 'chest-segment' in content_type:
+                    kind = ' (recorded segment keyframe)'
+                descriptions.append(f'- {timestamp_str}"{p.description}"{kind}')
+
+        if not descriptions:
+            return 'None'
+        return '\n'.join(descriptions)
+
+    @staticmethod
+    def photos_as_aligned_string(
+        photos: List['ConversationPhoto'],
+        segments: List[dict],
+        *,
+        started_at: Optional[datetime] = None,
+        clock: Optional[DisplayClock] = None,
+        segment_window: float = 15.0,
+    ) -> str:
+        """Photos and transcript sentences on one elapsed timeline.
+
+        For each photo (or recorded-segment keyframe) the sentence whose
+        [start, end] window contains the photo's capture offset is quoted next
+        to its description, as ``[+0:12:30] "desc" — then: "sentence text"``.
+        A photo outside every window is rendered with no sentence (the model
+        sees exactly what was said nowhere near it, not a guess).
+
+        ``segments`` are transcript segment dicts with ``start``/``end`` in
+        seconds from the conversation start and a ``text``. When
+        ``started_at`` is None (offsets unknown), the photo renders with its
+        wall-clock only and no sentence is attempted.
+        """
+        if not photos:
+            return 'None'
+        if started_at is None:
+            return ConversationPhoto.photos_as_string(photos, include_timestamps=True, clock=clock)
+        windows: list[tuple[float, float, str]] = []
+        for seg in segments:
+            try:
+                start = float(seg.get('start'))
+                end = float(seg.get('end'))
+            except (TypeError, ValueError):
+                continue
+            text = str(seg.get('text') or '').strip()
+            if text:
+                windows.append((start, end, text))
+
+        descriptions: list[str] = []
+        for p in photos:
+            if not (p.description and p.description.strip()):
+                continue
+            offset = (p.created_at - started_at).total_seconds()
+            # Sentence containing the capture instant wins; a segment keyframe
+            # may fall in a pause, then the nearest sentence within
+            # segment_window seconds makes the pair explicit instead of silent.
+            matched: Optional[tuple[float, str]] = None
+            for start, end, text in windows:
+                if start <= offset <= end:
+                    matched = (offset, text)
+                    break
+            if matched is None:
+                nearest: Optional[tuple[float, str]] = None
+                for start, end, text in windows:
+                    distance = min(abs(offset - start), abs(offset - end))
+                    if distance <= segment_window and (nearest is None or distance < nearest[0]):
+                        nearest = (distance, text)
+                if nearest is not None:
+                    matched = (offset, nearest[1])
+            sentence = f' — then: "{matched[1]}"' if matched is not None else ''
+            kind = ' (recorded segment keyframe)' if 'chest-segment' in (p.content_type or '').lower() else ''
+            descriptions.append(f'- [{format_elapsed(offset)}] "{p.description}"{kind}{sentence}')
 
         if not descriptions:
             return 'None'

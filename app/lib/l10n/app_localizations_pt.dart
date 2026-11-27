@@ -9255,6 +9255,20 @@ class AppLocalizationsPt extends AppLocalizations {
       'Você usa seu próprio provedor de transcrição. Sincronizar estas gravações as transcreve nos servidores da Omi e elas contam para o limite de transcrição do seu plano.';
 
   @override
+  String get chestCameraTitle => 'Câmera de peito';
+
+  @override
+  String get chestCameraDescription =>
+      'Durante a gravação, tira silenciosamente uma foto a cada 30 segundos com a câmera traseira para descrições de cena por IA';
+
+  @override
+  String get chestCameraVideoTitle => 'Modo de vídeo';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Em vez de fotos fixas, grava um clipe de 30 segundos a cada vez; o primeiro quadro é enviado como quadro-chave com carimbo de data/hora exato para alinhar frases';
+
+  @override
   String get transcribeLaterTitle => 'Transcrever depois';
 
   @override

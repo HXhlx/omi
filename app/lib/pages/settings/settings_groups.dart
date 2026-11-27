@@ -178,7 +178,21 @@ class _RecordingGroupPageState extends State<RecordingGroupPage> with _GroupRows
     final accepted = await context.read<CaptureProvider>().setBatchMode(value);
     if (!mounted) return;
     if (!accepted) OmiFeedback.error(context, context.l10n.transcribeLaterNote);
+    // Offline batch mode has no realtime socket, so chest-camera photos would
+    // have nowhere to go; turn the two state settings off together.
+    if (accepted && value) _prefs.chestCameraEnabled = false;
     setState(() {});
+  }
+
+  /// Chest-camera photos flow over the realtime socket, so the toggle
+  /// refuses to coexist with Transcribe Later's offline mode.
+  Future<void> _setChestCamera(bool value) async {
+    if (value && _prefs.batchModeEnabled) {
+      if (mounted) OmiFeedback.error(context, context.l10n.transcribeLaterNote);
+      return;
+    }
+    _prefs.chestCameraEnabled = value;
+    if (mounted) setState(() {});
   }
 
   @override
@@ -245,6 +259,26 @@ class _RecordingGroupPageState extends State<RecordingGroupPage> with _GroupRows
               value: _prefs.batchModeEnabled,
               onChanged: _setTranscribeLater,
             ),
+            OmiSettingsRow.toggle(
+              key: const ValueKey('settings_row_chestCamera'),
+              leading: const FaIcon(FontAwesomeIcons.camera),
+              title: l10n.chestCameraTitle,
+              subtitle: l10n.chestCameraDescription,
+              value: _prefs.chestCameraEnabled,
+              onChanged: _setChestCamera,
+            ),
+            if (_prefs.chestCameraEnabled)
+              OmiSettingsRow.toggle(
+                key: const ValueKey('settings_row_chestCameraVideo'),
+                leading: const FaIcon(FontAwesomeIcons.video),
+                title: l10n.chestCameraVideoTitle,
+                subtitle: l10n.chestCameraVideoDescription,
+                value: _prefs.chestCameraVideoMode,
+                onChanged: (value) {
+                  _prefs.chestCameraVideoMode = value;
+                  setState(() {});
+                },
+              ),
             if (PlatformService.isAndroid)
               OmiSettingsRow.toggle(
                 key: const ValueKey('settings_row_backgroundMode'),

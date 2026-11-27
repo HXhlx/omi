@@ -9270,6 +9270,20 @@ class AppLocalizationsLv extends AppLocalizations {
       'Jūs izmantojat savu transkripcijas pakalpojumu. Šo ierakstu sinhronizēšana tos transkribē Omi serveros, un tie tiek ieskaitīti jūsu plāna transkripcijas limitā.';
 
   @override
+  String get chestCameraTitle => 'Krūšu kamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Ierakstīšanas laikā ik pēc 30 sekundēm klusi uzņem vienu foto ar aizmugurējo kameru AI ainas aprakstiem';
+
+  @override
+  String get chestCameraVideoTitle => 'Video režīms';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Statisko attelu vietā katru reizi ieraksta 30 sekunžu video klipu; pirmais kadrs tiek nosūtīts kā atslēgas kadrs ar precīzu laika zīmogu teikumu līdzināšanai';
+
+  @override
   String get transcribeLaterTitle => 'Transkribēt vēlāk';
 
   @override

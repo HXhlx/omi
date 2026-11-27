@@ -9277,6 +9277,20 @@ class AppLocalizationsKn extends AppLocalizations {
       'ನೀವು ನಿಮ್ಮ ಸ್ವಂತ ಪ್ರತಿಲೇಖನ ಪೂರೈಕೆದಾರರನ್ನು ಬಳಸುತ್ತೀರಿ. ಈ ಧ್ವನಿಮುದ್ರಣಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿದರೆ ಅವು Omi ಸರ್ವರ್‌ಗಳಲ್ಲಿ ಪ್ರತಿಲೇಖನಗೊಳ್ಳುತ್ತವೆ ಮತ್ತು ನಿಮ್ಮ ಯೋಜನೆಯ ಪ್ರತಿಲೇಖನ ಮಿತಿಗೆ ಎಣಿಸಲಾಗುತ್ತದೆ.';
 
   @override
+  String get chestCameraTitle => 'ಚೆಸ್ಟ್ ಕ್ಯಾಮೆರಾ';
+
+  @override
+  String get chestCameraDescription =>
+      'ರೆಕಾರ್ಡಿಂಗ್ ಸಮಯದಲ್ಲಿ ಪ್ರತಿ 30 ಸೆಕೆಂಡುಗಳಿಗೆ ಹಿಂಬದಿ ಕ್ಯಾಮೆರಾದಿಂದ ಮೌನವಾಗಿ ಒಂದು ಫೋಟೋ ತೆಗೆಯುತ್ತದೆ, AI ದೃಶ್ಯ ವಿವರಣೆಗಾಗಿ';
+
+  @override
+  String get chestCameraVideoTitle => 'ವೀಡಿಯೊ ಮೋಡ್';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'ಸ್ಥಿರ ಫೋಟೊಗಳ ಬದಲಿಗೆ ಪ್ರತಿ ಬಾರಿ 30-ಸೆಕೆಂಡ್ ವೀಡಿಯೊ ಕ್ಲಿಪ್ ಅನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡುತ್ತದೆ; ಮೊದಲ ಫ್ರೇಮ್ ಅನ್ನು ವಾಕ್ಯ ಜೋಡಣೆಗಾಗಿ ನಿಖರ ಟೈಮ್‌ಸ್ಟ್ಯಾಂಪ್‌ನೊಂದಿಗೆ ಕೀಫ್ರೇಮ್ ಆಗಿ ಕಳುಹಿಸಲಾಗುತ್ತದೆ';
+
+  @override
   String get transcribeLaterTitle => 'ನಂತರ ಲಿಪ್ಯಂತರಿಸಿ';
 
   @override

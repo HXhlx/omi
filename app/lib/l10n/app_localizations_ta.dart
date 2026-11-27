@@ -9317,6 +9317,20 @@ class AppLocalizationsTa extends AppLocalizations {
       'நீங்கள் உங்கள் சொந்த படியெடுப்பு வழங்குநரைப் பயன்படுத்துகிறீர்கள். இந்தப் பதிவுகளை ஒத்திசைத்தால் அவை Omi சேவையகங்களில் படியெடுக்கப்படும், மேலும் உங்கள் திட்டத்தின் படியெடுப்பு வரம்பில் கணக்கிடப்படும்.';
 
   @override
+  String get chestCameraTitle => 'மார்பு கேமரா';
+
+  @override
+  String get chestCameraDescription =>
+      'பதிவு செய்யும் போது, ஒவ்வொரு 30 வினாடிகளிலும் பின்புற கேமராவால் அமைதியாக ஒரு புகைப்படம் எடுக்கிறது, AI காட்சி விளக்கத்திற்கு';
+
+  @override
+  String get chestCameraVideoTitle => 'வீடியோ பயன்முறை';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'நிலையான புகைப்படங்களுக்கு பதிலாக ஒவ்வொரு முறையும் 30 வினாடி வீடியோ கிளிப்பைப் பதிவு செய்கிறது; முதல் பிரேம் வாக்கியச் சீரமைப்புக்காக துல்லியமான நேர முத்திரையுடன் கீபிரேமாக அனுப்பப்படுகிறது';
+
+  @override
   String get transcribeLaterTitle => 'பின்னர் எழுத்தாக்கு';
 
   @override

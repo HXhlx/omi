@@ -223,6 +223,7 @@ def build_conversation_prompt_prefix(
     desktop_meeting_capture: bool = False,
     uid: Optional[str] = None,
     known_spellings: str = '',
+    segments: Optional[List[dict]] = None,
 ) -> ConversationPromptPrefix:
     """Render the shared context prefix for conversation-wide LLM tasks.
 
@@ -330,9 +331,16 @@ def build_conversation_prompt_prefix(
         source_speaker_names = dict(speaker_names)
 
     context_parts = ['CONVERSATION METADATA\n' + '\n'.join(metadata_lines), f'FULL TRANSCRIPT\n{transcript.strip()}']
-    photo_descriptions = (
-        ConversationPhoto.photos_as_string(photos, include_timestamps=True, clock=display_clock) if photos else ''
-    )
+    if segments:
+        # Sentence-level alignment: photo/segment-keyframe captures quoted next to the
+        # sentence spoken at their capture offset (see photos_as_aligned_string).
+        photo_descriptions = ConversationPhoto.photos_as_aligned_string(
+            photos or [], segments, started_at=aware_started_at, clock=display_clock
+        )
+    else:
+        photo_descriptions = (
+            ConversationPhoto.photos_as_string(photos, include_timestamps=True, clock=display_clock) if photos else ''
+        )
     if photo_descriptions and photo_descriptions != 'None':
         context_parts.append(f'CAPTURED PHOTO DESCRIPTIONS\n{photo_descriptions}')
 

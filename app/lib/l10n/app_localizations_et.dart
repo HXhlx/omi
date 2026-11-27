@@ -9239,6 +9239,20 @@ class AppLocalizationsEt extends AppLocalizations {
       'Kasutate oma transkriptsiooniteenust. Nende salvestiste sünkroonimine transkribeerib need Omi serverites ja need arvestatakse teie paketi transkriptsioonilimiidi sisse.';
 
   @override
+  String get chestCameraTitle => 'Rindkamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Salvestamise ajal võtab iga 30 sekundi järel vaikselt ühe pildi tagumise kaameraga tehisintellekti stseenikirjelduse jaoks';
+
+  @override
+  String get chestCameraVideoTitle => 'Videorežiim';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Piltide asemel salvestatakse iga kord 30-sekundiline videoklipp; esimene kaader saadetakse võtmekaadrina täpse ajatempliga lausete joondamiseks';
+
+  @override
   String get transcribeLaterTitle => 'Transkribeeri hiljem';
 
   @override

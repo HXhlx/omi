@@ -9246,6 +9246,20 @@ class AppLocalizationsFi extends AppLocalizations {
       'Käytät omaa litterointipalveluasi. Näiden tallenteiden synkronointi litteroi ne Omin palvelimilla, ja ne lasketaan tilauksesi litterointirajaan.';
 
   @override
+  String get chestCameraTitle => 'Rintakamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Ottaa tallennuksen aikana hiljaisesti kuvan 30 sekunnin välein takakameralla tekoälyn kohtausten kuvausten avuksi';
+
+  @override
+  String get chestCameraVideoTitle => 'Videotila';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Kiinteiden kuvien sijaan tallentaa 30 sekunnin videoleikkeen joka kerran; ensimmäinen kehys lähetetään avainkehyksenä tarkalla aikaleimalla lauseiden tasaamiseksi';
+
+  @override
   String get transcribeLaterTitle => 'Litteroi myöhemmin';
 
   @override

@@ -728,6 +728,9 @@ def _get_structured(
             transcript_segment_ids=transcript_segment_ids,
             roster=roster,
             desktop_meeting_capture=desktop_capture,
+            segments=[
+                {'start': segment.start, 'end': segment.end, 'text': segment.text} for segment in segments
+            ],
         )
         from utils.conversations import llm_input_dedupe
 

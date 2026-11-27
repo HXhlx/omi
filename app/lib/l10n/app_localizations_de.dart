@@ -9322,6 +9322,20 @@ class AppLocalizationsDe extends AppLocalizations {
       'Du verwendest einen eigenen Transkriptionsanbieter. Beim Synchronisieren werden diese Aufnahmen stattdessen auf den Servern von Omi transkribiert und auf das Transkriptionslimit deines Tarifs angerechnet.';
 
   @override
+  String get chestCameraTitle => 'Brustkamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Nimmt während der Aufnahme alle 30 Sekunden automatisch ein Foto mit der Rückkamera für KI-Szenenbeschreibungen';
+
+  @override
+  String get chestCameraVideoTitle => 'Videomodus';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Nimmt statt Standbildern alle 30 Sekunden einen Videoclip auf; das erste Frame geht als Keyframe mit exaktem Zeitstempel für die Satzausrichtung';
+
+  @override
   String get transcribeLaterTitle => 'Später transkribieren';
 
   @override

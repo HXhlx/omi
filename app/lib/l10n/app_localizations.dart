@@ -17175,6 +17175,30 @@ abstract class AppLocalizations {
   /// **'You use your own transcription provider. Syncing these recordings transcribes them on Omi\'s servers instead, and they count toward your plan\'s transcription limit.'**
   String get syncCustomSttWarningMessage;
 
+  /// Chest-mount periodic photo capture toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Chest Camera'**
+  String get chestCameraTitle;
+
+  /// Chest-mount periodic photo capture subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'While recording, silently take one photo every 30 seconds with the rear camera for AI scene descriptions'**
+  String get chestCameraDescription;
+
+  /// Chest-camera video toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Video Mode'**
+  String get chestCameraVideoTitle;
+
+  /// Chest-camera video subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Record a 30-second clip each tick instead of stills; the first frame is sent as a keyframe with an exact timestamp for sentence alignment'**
+  String get chestCameraVideoDescription;
+
   /// Title for the 'transcribe later' capture-mode toggle in device settings
   ///
   /// In en, this message translates to:

@@ -9246,6 +9246,20 @@ class AppLocalizationsVi extends AppLocalizations {
       'Bạn đang dùng nhà cung cấp phiên âm riêng. Đồng bộ các bản ghi này sẽ phiên âm chúng trên máy chủ của Omi và được tính vào giới hạn phiên âm của gói của bạn.';
 
   @override
+  String get chestCameraTitle => 'Camera ngực';
+
+  @override
+  String get chestCameraDescription =>
+      'Trong khi ghi âm, chụp lặng lẽ một ảnh mỗi 30 giây bằng camera sau để AI mô tả cảnh';
+
+  @override
+  String get chestCameraVideoTitle => 'Chế độ video';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Thay vì ảnh tĩnh, ghi một đoạn video 30 giây mỗi lần; khung hình đầu tiên được gửi làm khung hình chính với dấu thời gian chính xác để căn chỉnh câu';
+
+  @override
   String get transcribeLaterTitle => 'Phiên âm sau';
 
   @override

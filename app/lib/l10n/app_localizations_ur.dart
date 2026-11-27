@@ -9261,6 +9261,20 @@ class AppLocalizationsUr extends AppLocalizations {
       'آپ اپنا ذاتی ٹرانسکرپشن فراہم کنندہ استعمال کرتے ہیں۔ ان ریکارڈنگز کو سنک کرنے پر یہ Omi کے سرورز پر ٹرانسکرائب ہوں گی اور آپ کے پلان کی ٹرانسکرپشن حد میں شمار ہوں گی۔';
 
   @override
+  String get chestCameraTitle => 'چیسٹ کیمرہ';
+
+  @override
+  String get chestCameraDescription =>
+      'ریکارڈنگ کے دوران ہر 30 سیکنڈ میں پچھلی کیمرے سے خاموشی سے ایک تصویر لیتا ہے، AI منظر کی تفصیل کے لیے';
+
+  @override
+  String get chestCameraVideoTitle => 'ویڈیو موڈ';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'ساکن تصویروں کے بجائے ہر بار 30 سیکنڈ کا ویڈیو کلپ ریکارڈ کرتا ہے؛ پہلا فریم جملہ ہم آہنگی کے لیے عین وقت کے مہر کے ساتھ کی فریم کے طور پر بھیجا جاتا ہے';
+
+  @override
   String get transcribeLaterTitle => 'بعد میں ٹرانسکرائب کریں';
 
   @override

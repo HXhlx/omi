@@ -9251,6 +9251,20 @@ class AppLocalizationsBn extends AppLocalizations {
       'আপনি নিজের ট্রান্সক্রিপশন প্রদানকারী ব্যবহার করেন। এই রেকর্ডিংগুলি সিঙ্ক করলে সেগুলি Omi-এর সার্ভারে ট্রান্সক্রাইব হবে এবং আপনার প্ল্যানের ট্রান্সক্রিপশন সীমার মধ্যে গণনা হবে।';
 
   @override
+  String get chestCameraTitle => 'চেস্ট ক্যামেরা';
+
+  @override
+  String get chestCameraDescription =>
+      'রেকর্ডিং চলাকালীন প্রতি ৩০ সেকেন্ডে পিছনের ক্যামেরায় নিঃশব্দে একটি ছবি তোলে AI দৃশ্য বর্ণনার জন্য';
+
+  @override
+  String get chestCameraVideoTitle => 'ভিডিও মোড';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'ছবির বদলে প্রতি বার ৩০ সেকেন্ডের ভিডিও ক্লিপ রেকর্ড করে; প্রথম ফ্রেমটি কীফ্রেম হিসেবে নির্ভুল টাইমস্ট্যাম্প সহ বাক্য-সময় সামঞ্জস্যের জন্য যায়';
+
+  @override
   String get transcribeLaterTitle => 'পরে ট্রান্সক্রাইব করুন';
 
   @override

@@ -10984,6 +10984,22 @@
     "@syncCustomSttWarningMessage": {
         "description": "Body warning that syncing transcribes on Omi servers and counts toward the plan limit"
     },
+    "chestCameraTitle": "Chest Camera",
+    "@chestCameraTitle": {
+        "description": "Chest-mount periodic photo capture toggle"
+    },
+    "chestCameraDescription": "While recording, silently take one photo every 30 seconds with the rear camera for AI scene descriptions",
+    "@chestCameraDescription": {
+        "description": "Chest-mount periodic photo capture subtitle"
+    },
+    "chestCameraVideoTitle": "Video Mode",
+    "@chestCameraVideoTitle": {
+        "description": "Chest-camera video toggle"
+    },
+    "chestCameraVideoDescription": "Record a 30-second clip each tick instead of stills; the first frame is sent as a keyframe with an exact timestamp for sentence alignment",
+    "@chestCameraVideoDescription": {
+        "description": "Chest-camera video subtitle"
+    },
     "transcribeLaterTitle": "Transcribe Later",
     "@transcribeLaterTitle": {
         "description": "Title for the 'transcribe later' capture-mode toggle in device settings"

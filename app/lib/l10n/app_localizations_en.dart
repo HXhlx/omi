@@ -9238,6 +9238,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'You use your own transcription provider. Syncing these recordings transcribes them on Omi\'s servers instead, and they count toward your plan\'s transcription limit.';
 
   @override
+  String get chestCameraTitle => 'Chest Camera';
+
+  @override
+  String get chestCameraDescription =>
+      'While recording, silently take one photo every 30 seconds with the rear camera for AI scene descriptions';
+
+  @override
+  String get chestCameraVideoTitle => 'Video Mode';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Record a 30-second clip each tick instead of stills; the first frame is sent as a keyframe with an exact timestamp for sentence alignment';
+
+  @override
   String get transcribeLaterTitle => 'Transcribe Later';
 
   @override
