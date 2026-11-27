@@ -75,7 +75,12 @@ class Api {
     _tts = tts ?? router.ttsSurface();
     _stt = stt ?? router.sttSurface();
     _llm = llm ?? router.llmSurface();
-    _pipeline = ConversationPipeline(conversations: _conversations, knowledge: _knowledge, llm: _llm);
+    _pipeline = ConversationPipeline(
+      conversations: _conversations,
+      knowledge: _knowledge,
+      llm: _llm,
+      embed: _providers.localEmbed,
+    );
     _extra = ExtraRoutes(conversations: _conversations, knowledge: _knowledge, users: _users, llm: _llm);
   }
 
@@ -647,12 +652,23 @@ class Api {
       return _json({'available': true, 'provider': 'local'});
     }
     if (path.startsWith('v1/proxy/gemini')) {
-      // Desktop Gemini proxy: route generateContent/embedContent to the local
-      // LLM. Most call sites tolerate an OpenAI-shaped reply; embed batching
-      // is stubbed with a dimension-consistent zero vector.
+      // Desktop Gemini proxy: route generateContent to the local LLM;
+      // embedContent goes through the on-device embedding surface when the
+      // local-embed card is active (otherwise the zero-vector stub keeps
+      // shape-compatible replies flowing).
       if (method == 'POST') {
         final body = await _body(req);
         if (path.contains('embed')) {
+          final texts = _embedRequestTexts(body);
+          final surface = _providers.localEmbed;
+          if (surface != null && texts.isNotEmpty) {
+            try {
+              final vectors = await surface.embed(texts);
+              return _json(_embedReplyVectors(vectors));
+            } catch (_) {
+              // fall through to the stub below.
+            }
+          }
           return _json(_embedReply(body));
         }
         final messages = _geminiMessages(body);
@@ -805,14 +821,15 @@ class Api {
       final query = req.url.queryParameters['query'] ?? '';
       final limit = int.tryParse(req.url.queryParameters['limit'] ?? '') ?? 10;
       if (query.isEmpty) return _json({'items': <Object>[]});
-      final hits = _knowledge.searchMemories(query, limit: limit);
+      // Prefer semantic search when the embed engine is present.
+      final hits = await _searchMemoriesSmart(query, limit: limit);
       return _json({'items': hits.map((m) => m.toWire()).toList(), 'query': query});
     }
     if (path == 'memory/vector/search' && method == 'POST') {
       final body = await _body(req);
       final query = (body['query'] as String? ?? '').trim();
       if (query.isEmpty) return _json({'items': <Object>[]});
-      final hits = _knowledge.searchMemories(query, limit: int.tryParse('${body['limit'] ?? 10}') ?? 10);
+      final hits = await _searchMemoriesSmart(query, limit: int.tryParse('${body['limit'] ?? 10}') ?? 10);
       return _json({'items': hits.map((m) => m.toWire()).toList()});
     }
 
@@ -1248,6 +1265,23 @@ class Api {
   };
 
   /// Gemini `embedContent`/`batchEmbedContents` reply with a fixed 1024-dim
+  /// Memory search: semantic (embed query, cosine over stored vectors) when
+  /// the on-device embedding surface is active; plain LIKE otherwise, and as
+  /// fallback when no stored memory carries a vector.
+  Future<List<Memory>> _searchMemoriesSmart(String query, {int limit = 10}) async {
+    final surface = _providers.localEmbed;
+    if (surface != null && query.trim().isNotEmpty) {
+      try {
+        final vector = (await surface.embed([query])).first;
+        final hits = _knowledge.searchMemoriesVector(vector, limit: limit);
+        if (hits != null) return hits;
+      } catch (_) {
+        // engine failed mid-flight — fall through to LIKE.
+      }
+    }
+    return _knowledge.searchMemories(query, limit: limit);
+  }
+
   /// zero vector — enough shape for the desktop's cosine code to run without a
   /// real embedding provider.
   static Map<String, dynamic> _embedReply(Map<String, dynamic> body) {
@@ -1262,6 +1296,44 @@ class Api {
     return {
       'embedding': {'values': zero},
     };
+  }
+
+  /// Real-vector variant of [_embedReply]: one `values` per input text.
+  static Map<String, dynamic> _embedReplyVectors(List<List<double>> vectors) {
+    if (vectors.length == 1) {
+      return {
+        'embedding': {'values': vectors.first},
+      };
+    }
+    return {
+      'embeddings': [for (final v in vectors) {'values': v}],
+    };
+  }
+
+  /// Texts out of a Gemini `embedContent` / `batchEmbedContents` body.
+  static List<String> _embedRequestTexts(Map<String, dynamic> body) {
+    String? textOf(Object? request) {
+      final content = request is Map ? request['content'] : null;
+      final parts = content is Map ? content['parts'] : null;
+      if (parts is List && parts.isNotEmpty) {
+        final text = (parts.first as Map)['text'];
+        if (text is String && text.isNotEmpty) return text;
+      }
+      // Some clients post `{'text': ...}` directly on the request.
+      if (request is Map && request['text'] is String) return request['text'] as String;
+      return null;
+    }
+
+    if (body['requests'] is List) {
+      final out = <String>[];
+      for (final r in body['requests'] as List) {
+        final t = textOf(r);
+        if (t != null) out.add(t);
+      }
+      return out;
+    }
+    final single = textOf(body);
+    return single == null ? const [] : [single];
   }
 
   Future<Map<String, dynamic>> _body(Request req) async {

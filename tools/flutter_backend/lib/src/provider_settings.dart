@@ -165,6 +165,7 @@ class ProviderRouting {
     required this.llm,
     this.vision,
     this.video,
+    this.embed,
   });
 
   final RouteChain asr;
@@ -177,6 +178,9 @@ class ProviderRouting {
 
   /// Empty/null = not configured.
   final RouteChain? video;
+
+  /// Embedding chain: empty until the local-embed card's model is installed.
+  final RouteChain? embed;
 
   factory ProviderRouting.empty() =>
       ProviderRouting(asr: RouteChain(), tts: RouteChain(), realtime: RouteChain(), llm: RouteChain());
@@ -198,6 +202,7 @@ class ProviderRouting {
     ProviderCapability.llm => llm,
     ProviderCapability.vision => vision ?? llm,
     ProviderCapability.video => video ?? RouteChain(),
+    ProviderCapability.embed => embed ?? RouteChain(),
   };
 
   ProviderRouting copyWith({
@@ -209,6 +214,8 @@ class ProviderRouting {
     bool clearVision = false,
     RouteChain? video,
     bool clearVideo = false,
+    RouteChain? embed,
+    bool clearEmbed = false,
   }) => ProviderRouting(
     asr: asr ?? this.asr,
     tts: tts ?? this.tts,
@@ -216,6 +223,7 @@ class ProviderRouting {
     llm: llm ?? this.llm,
     vision: clearVision ? null : (vision ?? this.vision),
     video: clearVideo ? null : (video ?? this.video),
+    embed: clearEmbed ? null : (embed ?? this.embed),
   );
 
   Map<String, Object?> toJson() => {
@@ -225,6 +233,7 @@ class ProviderRouting {
     'llm': llm.toJson(),
     if (vision != null) 'vision': vision!.toJson(),
     if (video != null) 'video': video!.toJson(),
+    if (embed != null) 'embed': embed!.toJson(),
   };
 
   factory ProviderRouting.fromJson(Object? json) {
@@ -236,6 +245,7 @@ class ProviderRouting {
       llm: RouteChain.fromJson(json['llm']),
       vision: json['vision'] == null ? null : RouteChain.fromJson(json['vision']),
       video: json['video'] == null ? null : RouteChain.fromJson(json['video']),
+      embed: json['embed'] == null ? null : RouteChain.fromJson(json['embed']),
     );
   }
 }

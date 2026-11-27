@@ -43,12 +43,25 @@ const Map<String, List<OnDeviceModelFile>> kOnDeviceModels = {
       'https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main/tokens.txt',
     ]),
   ],
+  // Embedding engine: bge-base-zh int8 ONNX + WordPiece vocab. Default
+  // selection of the local-embed card's static list.
+  'local-embed': [
+    OnDeviceModelFile('embed/bge-base-zh/model_int8.onnx', [
+      'https://hf-mirror.com/Xenova/bge-base-zh-v1.5/resolve/main/onnx/model_int8.onnx',
+      'https://huggingface.co/Xenova/bge-base-zh-v1.5/resolve/main/onnx/model_int8.onnx',
+    ]),
+    OnDeviceModelFile('embed/bge-base-zh/vocab.txt', [
+      'https://hf-mirror.com/Xenova/bge-base-zh-v1.5/resolve/main/vocab.txt',
+      'https://huggingface.co/Xenova/bge-base-zh-v1.5/resolve/main/vocab.txt',
+    ]),
+  ],
 };
 
 /// Human-facing sizes for the card's download prompt (bytes).
 const Map<String, int> kOnDeviceModelSizeBytes = {
   'local-whisper': 77691713, // ggml tiny
   'local-sensevoice': 239549435, // model.int8.onnx + tokens.txt
+  'local-embed': 102517333, // bge-base-zh int8 + vocab
 };
 
 /// Progress of one download: 0–1 per file plus the file name.

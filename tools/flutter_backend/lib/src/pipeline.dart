@@ -18,14 +18,20 @@ class ConversationPipeline {
     required ConversationStore conversations,
     required KnowledgeStore knowledge,
     required LlmSurface llm,
+    EmbedSurface? embed,
   }) : _conversations = conversations,
        _knowledge = knowledge,
-       _llm = llm;
+       _llm = llm,
+       _embed = embed;
 
   // Constructor names stay unprefixed for call-site clarity; fields private.
   final ConversationStore _conversations;
   final KnowledgeStore _knowledge;
   final LlmSurface _llm;
+
+  /// On-device embedding: every extracted memory gets a vector so semantic
+  /// search finds it. Null (no local-embed card) leaves embeddings unset.
+  final EmbedSurface? _embed;
   static const _uuid = Uuid();
 
   static const _notesPrompt = '''
@@ -101,14 +107,24 @@ class ConversationPipeline {
       return const [];
     }
     final created = <Memory>[];
-    for (final f in facts) {
-      if (f.trim().isEmpty) continue;
+    // Batch-embed all facts at once — one engine pass, not N.
+    final texts = [for (final f in facts) f.trim()].where((t) => t.isNotEmpty).toList();
+    List<List<double>>? vectors;
+    if (_embed != null && texts.isNotEmpty) {
+      try {
+        vectors = await _embed.embed(texts);
+      } catch (_) {
+        // embedding is an enhancement, never a blocker: store without vectors.
+      }
+    }
+    for (var i = 0; i < texts.length; i++) {
       final m = Memory(
         id: _uuid.v4(),
-        content: f.trim(),
+        content: texts[i],
         category: 'interesting',
         createdAt: DateTime.now(),
         sourceConversationId: conversationId,
+        embedding: vectors != null && i < vectors.length ? vectors[i] : null,
       );
       _knowledge.upsertMemory(m);
       created.add(m);

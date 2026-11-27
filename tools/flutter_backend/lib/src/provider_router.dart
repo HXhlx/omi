@@ -115,7 +115,7 @@ class ProviderRouter {
   /// `local-stt` (whisper fallback), `local-whisper`, `local-sensevoice`.
   /// An absent id (or an empty map, the standalone harness) keeps that card
   /// on its HTTP worker port.
-  ProviderRouter(this._db, {Map<String, SttSurface>? localStt, this.localTts})
+  ProviderRouter(this._db, {Map<String, SttSurface>? localStt, this.localTts, this.localEmbed})
     : _keys = ProviderKeyStore(_db),
       localStt = localStt ?? const {},
       _settings = ProviderSettings.decode(_db.getSetting(_settingsKey));
@@ -132,6 +132,10 @@ class ProviderRouter {
   /// In-process on-device TTS for the `local-tts` card. Null (the standalone
   /// harness) keeps the card on its HTTP worker port.
   final TtsSurface? localTts;
+
+  /// In-process on-device embedding for the `local-embed` card (memory
+  /// vector search). Null keeps the zero-vector stub replies.
+  final EmbedSurface? localEmbed;
   ProviderSettings _settings;
 
   ProviderSettings get settings => _settings;

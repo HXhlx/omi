@@ -23,3 +23,10 @@ abstract class SttSurface {
 abstract class TtsSurface {
   Future<Uint8List> synthesize(TtsRequest req);
 }
+
+/// On-device sentence embedding: texts in, one vector per text out. The
+/// vector dimension is the engine's (768 for bge-base-zh, 512 for small,
+/// 1024 for Qwen3-Embedding); consumers compute cosine similarity directly.
+abstract class EmbedSurface {
+  Future<List<List<double>>> embed(List<String> texts);
+}

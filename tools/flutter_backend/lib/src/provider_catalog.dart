@@ -11,7 +11,7 @@
 library;
 
 /// Capability id. Wire JSON uses `.name`.
-enum ProviderCapability { asr, tts, realtime, llm, vision, video }
+enum ProviderCapability { asr, tts, realtime, llm, vision, video, embed }
 
 /// Static description of one channel.
 class ProviderDescriptor {
@@ -146,6 +146,26 @@ const List<ProviderDescriptor> kProviderCatalog = <ProviderDescriptor>[
     discoverable: false,
     requiresKey: false,
   ),
+  // On-device embedding for memory vector search. RequiresModel: the
+  // weights download only when the user picks the card. Static list is the
+  // selectable engine lineup — default is the quality/size sweet spot.
+  ProviderDescriptor(
+    id: 'local-embed',
+    label: '本地嵌入 (bge)',
+    capabilities: {ProviderCapability.embed},
+    staticModels: {
+      // [0] default: bge-base-zh-v1.5 int8, 102MB, dim 768, ~10ms/句 on
+      // SD865. C-MTEB 2023 but still the zh quality/size sweet spot.
+      'embed': [
+        'bge-base-zh-v1.5',
+        'bge-small-zh-v1.5',
+        'qwen3-embedding-0.6b',
+      ],
+    },
+    discoverable: false,
+    requiresKey: false,
+    requiresModel: true,
+  ),
   ProviderDescriptor(
     id: 'minimax',
     label: 'MiniMax',
@@ -279,6 +299,7 @@ List<String> filterModels(ProviderCapability cap, Iterable<String> ids) {
       ProviderCapability.realtime => _containsAny(lower, const ['realtime', 'live', 'omni']),
       ProviderCapability.llm => !_containsAny(lower, _llmExcluded),
       ProviderCapability.vision || ProviderCapability.video => true,
+      ProviderCapability.embed => _containsAny(lower, const ['embed', 'bge', 'gte', 'e5']),
     };
     if (ok && !out.contains(id)) out.add(id);
   }

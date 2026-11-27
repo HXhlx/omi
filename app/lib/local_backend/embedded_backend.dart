@@ -62,6 +62,7 @@ class EmbeddedLocalBackend {
       dbPath: '${support.path}/omi_local.db',
       localStt: onDevice?.sttByCard,
       localTts: onDevice?.tts,
+      localEmbed: onDevice?.embed,
     );
 
     _server = server;

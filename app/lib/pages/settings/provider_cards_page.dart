@@ -25,10 +25,11 @@ class ProviderCardsPage extends StatefulWidget {
 }
 
 /// Services shown as rows inside a card, in display order.
-const List<String> _cardCapabilities = ['asr', 'tts', 'llm', 'realtime', 'vision', 'video'];
+const List<String> _cardCapabilities = ['asr', 'tts', 'llm', 'realtime', 'vision', 'video', 'embed'];
 
 /// Services the unified channel section routes. Vision follows the LLM and
-/// video is not routed by this page, so neither is offered here.
+/// video is not routed by this page, so neither is offered here. Embedding is
+/// internal to memory search — no user-facing route chain.
 const List<String> _routedCapabilities = ['asr', 'tts', 'llm', 'realtime'];
 
 class _ProviderCardsPageState extends State<ProviderCardsPage> {
@@ -272,6 +273,7 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
         'realtime' => context.l10n.providerCapabilityRealtime,
         'vision' => context.l10n.providerCapabilityVision,
         'video' => context.l10n.providerCapabilityVideo,
+        'embed' => '嵌入',
         _ => cap,
       };
 

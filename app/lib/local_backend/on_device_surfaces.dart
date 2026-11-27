@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_backend/embedded.dart';
 
+import 'package:omi/local_backend/bge_embed_surface.dart';
 import 'package:omi/local_backend/sensevoice_stt_surface.dart';
 import 'package:omi/services/sockets/on_device_whisper_provider.dart';
 import 'package:omi/utils/audio/wav_bytes.dart';
@@ -13,9 +14,10 @@ import 'package:omi/utils/audio/wav_bytes.dart';
 /// On-device inference surfaces the embedded backend routes the on-device
 /// provider cards to. STT is per-card (whisper for `local-stt` /
 /// `local-whisper`, sherpa-onnx for `local-sensevoice`); TTS runs through the
-/// system speech engine (`flutter_tts`). None opens a socket.
+/// system speech engine (`flutter_tts`); embedding is bge via onnxruntime_v2.
+/// None opens a socket.
 class OnDeviceInferenceSurfaces {
-  OnDeviceInferenceSurfaces._(this.sttByCard, this.tts);
+  OnDeviceInferenceSurfaces._(this.sttByCard, this.tts, this.embed);
 
   static Future<OnDeviceInferenceSurfaces> create() async {
     final support = await getApplicationSupportDirectory();
@@ -29,12 +31,14 @@ class OnDeviceInferenceSurfaces {
         'local-sensevoice': SenseVoiceSttSurface(),
       },
       OnDeviceTtsSurface(),
+      BgeEmbedSurface(),
     );
   }
 
   /// Provider card id -> in-process STT surface.
   final Map<String, SttSurface> sttByCard;
   final OnDeviceTtsSurface tts;
+  final BgeEmbedSurface embed;
 }
 
 /// `local-stt` card, served by on-device whisper.cpp.

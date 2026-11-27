@@ -39,6 +39,7 @@ class LocalBackendServer {
     int port = 0,
     Map<String, SttSurface>? localStt,
     TtsSurface? localTts,
+    EmbedSurface? localEmbed,
   }) async {
     final file = File(dbPath);
     await file.parent.create(recursive: true);
@@ -46,14 +47,14 @@ class LocalBackendServer {
     await db.migrate();
     db.setSetting('booted', DateTime.now().toIso8601String());
 
-    final server = await shelf_io.serve(_handler(db, localStt: localStt, localTts: localTts), InternetAddress.loopbackIPv4, port);
+    final server = await shelf_io.serve(_handler(db, localStt: localStt, localTts: localTts, localEmbed: localEmbed), InternetAddress.loopbackIPv4, port);
     return LocalBackendServer._(db, server);
   }
 
-  static Handler _handler(LocalDb db, {Map<String, SttSurface>? localStt, TtsSurface? localTts}) => const Pipeline()
+  static Handler _handler(LocalDb db, {Map<String, SttSurface>? localStt, TtsSurface? localTts, EmbedSurface? localEmbed}) => const Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(_cors())
-      .addHandler(Api(db, providers: ProviderRouter(db, localStt: localStt, localTts: localTts)).handler);
+      .addHandler(Api(db, providers: ProviderRouter(db, localStt: localStt, localTts: localTts, localEmbed: localEmbed)).handler);
 
   Future<void> close() async {
     await _server.close(force: true);
