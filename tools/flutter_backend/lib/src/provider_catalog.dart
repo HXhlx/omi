@@ -119,18 +119,10 @@ const List<ProviderDescriptor> kProviderCatalog = <ProviderDescriptor>[
     requiresKey: false,
     requiresModel: true,
   ),
-  ProviderDescriptor(
-    id: 'local-llm',
-    label: '本地 LLM (LiteLLM)',
-    capabilities: {ProviderCapability.llm, ProviderCapability.vision},
-    defaultBase: 'http://127.0.0.1:4000/v1',
-    staticModels: {
-      'llm': ['deepseek-flash'],
-      'vision': ['deepseek-flash'],
-    },
-    discoverable: false,
-    requiresKey: false,
-  ),
+  // No local-llm card: a generative LLM on a 2020-class phone (SD865,
+  // 11.8GB RAM) is not usable (~5-8 tok/s even at 1.7B Q4). LLM/VLM stay
+  // cloud-only (the slow model); a future on-device card would carry a small
+  // decision/routing model, not a chat generator.
   ProviderDescriptor(
     id: 'local-tts',
     label: '本地 TTS (speaches)',

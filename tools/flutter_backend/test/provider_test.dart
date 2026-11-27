@@ -16,8 +16,8 @@ void main() {
   group('catalog', () {
     test('local channels are key-free and first in the list', () {
       final ids = kProviderCatalog.map((d) => d.id).toList();
-      expect(ids.take(5), ['local-stt', 'local-whisper', 'local-sensevoice', 'local-llm', 'local-tts']);
-      for (final id in ids.take(5)) {
+      expect(ids.take(4), ['local-stt', 'local-whisper', 'local-sensevoice', 'local-tts']);
+      for (final id in ids.take(4)) {
         expect(descriptorOf(id)!.requiresKey, isFalse);
       }
     });
@@ -65,30 +65,30 @@ void main() {
   });
 
   group('settings round-trip', () {
-    test('defaults point routes at the local trio', () {
+    test('defaults point routes at the local cards; llm stays empty', () {
       final s = ProviderSettings.defaults();
       expect(s.routing.asr.primary, 'local-stt');
       expect(s.routing.tts.primary, 'local-tts');
-      expect(s.routing.llm.primary, 'local-llm');
+      expect(s.routing.llm.primary, isEmpty);
       expect(s.routing.realtime.primary, isEmpty);
     });
 
     test('encode/decode preserves cards, selection and routes', () {
       final s = ProviderSettings.defaults()
-          .withAccount(ProviderAccount(id: 'local-llm', selectedModels: {'llm': 'deepseek-flash'}))
+          .withAccount(ProviderAccount(id: 'minimax', selectedModels: {'llm': 'MiniMax-M3.1-Flash'}))
           .copyWith(
             routing: ProviderRouting(
               asr: RouteChain(primary: 'local-stt', fallbacks: ['siliconflow']),
               tts: RouteChain(primary: 'local-tts'),
               realtime: RouteChain(primary: 'qwen'),
-              llm: RouteChain(primary: 'local-llm', fallbacks: ['minimax']),
+              llm: RouteChain(primary: 'minimax', fallbacks: ['siliconflow']),
             ),
           );
       final back = ProviderSettings.decode(s.encode());
-      expect(back.account('local-llm')!.selectedModels['llm'], 'deepseek-flash');
+      expect(back.account('minimax')!.selectedModels['llm'], 'MiniMax-M3.1-Flash');
       expect(back.routing.asr.primary, 'local-stt');
       expect(back.routing.asr.fallbacks, ['siliconflow']);
-      expect(back.routing.llm.fallbacks, ['minimax']);
+      expect(back.routing.llm.fallbacks, ['siliconflow']);
     });
 
     test('RouteChain drops the primary from its own fallbacks', () {
@@ -99,7 +99,7 @@ void main() {
 
     test('unknown version falls back to defaults', () {
       final back = ProviderSettings.decode('{"version": 99, "accounts": []}');
-      expect(back.routing.llm.primary, 'local-llm');
+      expect(back.routing.llm.primary, isEmpty);
     });
   });
 
@@ -116,7 +116,9 @@ void main() {
     tearDown(() => db.close());
 
     test('fresh install activates exactly the key-free channels', () {
-      expect(router.activatedFor(ProviderCapability.llm), ['local-llm']);
+      // No on-device LLM: chat stays cloud-only until a key is added.
+      expect(router.activatedFor(ProviderCapability.llm), isEmpty);
+      expect(router.activatedFor(ProviderCapability.vision), isEmpty);
       expect(router.activatedFor(ProviderCapability.asr), ['local-stt']);
       expect(router.activatedFor(ProviderCapability.tts), ['local-tts', 'edge']);
       expect(router.activatedFor(ProviderCapability.realtime), isEmpty);
@@ -185,7 +187,8 @@ void main() {
       final r = await call('GET', '/v1/provider/catalog');
       expect(r['status'], 200);
       final ids = (r['body']['channels'] as List).map((c) => c['id']).toList();
-      expect(ids, containsAll(['local-stt', 'local-llm', 'local-tts']));
+      expect(ids, containsAll(['local-stt', 'local-sensevoice', 'local-tts']));
+      expect(ids, isNot(contains('local-llm')), reason: 'no on-device LLM card');
     });
 
     test('settings PUT round-trips and GET reflects it', () async {
@@ -207,7 +210,7 @@ void main() {
             'realtime': {'primary': '', 'fallbacks': <String>[]},
             'llm': {
               'primary': 'minimax',
-              'fallbacks': ['local-llm'],
+              'fallbacks': <String>[],
             },
           },
         },
@@ -221,7 +224,7 @@ void main() {
     test('active lists only activated channels per capability', () async {
       final r = await call('GET', '/v1/provider/active?capability=llm');
       expect(r['status'], 200);
-      expect(r['body']['llm'], ['local-llm']);
+      expect(r['body']['llm'], isEmpty, reason: 'no on-device LLM; cloud needs a key');
     });
 
     test('setting a key activates the channel without echoing it back', () async {
@@ -276,7 +279,7 @@ void main() {
           asr: RouteChain(primary: 'local-sensevoice'),
           tts: RouteChain(primary: 'local-tts'),
           realtime: RouteChain(),
-          llm: RouteChain(primary: 'local-llm'),
+          llm: RouteChain(),
         ),
       ));
       final result = await router.sttSurface().transcribePcm(

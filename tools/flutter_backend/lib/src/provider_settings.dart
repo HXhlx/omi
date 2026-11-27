@@ -182,11 +182,13 @@ class ProviderRouting {
       ProviderRouting(asr: RouteChain(), tts: RouteChain(), realtime: RouteChain(), llm: RouteChain());
 
   /// Local defaults so a fresh install keeps the single-channel behaviour.
+  /// LLM routes stay empty: no on-device LLM exists — chat activates only
+  /// after the user adds a key on a cloud card.
   factory ProviderRouting.localDefaults() => ProviderRouting(
     asr: RouteChain(primary: 'local-stt'),
     tts: RouteChain(primary: 'local-tts'),
     realtime: RouteChain(),
-    llm: RouteChain(primary: 'local-llm'),
+    llm: RouteChain(),
   );
 
   RouteChain chainFor(ProviderCapability cap) => switch (cap) {
