@@ -9279,6 +9279,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вы используете собственный сервис транскрипции. Синхронизация этих записей расшифрует их на серверах Omi, и они будут засчитаны в лимит транскрипции вашего тарифа.';
 
   @override
+  String get chestCameraTitle => 'Нагрудная камера';
+
+  @override
+  String get chestCameraDescription =>
+      'Во время записи каждые 30 секунд незаметно делает один снимок задней камерой для описания сцены ИИ';
+
+  @override
   String get transcribeLaterTitle => 'Расшифровать позже';
 
   @override

@@ -9251,6 +9251,13 @@ class AppLocalizationsSr extends AppLocalizations {
       'Користите сопственог пружаоца транскрипције. Синхронизација ових снимака их транскрибује на Omi серверима и рачунају се у лимит транскрипције вашег плана.';
 
   @override
+  String get chestCameraTitle => 'Нагрудна камера';
+
+  @override
+  String get chestCameraDescription =>
+      'Током снимања, на сваких 30 секунди тихо узима једну фотографију задњом камером за АИ опис сцене';
+
+  @override
   String get transcribeLaterTitle => 'Transkripcija kasnije';
 
   @override

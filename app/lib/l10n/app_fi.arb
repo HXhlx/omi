@@ -2973,6 +2973,8 @@
     "recapRegenerateNoConversations": "Tänä päivänä ei ole keskusteluja yhteenvedettäväksi.",
     "syncCustomSttWarningTitle": "Synkronointi käyttää Omin litterointia",
     "syncCustomSttWarningMessage": "Käytät omaa litterointipalveluasi. Näiden tallenteiden synkronointi litteroi ne Omin palvelimilla, ja ne lasketaan tilauksesi litterointirajaan.",
+    "chestCameraTitle": "Rintakamera",
+    "chestCameraDescription": "Ottaa tallennuksen aikana hiljaisesti kuvan 30 sekunnin välein takakameralla tekoälyn kohtausten kuvausten avuksi",
     "transcribeLaterTitle": "Litteroi myöhemmin",
     "transcribeLaterDescription": "Nauhoita nyt ja litteroi, kun haluat. Siihen asti ääni pysyy puhelimessasi.",
     "transcribeLaterNote": "Toimii puhelimen mikrofonin sekä Omi- ja Limitless-laitteiden kanssa. Ääni säilyy puhelimessasi, kunnes päätät ladata sen.",

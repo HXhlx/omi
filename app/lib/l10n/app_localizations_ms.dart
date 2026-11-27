@@ -9263,6 +9263,13 @@ class AppLocalizationsMs extends AppLocalizations {
       'Anda menggunakan penyedia transkripsi sendiri. Menyegerakkan rakaman ini akan mentranskripsikannya di pelayan Omi dan dikira dalam had transkripsi pelan anda.';
 
   @override
+  String get chestCameraTitle => 'Kamera Dada';
+
+  @override
+  String get chestCameraDescription =>
+      'Semasa merakam, ambil satu foto secara senyap setiap 30 saat dengan kamera belakang untuk penerangan adegan oleh AI';
+
+  @override
   String get transcribeLaterTitle => 'Transkrip Kemudian';
 
   @override

@@ -9272,6 +9272,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Usas tu propio proveedor de transcripción. Sincronizar estas grabaciones las transcribe en los servidores de Omi y cuentan para el límite de transcripción de tu plan.';
 
   @override
+  String get chestCameraTitle => 'Cámara de pecho';
+
+  @override
+  String get chestCameraDescription =>
+      'Durante la grabación, toma una foto silenciosa cada 30 segundos con la cámara trasera para descripciones de escena por IA';
+
+  @override
   String get transcribeLaterTitle => 'Transcribir después';
 
   @override

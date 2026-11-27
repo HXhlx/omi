@@ -174,7 +174,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Access most functions for calendar viewing and editing.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera access is required to report issues</string>
+	<string>Omi uses the camera to capture photos during conversations for AI descriptions, and to report issues</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Access contacts for event attendee editing and to share conversation summaries via SMS.</string>
 	<key>NSHealthShareUsageDescription</key>

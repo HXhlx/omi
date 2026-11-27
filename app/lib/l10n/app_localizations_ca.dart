@@ -9296,6 +9296,13 @@ class AppLocalizationsCa extends AppLocalizations {
       'Utilitzes el teu propi proveïdor de transcripció. Sincronitzar aquests enregistraments els transcriu als servidors d\'Omi i compten per al límit de transcripció del teu pla.';
 
   @override
+  String get chestCameraTitle => 'Càmera de pit';
+
+  @override
+  String get chestCameraDescription =>
+      'Durant la gravació, fes una foto silenciosa cada 30 segons amb la càmera posterior per a descripcions d\'escena amb IA';
+
+  @override
   String get transcribeLaterTitle => 'Transcriure més tard';
 
   @override

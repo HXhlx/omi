@@ -9254,6 +9254,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kendi transkripsiyon sağlayıcınızı kullanıyorsunuz. Bu kayıtları eşitlemek onları Omi sunucularında yazıya döker ve planınızın transkripsiyon sınırına sayılır.';
 
   @override
+  String get chestCameraTitle => 'Göğüs kamerası';
+
+  @override
+  String get chestCameraDescription =>
+      'Kayıt sırasında, arka kamerayla her 30 saniyede bir sessizce fotoğraf çeker ve yapay zekâ sahne açıklamaları için kullanır';
+
+  @override
   String get transcribeLaterTitle => 'Sonradan Transkribe Et';
 
   @override

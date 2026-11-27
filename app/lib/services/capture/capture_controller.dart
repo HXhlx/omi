@@ -62,6 +62,7 @@ import 'package:omi/services/capture/recording_lifecycle_telemetry.dart';
 import 'package:omi/backend/http/shared.dart' show accountDeletionWebSocketCloseCode;
 import 'package:omi/services/telemetry/client_telemetry.dart';
 import 'package:omi/services/capture/capture_seams.dart';
+import 'package:omi/services/capture/chest_camera_service.dart';
 import 'package:omi/services/capture/capture_session_owner.dart';
 import 'package:omi/services/capture/capture_wedge_monitor.dart';
 import 'package:omi/services/capture/capture_continuity_monitor.dart';
@@ -1105,6 +1106,11 @@ class CaptureController extends ChangeNotifier
 
   StreamSubscription? _bleBytesStream;
   StreamSubscription? _blePhotoStream;
+
+  /// Chest-mounted periodic photo capture for sessions without a camera-capable
+  /// wearable: the phone's rear camera feeds the same photo pipeline the BLE
+  /// stream above feeds. Null while no chest session runs.
+  ChestCameraService? _chestCamera;
 
   get bleBytesStream => _bleBytesStream;
 
@@ -2519,6 +2525,7 @@ class CaptureController extends ChangeNotifier
     _socketReconnectPending = false;
     _stopInProgressConversationRefresh();
     await _closeBleStream(disableNativeBackground: disableNativeBackground);
+    await _stopChestCamera();
     _activeSource = null;
     notifyListeners();
   }
@@ -2893,28 +2900,57 @@ class CaptureController extends ChangeNotifier
       await connection.performGetImageListener(
         onImageReceived: (orientedImage) async {
           final rotatedImageBytes = rotateImage(orientedImage);
-          final String tempId = 'temp_img_${DateTime.now().millisecondsSinceEpoch}';
-          final String base64Image = base64Encode(rotatedImageBytes);
-
-          // Add placeholder to UI for immediate feedback
-          photos.add(ConversationPhoto(id: tempId, base64: base64Image, createdAt: DateTime.now()));
-          photos = List.from(photos);
-          _segmentsPhotosVersion++;
-          notifyListeners();
-          await emitBase64ImageChunks(
-            base64Image,
-            id: tempId,
-            emit: (payload) async {
-              if (_socket?.state == SocketServiceState.connected &&
-                  !OnDeviceTranscriptionController.instance.shouldKeepAudioLocal) {
-                _socket?.send(payload);
-              }
-            },
-          );
+          await _ingestCapturedPhoto(base64Encode(rotatedImageBytes));
         },
       ),
     );
     notifyListeners();
+  }
+
+  /// Ingests one captured photo into the live session: a placeholder for
+  /// immediate UI feedback, then the base64 chunk upload the backend turns
+  /// into an AI scene description (`describe_image`). Shared by the BLE photo
+  /// stream above and the chest-mounted camera below.
+  Future<void> _ingestCapturedPhoto(String base64Image) async {
+    final String tempId = 'temp_img_${DateTime.now().millisecondsSinceEpoch}';
+
+    // Add placeholder to UI for immediate feedback
+    photos.add(ConversationPhoto(id: tempId, base64: base64Image, createdAt: DateTime.now()));
+    photos = List.from(photos);
+    _segmentsPhotosVersion++;
+    notifyListeners();
+    await emitBase64ImageChunks(
+      base64Image,
+      id: tempId,
+      emit: (payload) async {
+        if (_socket?.state == SocketServiceState.connected &&
+            !OnDeviceTranscriptionController.instance.shouldKeepAudioLocal) {
+          _socket?.send(payload);
+        }
+      },
+    );
+  }
+
+  /// Starts chest-mounted periodic photo capture when the user enabled it.
+  /// Skipped when Transcribe Later owns the session (the photo upload path is
+  /// the realtime socket); a denied permission or a missing camera makes the
+  /// service report false once instead of failing on every tick.
+  Future<void> _startChestCameraIfEnabled() async {
+    if (_preferences.batchModeEnabled) return;
+    if (!_preferences.chestCameraEnabled || _chestCamera != null) return;
+    final service = ChestCameraService();
+    final started = await service.start(
+      onPhoto: (jpeg) => _ingestCapturedPhoto(base64Encode(jpeg)),
+    );
+    if (!started) return;
+    _chestCamera = service;
+    notifyListeners();
+  }
+
+  Future<void> _stopChestCamera() async {
+    final service = _chestCamera;
+    _chestCamera = null;
+    await service?.stop();
   }
 
   void clearTranscripts() {
@@ -2999,6 +3035,7 @@ class CaptureController extends ChangeNotifier
   void dispose() {
     _clearIngressByteObserver();
     _uplinkSilence.cancel();
+    unawaited(_stopChestCamera());
     _captureControllerDisposed = true;
     _reconnectGraceTimer?.cancel();
     _reconnectGraceTimer = null;
@@ -3208,6 +3245,9 @@ class CaptureController extends ChangeNotifier
       // the recording-owned WAL snapshot and then updates the compatibility
       // cache when the grant/fix lands.
       unawaited(_captureSessionLocation());
+      // The phone in a chest pocket is the whole capture rig: mic above, here
+      // the rear camera feeding the same photo channel a wearable would.
+      unawaited(_startChestCameraIfEnabled());
     } catch (e, st) {
       // Typed native failures (permission_denied, engine_start_failed, ...) or
       // mic contention — fail visibly instead of recording silence.

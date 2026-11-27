@@ -2973,6 +2973,8 @@
     "recapRegenerateNoConversations": "Tiada perbualan untuk diringkaskan untuk hari ini.",
     "syncCustomSttWarningTitle": "Penyegerakan menggunakan transkripsi Omi",
     "syncCustomSttWarningMessage": "Anda menggunakan penyedia transkripsi sendiri. Menyegerakkan rakaman ini akan mentranskripsikannya di pelayan Omi dan dikira dalam had transkripsi pelan anda.",
+    "chestCameraTitle": "Kamera Dada",
+    "chestCameraDescription": "Semasa merakam, ambil satu foto secara senyap setiap 30 saat dengan kamera belakang untuk penerangan adegan oleh AI",
     "transcribeLaterTitle": "Transkrip Kemudian",
     "transcribeLaterDescription": "Rakam sekarang, transkripsi bila-bila anda mahu. Sehingga itu, audio kekal pada telefon anda.",
     "transcribeLaterNote": "Berfungsi dengan mikrofon telefon serta peranti Omi dan Limitless. Audio kekal dalam telefon anda sehingga anda memilih untuk memuat naiknya.",

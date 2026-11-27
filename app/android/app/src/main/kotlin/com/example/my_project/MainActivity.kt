@@ -125,6 +125,24 @@ class MainActivity: FlutterActivity() {
             result.success(true)
         }
 
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.omi/keep_screen_on").setMethodCallHandler {
+            call, result ->
+            if (call.method == "set") {
+                val on = call.arguments as? Boolean
+                if (on == null) {
+                    result.error("invalid_keep_screen_on", "expected a boolean argument", null)
+                    return@setMethodCallHandler
+                }
+                // Screen keep-on for chest-camera capture: without it the display
+                // sleeps while the phone sits in a pocket and Android closes the camera.
+                if (on) window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                else window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                result.success(true)
+            } else {
+                result.notImplemented()
+            }
+        }
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
             call, result ->
             if(call.method == "setNotificationOnKillService"){

@@ -9194,6 +9194,12 @@ class AppLocalizationsTh extends AppLocalizations {
       'คุณใช้ผู้ให้บริการถอดเสียงของคุณเอง การซิงค์การบันทึกเหล่านี้จะถอดเสียงบนเซิร์ฟเวอร์ของ Omi และจะนับรวมในขีดจำกัดการถอดเสียงของแพ็กเกจของคุณ';
 
   @override
+  String get chestCameraTitle => 'กล้องอก';
+
+  @override
+  String get chestCameraDescription => 'ขณะบันทึกเสียง จะถ่ายภาพเงียบๆ ทุก 30 วินาทีด้วยกล้องหลังเพื่อให้ AI อธิบายฉาก';
+
+  @override
   String get transcribeLaterTitle => 'ถอดเสียงภายหลัง';
 
   @override

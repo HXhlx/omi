@@ -9256,6 +9256,13 @@ class AppLocalizationsLt extends AppLocalizations {
       'Naudojate savo transkripcijos paslaugą. Sinchronizuojant šiuos įrašus jie transkribuojami Omi serveriuose ir įskaičiuojami į jūsų plano transkripcijos limitą.';
 
   @override
+  String get chestCameraTitle => 'Krūtinės kamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Įrašinėjant kas 30 sekundžių tyliai padaro vieną nuotrauką galine kamera AI scenos aprašymams';
+
+  @override
   String get transcribeLaterTitle => 'Transkribuoti vėliau';
 
   @override

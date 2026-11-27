@@ -9271,6 +9271,13 @@ class AppLocalizationsBe extends AppLocalizations {
       'Вы карыстаецеся ўласным сэрвісам транскрыпцыі. Сінхранізацыя гэтых запісаў транскрыбуе іх на серверах Omi, і яны залічацца ў ліміт транскрыпцыі вашага тарыфу.';
 
   @override
+  String get chestCameraTitle => 'Нагрудная камера';
+
+  @override
+  String get chestCameraDescription =>
+      'Падчас запісу — адна ціхая фотаздымка кожныя 30 секунд задняй камерай для апісання сцэны ШІ';
+
+  @override
   String get transcribeLaterTitle => 'Транскрыпцыя пазней';
 
   @override

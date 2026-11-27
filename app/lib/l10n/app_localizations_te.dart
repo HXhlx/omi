@@ -9294,6 +9294,13 @@ class AppLocalizationsTe extends AppLocalizations {
       'మీరు మీ సొంత ట్రాన్స్‌క్రిప్షన్ ప్రొవైడర్‌ను ఉపయోగిస్తున్నారు. ఈ రికార్డింగ్‌లను సింక్ చేస్తే అవి Omi సర్వర్‌లలో ట్రాన్స్‌క్రైబ్ చేయబడతాయి మరియు మీ ప్లాన్ ట్రాన్స్‌క్రిప్షన్ పరిమితిలో లెక్కించబడతాయి.';
 
   @override
+  String get chestCameraTitle => 'చెస్ట్ కెమెరా';
+
+  @override
+  String get chestCameraDescription =>
+      'రికార్డింగ్ సమయంలో ప్రతి 30 సెకన్లకు వెనుక కెమెరాతో నిశ్శబ్దంగా ఒక ఫోటో తీస్తుంది, AI దృశ్య వివరణ కోసం';
+
+  @override
   String get transcribeLaterTitle => 'తర్వాత ట్రాన్‌స్క్రైబ్ చేయండి';
 
   @override

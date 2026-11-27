@@ -9269,6 +9269,13 @@ class AppLocalizationsSl extends AppLocalizations {
       'Uporabljate svojega ponudnika prepisa. Sinhronizacija teh posnetkov jih prepiše na strežnikih Omi in se štejejo v omejitev prepisa vašega paketa.';
 
   @override
+  String get chestCameraTitle => 'Prsna kamera';
+
+  @override
+  String get chestCameraDescription =>
+      'Med snemanjem vsakih 30 sekund tiho posname eno fotografijo z zadnjo kamero za opis prizora z umetno inteligenco';
+
+  @override
   String get transcribeLaterTitle => 'Prepiši pozneje';
 
   @override

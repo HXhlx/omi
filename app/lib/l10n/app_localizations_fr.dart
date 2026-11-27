@@ -9329,6 +9329,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous utilisez votre propre fournisseur de transcription. Synchroniser ces enregistrements les transcrit sur les serveurs d\'Omi et ils comptent dans la limite de transcription de votre forfait.';
 
   @override
+  String get chestCameraTitle => 'Caméra de poitrine';
+
+  @override
+  String get chestCameraDescription =>
+      'Pendant l\'enregistrement, prend discrètement une photo toutes les 30 secondes avec la caméra arrière pour des descriptions de scène par IA';
+
+  @override
   String get transcribeLaterTitle => 'Transcrire plus tard';
 
   @override

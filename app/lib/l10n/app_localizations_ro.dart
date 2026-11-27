@@ -9291,6 +9291,13 @@ class AppLocalizationsRo extends AppLocalizations {
       'Folosești propriul furnizor de transcriere. Sincronizarea acestor înregistrări le transcrie pe serverele Omi și se iau în calcul pentru limita de transcriere a planului tău.';
 
   @override
+  String get chestCameraTitle => 'Cameră de piept';
+
+  @override
+  String get chestCameraDescription =>
+      'În timpul înregistrării, face discret o poză la fiecare 30 de secunde cu camera din spate pentru descrieri de scenă prin AI';
+
+  @override
   String get transcribeLaterTitle => 'Transcrie mai târziu';
 
   @override

@@ -2998,6 +2998,8 @@
     "recapRegenerateNoConversations": "この日の要約対象となる会話はありません。",
     "syncCustomSttWarningTitle": "同期では Omi の文字起こしを使用します",
     "syncCustomSttWarningMessage": "ご自身の文字起こしプロバイダーを使用しています。これらの録音を同期すると Omi のサーバーで文字起こしされ、プランの文字起こし上限にカウントされます。",
+    "chestCameraTitle": "チェストカメラ",
+    "chestCameraDescription": "録音中、30秒ごとにリアカメラで静かに1枚撮影し、AIによるシーン描写に使用します",
     "transcribeLaterTitle": "後で文字起こし",
     "transcribeLaterDescription": "今録音して、好きなときに文字起こしできます。それまで音声はスマートフォンに保存されます。",
     "transcribeLaterNote": "スマートフォンのマイク、OmiおよびLimitlessデバイスでご利用いただけます。音声はアップロードするまでスマートフォンに保存されたままになります。",

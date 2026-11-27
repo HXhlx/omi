@@ -9098,6 +9098,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get syncCustomSttWarningMessage => '您使用的是自己的转录服务。同步这些录音会改为在小蜗的服务器上转录，并计入您套餐的转录额度。';
 
   @override
+  String get chestCameraTitle => '胸包相机';
+
+  @override
+  String get chestCameraDescription => '录音期间，用手机后置相机每 30 秒静默拍摄一张照片，供 AI 生成场景描述';
+
+  @override
   String get transcribeLaterTitle => '稍后转写';
 
   @override

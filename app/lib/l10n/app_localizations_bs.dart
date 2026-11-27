@@ -9266,6 +9266,13 @@ class AppLocalizationsBs extends AppLocalizations {
       'Koristite vlastiti provajder transkripcije. Sinkronizacija ovih snimaka transkribuje ih na Omi serverima i broje se u limit transkripcije vašeg plana.';
 
   @override
+  String get chestCameraTitle => 'Kamera za prsa';
+
+  @override
+  String get chestCameraDescription =>
+      'Tokom snimanja, svakih 30 sekundi tiho uslikaj jednu fotografiju zadnjom kamerom za AI opis scene';
+
+  @override
   String get transcribeLaterTitle => 'Transkripcija kasnije';
 
   @override
