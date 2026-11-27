@@ -38,49 +38,63 @@ class BgeEmbedSurface implements EmbedSurface {
     _options = options;
   }
 
-  /// WordPiece token ids for [text]: CLS + subwords + SEP.
+  /// Token ids for [text]: CLS + tokens + SEP. BERT Chinese convention — CJK
+  /// characters tokenize one-per-token (the vocab carries single chars);
+  /// Latin runs split on whitespace and go through greedy longest-prefix
+  /// WordPiece with `##` continuations.
   List<int> _tokenize(String text) {
     final tokens = <int>[101]; // [CLS]
-    for (final word in _wsSplit(text)) {
-      if (tokens.length >= maxSequenceLength - 1) break;
-      final lower = word.toLowerCase();
-      final direct = _vocab[lower];
+    final runes = text.runes.toList();
+    var latin = StringBuffer();
+    void flushLatin() {
+      final word = latin.toString().toLowerCase();
+      latin = StringBuffer();
+      if (word.isEmpty) return;
+      final direct = _vocab[word];
       if (direct != null) {
         tokens.add(direct);
-        continue;
+        return;
       }
-      // Greedy longest-prefix WordPiece with `##` continuations.
       var start = 0;
-      var unknown = false;
-      while (start < lower.length && tokens.length < maxSequenceLength - 1) {
-        var end = lower.length;
+      while (start < word.length && tokens.length < maxSequenceLength - 1) {
+        var end = word.length;
         int? id;
         while (end > start) {
-          final candidate = start == 0 ? lower.substring(start, end) : '##${lower.substring(start, end)}';
+          final candidate = start == 0 ? word.substring(start, end) : '##${word.substring(start, end)}';
           id = _vocab[candidate];
           if (id != null) break;
           end--;
         }
         if (id == null) {
           tokens.add(100); // [UNK]
-          unknown = true;
-          break;
+          return;
         }
         tokens.add(id);
         start = end;
       }
-      if (unknown) continue;
     }
+
+    for (final rune in runes) {
+      if (tokens.length >= maxSequenceLength - 1) break;
+      final c = String.fromCharCode(rune);
+      if (RegExp(r'[一-鿿㐀-䶿豈-﫿　-〿＀-￯]').hasMatch(c)) {
+        flushLatin();
+        // CJK or CJK punctuation: single-char token, falling back to [UNK]
+        // only for punctuation outside the vocab.
+        tokens.add(_vocab[c] ?? 100);
+      } else if (c.trim().isEmpty) {
+        flushLatin();
+      } else {
+        latin.write(c);
+      }
+    }
+    flushLatin();
     tokens.add(102); // [SEP]
     if (tokens.length > maxSequenceLength) {
       return tokens.sublist(0, maxSequenceLength - 1)..add(102);
     }
     return tokens;
   }
-
-  static List<String> _wsSplit(String text) => text
-      .replaceAll(RegExp(r'[\s,。！？；：、,.!?;:]+'), ' ')
-      .split(' ');
 
   @override
   Future<List<List<double>>> embed(List<String> texts) async {
