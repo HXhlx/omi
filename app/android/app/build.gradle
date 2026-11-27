@@ -68,6 +68,14 @@ android {
         buildConfig = true
     }
 
+    // sherpa_onnx bundles its own onnxruntime .so while onnxruntime_v2 (the
+    // VAD engine) ships another — same file name, merged into one APK path.
+    // Pick first so native lib merging succeeds; the onnxruntime C API is
+    // stable across these builds so both consumers load it.
+    packagingOptions {
+        pickFirst 'lib/**/libonnxruntime.so'
+    }
+
     namespace "com.friend.ios"
 
 
