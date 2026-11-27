@@ -27404,6 +27404,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not save provider settings.'**
   String get providerSaveFailed;
+
+  /// No description provided for @providerModelDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Model downloaded'**
+  String get providerModelDownloaded;
+
+  /// No description provided for @providerModelDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get providerModelDownload;
+
+  /// No description provided for @providerModelDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading'**
+  String get providerModelDownloading;
+
+  /// No description provided for @providerModelNotDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Model not downloaded'**
+  String get providerModelNotDownloaded;
+
+  /// No description provided for @providerModelDownloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Model download failed'**
+  String get providerModelDownloadFailed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

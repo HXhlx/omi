@@ -19064,5 +19064,10 @@
     "providerSaveFailed": "Could not save provider settings.",
     "@providerSaveFailed": {
         "description": "Toast when saving fails"
-    }
+    },
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

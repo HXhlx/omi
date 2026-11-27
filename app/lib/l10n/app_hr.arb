@@ -12259,5 +12259,10 @@
     "providerKeyMissing": "Not activated",
     "providerNoActiveProviders": "No activated provider supports this service yet.",
     "providerSaved": "Provider settings saved",
-    "providerSaveFailed": "Could not save provider settings."
+    "providerSaveFailed": "Could not save provider settings.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

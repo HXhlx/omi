@@ -4702,5 +4702,10 @@
     "providerKeyMissing": "未有効",
     "providerNoActiveProviders": "このサービスをサポートする有効なプロバイダーがまだありません。",
     "providerSaved": "プロバイダー設定を保存しました",
-    "providerSaveFailed": "プロバイダー設定を保存できませんでした。"
+    "providerSaveFailed": "プロバイダー設定を保存できませんでした。",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

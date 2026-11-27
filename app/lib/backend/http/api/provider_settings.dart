@@ -14,6 +14,7 @@ class ProviderChannel {
     this.staticModels = const {},
     this.defaultVoice = '',
     this.requiresKey = true,
+    this.requiresModel = false,
     this.discoverable = true,
   });
 
@@ -24,6 +25,9 @@ class ProviderChannel {
   final Map<String, List<String>> staticModels;
   final String defaultVoice;
   final bool requiresKey;
+
+  /// On-device model card: activates only after the user downloads the model.
+  final bool requiresModel;
   final bool discoverable;
 
   factory ProviderChannel.fromJson(Map<String, dynamic> j) => ProviderChannel(
@@ -34,6 +38,7 @@ class ProviderChannel {
         staticModels: _stringListMap(j['staticModels']),
         defaultVoice: j['defaultVoice'] as String? ?? '',
         requiresKey: j['requiresKey'] as bool? ?? true,
+        requiresModel: j['requiresModel'] as bool? ?? false,
         discoverable: j['discoverable'] as bool? ?? true,
       );
 }
@@ -181,6 +186,7 @@ class ProviderApi {
     return switch (method) {
       'GET' => http.get(uri),
       'PUT' => http.put(uri, headers: {'content-type': 'application/json'}, body: body),
+      'DELETE' => http.delete(uri, headers: {'content-type': 'application/json'}, body: body),
       _ => http.post(uri, headers: {'content-type': 'application/json'}, body: body),
     };
   }
@@ -222,6 +228,23 @@ class ProviderApi {
 
   Future<bool> setKey(String id, String key) async {
     final res = await _call('PUT', 'v1/provider/key', jsonEncode({'id': id, 'key': key}));
+    if (res.statusCode != 200) throw ProviderApiException(res.statusCode);
+    final row = jsonDecode(res.body) as Map<String, dynamic>;
+    return row['activated'] as bool? ?? false;
+  }
+
+  /// Reports a completed on-device model download (size in bytes) so the
+  /// `requiresModel` card activates.
+  Future<bool> reportModelDownloaded(String id, int sizeBytes) async {
+    final res = await _call('PUT', 'v1/provider/model', jsonEncode({'id': id, 'sizeBytes': sizeBytes}));
+    if (res.statusCode != 200) throw ProviderApiException(res.statusCode);
+    final row = jsonDecode(res.body) as Map<String, dynamic>;
+    return row['activated'] as bool? ?? false;
+  }
+
+  /// Drops the on-device model row: the card deactivates until re-downloaded.
+  Future<bool> reportModelRemoved(String id) async {
+    final res = await _call('DELETE', 'v1/provider/model', jsonEncode({'id': id}));
     if (res.statusCode != 200) throw ProviderApiException(res.statusCode);
     final row = jsonDecode(res.body) as Map<String, dynamic>;
     return row['activated'] as bool? ?? false;

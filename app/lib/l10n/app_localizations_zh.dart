@@ -15355,4 +15355,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get providerSaveFailed => '供应商设置保存失败。';
+
+  @override
+  String get providerModelDownloaded => '模型已下载';
+
+  @override
+  String get providerModelDownload => '下载模型';
+
+  @override
+  String get providerModelDownloading => '正在下载';
+
+  @override
+  String get providerModelNotDownloaded => '模型未下载';
+
+  @override
+  String get providerModelDownloadFailed => '模型下载失败';
 }

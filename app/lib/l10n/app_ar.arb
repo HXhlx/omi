@@ -4702,5 +4702,10 @@
     "providerKeyMissing": "غير مفعّل",
     "providerNoActiveProviders": "لا يوجد بعد مزوّد مفعّل يدعم هذه الخدمة.",
     "providerSaved": "تم حفظ إعدادات المزوّدين",
-    "providerSaveFailed": "تعذّر حفظ إعدادات المزوّدين."
+    "providerSaveFailed": "تعذّر حفظ إعدادات المزوّدين.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

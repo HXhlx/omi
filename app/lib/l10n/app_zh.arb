@@ -4702,5 +4702,10 @@
     "providerKeyMissing": "未激活",
     "providerNoActiveProviders": "尚无已激活的供应商支持此项服务。",
     "providerSaved": "供应商设置已保存",
-    "providerSaveFailed": "供应商设置保存失败。"
+    "providerSaveFailed": "供应商设置保存失败。",
+    "providerModelDownloaded": "模型已下载",
+    "providerModelDownload": "下载模型",
+    "providerModelDownloading": "正在下载",
+    "providerModelNotDownloaded": "模型未下载",
+    "providerModelDownloadFailed": "模型下载失败"
 }

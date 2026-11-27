@@ -110,6 +110,7 @@ dependencies:
   flutter_background_service_android: 6.3.0
   flutter_background_service_platform_interface: 5.1.2
   onnxruntime_v2: 1.23.2+2
+  sherpa_onnx: ^2.0.3
   opus_flutter: ^3.0.3
   opus_dart:
     git:

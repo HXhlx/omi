@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:omi/backend/http/api/provider_settings.dart' as api;
+import 'package:omi/local_backend/on_device_models.dart' as models;
 import 'package:omi/pages/settings/transcription/transcription_fields.dart';
 import 'package:omi/ui/ui.dart';
 import 'package:omi/utils/l10n_extensions.dart';
@@ -47,6 +48,13 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
   /// Cards whose services are expanded.
   final Set<String> _expanded = {};
 
+  /// `requiresModel` cards the user reported downloaded to the backend
+  /// (mirror of `provider_model:<id>` rows).
+  final Set<String> _modelReady = {};
+
+  /// Card id -> current download fraction 0–1 (only while in flight).
+  final Map<String, double> _downloading = {};
+
   @override
   void initState() {
     super.initState();
@@ -78,10 +86,18 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
       final settings = await _api.getSettings();
       final active = await _api.getActive();
       if (!mounted) return;
+      // On-device model cards: already-downloaded check is local (files on
+      // disk), so the page reflects reality even before the backend row.
+      final ready = <String>{};
+      for (final c in catalog.where((c) => c.requiresModel)) {
+        if (await models.isOnDeviceModelDownloaded(c.id)) ready.add(c.id);
+      }
+      if (!mounted) return;
       setState(() {
         _catalog = catalog;
         _draft = settings;
         _active = active;
+        _modelReady..clear()..addAll(ready);
         _loading = false;
       });
     } catch (e) {
@@ -90,6 +106,48 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
         _error = e.toString();
         _loading = false;
       });
+    }
+  }
+
+  /// Downloads the card's on-demand model (domestic mirror), reports it to
+  /// the backend so the card activates, and refreshes the active lists.
+  Future<void> _downloadModel(String channelId) async {
+    if (_downloading.containsKey(channelId)) return;
+    setState(() => _downloading[channelId] = 0);
+    try {
+      final bytes = await models.downloadOnDeviceModel(
+        channelId,
+        onProgress: (p) {
+          if (!mounted) return;
+          setState(() => _downloading[channelId] = p.fraction);
+        },
+      );
+      await _api.reportModelDownloaded(channelId, bytes);
+      if (!mounted) return;
+      setState(() {
+        _downloading.remove(channelId);
+        _modelReady.add(channelId);
+      });
+      await _load();
+      if (mounted) OmiFeedback.confirm(context, context.l10n.providerModelDownloaded);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _downloading.remove(channelId));
+      OmiFeedback.error(context, context.l10n.providerModelDownloadFailed);
+    }
+  }
+
+  /// Deletes the card's model files and tells the backend (card deactivates).
+  Future<void> _removeModel(String channelId) async {
+    try {
+      await models.deleteOnDeviceModel(channelId);
+      await _api.reportModelRemoved(channelId);
+      if (!mounted) return;
+      setState(() => _modelReady.remove(channelId));
+      await _load();
+    } catch (_) {
+      if (!mounted) return;
+      OmiFeedback.error(context, context.l10n.providerModelDownloadFailed);
     }
   }
 
@@ -308,8 +366,10 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
     final channel = _channelOf(account.id);
     final label = channel?.label ?? account.id;
     final needsKey = channel?.requiresKey ?? true;
+    final needsModel = channel?.requiresModel ?? false;
     final activeIds = _active.values.expand((ids) => ids).toSet();
-    final activated = !needsKey || activeIds.contains(account.id);
+    var activated = !needsKey || activeIds.contains(account.id);
+    if (needsModel && !_modelReady.contains(account.id)) activated = false;
     final expanded = _expanded.contains(account.id);
     final caps = (account.capabilities.isNotEmpty
             ? account.capabilities.toList()
@@ -355,6 +415,7 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (needsModel) _modelDownloadRow(account.id),
                   for (final cap in caps) _modelRow(account, cap),
                   if (needsKey && !activated) ...[
                     const SizedBox(height: OmiSpacing.sm),
@@ -411,6 +472,64 @@ class _ProviderCardsPageState extends State<ProviderCardsPage> {
                 if (v != null) _setModel(account.id, cap, v);
               },
             ),
+        ],
+      ),
+    );
+  }
+
+  /// The on-demand model row of a `requiresModel` card: download with
+  /// progress, or "downloaded" with remove.
+  Widget _modelDownloadRow(String id) {
+    final progress = _downloading[id];
+    final sizeMb = ((models.kOnDeviceModelSizeBytes[id] ?? 0) / 1048576).round();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: OmiSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (progress != null) ...[
+            Text(
+              '${context.l10n.providerModelDownloading} ${(progress * 100).toStringAsFixed(0)}%',
+              style: OmiType.footnote.copyWith(color: OmiColors.textSecondary),
+            ),
+            const SizedBox(height: OmiSpacing.xxs),
+            LinearProgressIndicator(
+              key: ValueKey('provider_model_progress_$id'),
+              value: progress,
+              minHeight: 4,
+            ),
+          ] else if (_modelReady.contains(id)) ...[
+            Row(
+              children: [
+                Icon(Icons.check_circle, size: 16, color: OmiColors.success),
+                const SizedBox(width: OmiSpacing.xs),
+                Text(context.l10n.providerModelDownloaded, style: OmiType.footnote),
+                const Spacer(),
+                IconButton(
+                  key: ValueKey('provider_model_remove_$id'),
+                  icon: Icon(Icons.delete_outline, size: 18, color: OmiColors.textTertiary),
+                  onPressed: () => _removeModel(id),
+                ),
+              ],
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${context.l10n.providerModelNotDownloaded} (${sizeMb}MB)',
+                    style: OmiType.footnote.copyWith(color: OmiColors.textTertiary),
+                  ),
+                ),
+                OmiButton(
+                  key: ValueKey('provider_model_download_$id'),
+                  label: context.l10n.providerModelDownload,
+                  variant: OmiButtonVariant.secondary,
+                  onPressed: () => _downloadModel(id),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

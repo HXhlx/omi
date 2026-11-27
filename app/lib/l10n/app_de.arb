@@ -4702,5 +4702,10 @@
     "providerKeyMissing": "Nicht aktiviert",
     "providerNoActiveProviders": "Noch kein aktivierter Anbieter unterstützt diesen Dienst.",
     "providerSaved": "Anbietereinstellungen gespeichert",
-    "providerSaveFailed": "Anbietereinstellungen konnten nicht gespeichert werden."
+    "providerSaveFailed": "Anbietereinstellungen konnten nicht gespeichert werden.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

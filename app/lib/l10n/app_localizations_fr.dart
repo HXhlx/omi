@@ -15736,4 +15736,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get providerSaveFailed => 'Impossible d\'enregistrer les paramètres des fournisseurs.';
+
+  @override
+  String get providerModelDownloaded => 'Model downloaded';
+
+  @override
+  String get providerModelDownload => 'Download';
+
+  @override
+  String get providerModelDownloading => 'Downloading';
+
+  @override
+  String get providerModelNotDownloaded => 'Model not downloaded';
+
+  @override
+  String get providerModelDownloadFailed => 'Model download failed';
 }

@@ -4737,5 +4737,10 @@
     "providerKeyMissing": "Non activé",
     "providerNoActiveProviders": "Aucun fournisseur activé ne prend encore en charge ce service.",
     "providerSaved": "Paramètres des fournisseurs enregistrés",
-    "providerSaveFailed": "Impossible d'enregistrer les paramètres des fournisseurs."
+    "providerSaveFailed": "Impossible d'enregistrer les paramètres des fournisseurs.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

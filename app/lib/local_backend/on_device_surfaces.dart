@@ -6,25 +6,34 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_backend/embedded.dart';
 
+import 'package:omi/local_backend/sensevoice_stt_surface.dart';
 import 'package:omi/services/sockets/on_device_whisper_provider.dart';
 import 'package:omi/utils/audio/wav_bytes.dart';
 
-/// On-device inference surfaces the embedded backend routes the `local-stt`
-/// and `local-tts` provider cards to. Whisper runs through the same
-/// `OnDeviceWhisperProvider` the Transcription settings page drives; TTS runs
-/// through the system speech engine (`flutter_tts`). Neither opens a socket.
+/// On-device inference surfaces the embedded backend routes the on-device
+/// provider cards to. STT is per-card (whisper for `local-stt` /
+/// `local-whisper`, sherpa-onnx for `local-sensevoice`); TTS runs through the
+/// system speech engine (`flutter_tts`). None opens a socket.
 class OnDeviceInferenceSurfaces {
-  OnDeviceInferenceSurfaces._(this.stt, this.tts);
+  OnDeviceInferenceSurfaces._(this.sttByCard, this.tts);
 
   static Future<OnDeviceInferenceSurfaces> create() async {
     final support = await getApplicationSupportDirectory();
+    final whisper = OnDeviceWhisperSttSurface(modelsDir: '${support.path}/models');
     return OnDeviceInferenceSurfaces._(
-      OnDeviceWhisperSttSurface(modelsDir: '${support.path}/models'),
+      {
+        // The legacy local-stt card: whisper fallback (the FunASR worker is
+        // absent on an embedded device, whisper.cpp is the on-device path).
+        'local-stt': whisper,
+        'local-whisper': whisper,
+        'local-sensevoice': SenseVoiceSttSurface(),
+      },
       OnDeviceTtsSurface(),
     );
   }
 
-  final OnDeviceWhisperSttSurface stt;
+  /// Provider card id -> in-process STT surface.
+  final Map<String, SttSurface> sttByCard;
   final OnDeviceTtsSurface tts;
 }
 

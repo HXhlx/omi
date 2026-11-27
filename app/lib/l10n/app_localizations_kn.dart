@@ -15659,4 +15659,19 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get providerSaveFailed => 'Could not save provider settings.';
+
+  @override
+  String get providerModelDownloaded => 'Model downloaded';
+
+  @override
+  String get providerModelDownload => 'Download';
+
+  @override
+  String get providerModelDownloading => 'Downloading';
+
+  @override
+  String get providerModelNotDownloaded => 'Model not downloaded';
+
+  @override
+  String get providerModelDownloadFailed => 'Model download failed';
 }

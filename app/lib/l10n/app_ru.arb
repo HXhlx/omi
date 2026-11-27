@@ -4737,5 +4737,10 @@
     "providerKeyMissing": "Не активировано",
     "providerNoActiveProviders": "Пока ни один активированный провайдер не поддерживает этот сервис.",
     "providerSaved": "Настройки провайдеров сохранены",
-    "providerSaveFailed": "Не удалось сохранить настройки провайдеров."
+    "providerSaveFailed": "Не удалось сохранить настройки провайдеров.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

@@ -60,7 +60,7 @@ class EmbeddedLocalBackend {
     } catch (_) {}
     final server = await LocalBackendServer.start(
       dbPath: '${support.path}/omi_local.db',
-      localStt: onDevice?.stt,
+      localStt: onDevice?.sttByCard,
       localTts: onDevice?.tts,
     );
 

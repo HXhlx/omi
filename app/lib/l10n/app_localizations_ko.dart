@@ -15385,4 +15385,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get providerSaveFailed => '공급자 설정을 저장하지 못했습니다.';
+
+  @override
+  String get providerModelDownloaded => 'Model downloaded';
+
+  @override
+  String get providerModelDownload => 'Download';
+
+  @override
+  String get providerModelDownloading => 'Downloading';
+
+  @override
+  String get providerModelNotDownloaded => 'Model not downloaded';
+
+  @override
+  String get providerModelDownloadFailed => 'Model download failed';
 }

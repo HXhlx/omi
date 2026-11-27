@@ -4702,5 +4702,10 @@
     "providerKeyMissing": "활성화되지 않음",
     "providerNoActiveProviders": "이 서비스를 지원하는 활성화된 공급자가 아직 없습니다.",
     "providerSaved": "공급자 설정이 저장되었습니다",
-    "providerSaveFailed": "공급자 설정을 저장하지 못했습니다."
+    "providerSaveFailed": "공급자 설정을 저장하지 못했습니다.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }

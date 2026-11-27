@@ -15378,4 +15378,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get providerSaveFailed => 'プロバイダー設定を保存できませんでした。';
+
+  @override
+  String get providerModelDownloaded => 'Model downloaded';
+
+  @override
+  String get providerModelDownload => 'Download';
+
+  @override
+  String get providerModelDownloading => 'Downloading';
+
+  @override
+  String get providerModelNotDownloaded => 'Model not downloaded';
+
+  @override
+  String get providerModelDownloadFailed => 'Model download failed';
 }

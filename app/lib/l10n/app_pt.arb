@@ -4737,5 +4737,10 @@
     "providerKeyMissing": "Não ativado",
     "providerNoActiveProviders": "Ainda nenhum fornecedor ativado suporta este serviço.",
     "providerSaved": "Definições de fornecedor guardadas",
-    "providerSaveFailed": "Não foi possível guardar as definições de fornecedor."
+    "providerSaveFailed": "Não foi possível guardar as definições de fornecedor.",
+    "providerModelDownloaded": "Model downloaded",
+    "providerModelDownload": "Download",
+    "providerModelDownloading": "Downloading",
+    "providerModelNotDownloaded": "Model not downloaded",
+    "providerModelDownloadFailed": "Model download failed"
 }
