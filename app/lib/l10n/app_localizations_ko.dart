@@ -9117,6 +9117,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chestCameraDescription => '녹음 중 30초마다 후면 카메라로 소리 없이 한 장의 사진을 찍어 AI 장면 설명에 사용합니다';
 
   @override
+  String get chestCameraVideoTitle => '비디오 모드';
+
+  @override
+  String get chestCameraVideoDescription =>
+      '정적 사진 대신 매번 30초짜리 동영상 클립을 녹화하고, 첫 프레임을 문장 정렬을 위해 정확한 타임스탬프가 포함된 키프레임으로 전송합니다';
+
+  @override
   String get transcribeLaterTitle => '나중에 변환하기';
 
   @override

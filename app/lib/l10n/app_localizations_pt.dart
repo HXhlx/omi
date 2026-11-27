@@ -9262,6 +9262,13 @@ class AppLocalizationsPt extends AppLocalizations {
       'Durante a gravação, tira silenciosamente uma foto a cada 30 segundos com a câmera traseira para descrições de cena por IA';
 
   @override
+  String get chestCameraVideoTitle => 'Modo de vídeo';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Em vez de fotos fixas, grava um clipe de 30 segundos a cada vez; o primeiro quadro é enviado como quadro-chave com carimbo de data/hora exato para alinhar frases';
+
+  @override
   String get transcribeLaterTitle => 'Transcrever depois';
 
   @override

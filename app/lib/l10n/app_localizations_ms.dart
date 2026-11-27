@@ -9270,6 +9270,13 @@ class AppLocalizationsMs extends AppLocalizations {
       'Semasa merakam, ambil satu foto secara senyap setiap 30 saat dengan kamera belakang untuk penerangan adegan oleh AI';
 
   @override
+  String get chestCameraVideoTitle => 'Mod Video';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Sebagai ganti gambar statik, merakam klip video 30 saat setiap kali; bingkai pertama dihantar sebagai bingkai kunci dengan setem masa yang tepat untuk penjajaran ayat';
+
+  @override
   String get transcribeLaterTitle => 'Transkrip Kemudian';
 
   @override

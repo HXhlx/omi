@@ -9261,6 +9261,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kayıt sırasında, arka kamerayla her 30 saniyede bir sessizce fotoğraf çeker ve yapay zekâ sahne açıklamaları için kullanır';
 
   @override
+  String get chestCameraVideoTitle => 'Video modu';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Sabit fotoğraflar yerine her seferinde 30 saniyelik bir video klip kaydeder; ilk kare, cümle hizalaması için tam zaman damgasıyla anahtar kare olarak gönderilir';
+
+  @override
   String get transcribeLaterTitle => 'Sonradan Transkribe Et';
 
   @override

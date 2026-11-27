@@ -9104,6 +9104,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chestCameraDescription => '录音期间，用手机后置相机每 30 秒静默拍摄一张照片，供 AI 生成场景描述';
 
   @override
+  String get chestCameraVideoTitle => '录屏模式';
+
+  @override
+  String get chestCameraVideoDescription => '以录像代替静照：每次录制 30 秒片段，首帧作为关键帧携带精确时间戳发送，用于句级对齐';
+
+  @override
   String get transcribeLaterTitle => '稍后转写';
 
   @override

@@ -9251,6 +9251,13 @@ class AppLocalizationsNo extends AppLocalizations {
       'Tar et stille bilde hvert 30. sekund med bakovervendt kamera under opptak, til AI-scenebeskrivelser';
 
   @override
+  String get chestCameraVideoTitle => 'Videomodus';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Tar i stedet for stillbilder opp en 30-sekunders videoklipp hver gang; første bilde sendes som nøkkelbilde med nøyaktig tidsstempel for setningsjustering';
+
+  @override
   String get transcribeLaterTitle => 'Transkriber senere';
 
   @override

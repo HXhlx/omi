@@ -3010,6 +3010,8 @@
     "syncCustomSttWarningMessage": "Anda memakai penyedia transkripsi sendiri. Menyinkronkan rekaman ini akan mentranskripsikannya di server Omi dan dihitung dalam batas transkripsi paket Anda.",
     "chestCameraTitle": "Kamera Dada",
     "chestCameraDescription": "Saat merekam, ambil satu foto secara senyap setiap 30 detik dengan kamera belakang untuk deskripsi adegan oleh AI",
+    "chestCameraVideoTitle": "Mode Video",
+    "chestCameraVideoDescription": "Alih-alih foto diam, merekam klip video 30 detik setiap kali; bingkai pertama dikirim sebagai keyframe dengan stempel waktu persis untuk perataan kalimat",
     "transcribeLaterTitle": "Transkripsi Nanti",
     "transcribeLaterDescription": "Rekam sekarang, transkripsikan kapan pun Anda mau. Sampai saat itu, audio tetap di ponsel Anda.",
     "transcribeLaterNote": "Berfungsi dengan mikrofon ponsel serta perangkat Omi dan Limitless. Audio tetap berada di ponsel Anda sampai Anda memilih untuk mengunggahnya.",

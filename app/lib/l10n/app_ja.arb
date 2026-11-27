@@ -3000,6 +3000,8 @@
     "syncCustomSttWarningMessage": "ご自身の文字起こしプロバイダーを使用しています。これらの録音を同期すると Omi のサーバーで文字起こしされ、プランの文字起こし上限にカウントされます。",
     "chestCameraTitle": "チェストカメラ",
     "chestCameraDescription": "録音中、30秒ごとにリアカメラで静かに1枚撮影し、AIによるシーン描写に使用します",
+    "chestCameraVideoTitle": "ビデオモード",
+    "chestCameraVideoDescription": "静止画の代わりに毎回30秒の動画クリップを録画し、最初のフレームを正確なタイムスタンプ付きのキーフレームとして文の整列のために送信します",
     "transcribeLaterTitle": "後で文字起こし",
     "transcribeLaterDescription": "今録音して、好きなときに文字起こしできます。それまで音声はスマートフォンに保存されます。",
     "transcribeLaterNote": "スマートフォンのマイク、OmiおよびLimitlessデバイスでご利用いただけます。音声はアップロードするまでスマートフォンに保存されたままになります。",

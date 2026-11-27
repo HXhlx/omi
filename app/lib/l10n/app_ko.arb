@@ -2975,6 +2975,8 @@
     "syncCustomSttWarningMessage": "직접 설정한 전사 제공자를 사용 중입니다. 이 녹음을 동기화하면 Omi 서버에서 전사되며 요금제의 전사 한도에 포함됩니다.",
     "chestCameraTitle": "체스트 카메라",
     "chestCameraDescription": "녹음 중 30초마다 후면 카메라로 소리 없이 한 장의 사진을 찍어 AI 장면 설명에 사용합니다",
+    "chestCameraVideoTitle": "비디오 모드",
+    "chestCameraVideoDescription": "정적 사진 대신 매번 30초짜리 동영상 클립을 녹화하고, 첫 프레임을 문장 정렬을 위해 정확한 타임스탬프가 포함된 키프레임으로 전송합니다",
     "transcribeLaterTitle": "나중에 변환하기",
     "transcribeLaterDescription": "지금 녹음하고 원할 때 전사하세요. 그때까지 오디오는 휴대폰에 보관됩니다.",
     "transcribeLaterNote": "휴대폰 마이크, Omi 및 Limitless 기기에서 사용할 수 있습니다. 직접 업로드하기 전까지 오디오는 휴대폰에만 보관됩니다.",

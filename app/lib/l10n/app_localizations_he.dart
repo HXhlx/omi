@@ -9182,6 +9182,13 @@ class AppLocalizationsHe extends AppLocalizations {
       'במהלך ההקלטה, מצלם בשקט תמונה אחת כל 30 שניות במצלמה האחורית לתיאורי סצנה של AI';
 
   @override
+  String get chestCameraVideoTitle => 'מצב וידאו';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'במקום תמונות סטילס, מקליט קליפ של 30 שניות בכל פעם; הפריים הראשון נשלח כפריים מפתח עם חותמת זמן מדויקת ליישור משפטים';
+
+  @override
   String get transcribeLaterTitle => 'תמלול מאוחר יותר';
 
   @override

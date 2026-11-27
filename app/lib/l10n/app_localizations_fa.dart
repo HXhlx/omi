@@ -9250,6 +9250,13 @@ class AppLocalizationsFa extends AppLocalizations {
       'در حین ضبط، هر ۳۰ ثانیه یک عکس بی‌صدا با دوربین عقب برای توصیف صحنه توسط هوش مصنوعی می‌گیرد';
 
   @override
+  String get chestCameraVideoTitle => 'حالت ویدیو';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'به جای عکس ثابت، هر بار یک کلیپ ۳۰ ثانیه‌ای ضبط می‌کند؛ فریم اول به‌عنوان فریم کلیدی با مهر زمانی دقیق برای ترازبندی جملات ارسال می‌شود';
+
+  @override
   String get transcribeLaterTitle => 'رونویسی در زمان دلخواه';
 
   @override

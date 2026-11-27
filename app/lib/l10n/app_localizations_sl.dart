@@ -9276,6 +9276,13 @@ class AppLocalizationsSl extends AppLocalizations {
       'Med snemanjem vsakih 30 sekund tiho posname eno fotografijo z zadnjo kamero za opis prizora z umetno inteligenco';
 
   @override
+  String get chestCameraVideoTitle => 'Video način';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Namesto negibnih fotografij vsakič posname 30-sekundni posnetek; prva sličica gre kot ključna sličica z natančnim časovnim žigom za poravnavo stavkov';
+
+  @override
   String get transcribeLaterTitle => 'Prepiši pozneje';
 
   @override

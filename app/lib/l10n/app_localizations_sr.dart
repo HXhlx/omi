@@ -9258,6 +9258,13 @@ class AppLocalizationsSr extends AppLocalizations {
       'Током снимања, на сваких 30 секунди тихо узима једну фотографију задњом камером за АИ опис сцене';
 
   @override
+  String get chestCameraVideoTitle => 'Видео режим';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Уместо статичних фотографија, сваки пут снима клип од 30 секунди; први кадар се шаље као кључни кадар са прецизним временским жигом за поравнање реченица';
+
+  @override
   String get transcribeLaterTitle => 'Transkripcija kasnije';
 
   @override

@@ -10386,6 +10386,8 @@
     "syncCustomSttWarningMessage": "Koristite vlastiti pružatelj transkripcije. Sinkronizacija ovih snimaka transkribira ih na Omijevim poslužiteljima i broje se u ograničenje transkripcije vašeg plana.",
     "chestCameraTitle": "Kamera za prsa",
     "chestCameraDescription": "Tijekom snimanja svakih 30 sekundi tiho uslikaj jednu fotografiju stražnjom kamerom za AI opis scene",
+    "chestCameraVideoTitle": "Video način rada",
+    "chestCameraVideoDescription": "Umjesto mirnih fotografija, snima klip od 30 sekundi svaki put; prvi kadar ide kao ključni kadar s točnom vremenskom oznakom za poravnanje rečenica",
     "transcribeLaterTitle": "Transkribiraj poslije",
     "transcribeLaterDescription": "Snimajte sada, transkribirajte kada želite. Do tada zvuk ostaje na vašem telefonu.",
     "transcribeLaterNote": "Radi s mikrofonom telefona te Omi i Limitless uređajima. Zvuk ostaje na tvom telefonu dok ga ne odlučiš prenijeti.",

@@ -9200,6 +9200,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get chestCameraDescription => 'ขณะบันทึกเสียง จะถ่ายภาพเงียบๆ ทุก 30 วินาทีด้วยกล้องหลังเพื่อให้ AI อธิบายฉาก';
 
   @override
+  String get chestCameraVideoTitle => 'โหมดวิดีโอ';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'แทนที่ภาพนิ่ง จะบันทึกคลิปวิดีโอ 30 วินาทีทุกครั้ง เฟรมแรกจะถูกส่งเป็นคีย์เฟรมพร้อมเวลาที่แม่นยำสำหรับการจัดเรียงประโยค';
+
+  @override
   String get transcribeLaterTitle => 'ถอดเสียงภายหลัง';
 
   @override

@@ -2911,11 +2911,21 @@ class CaptureController extends ChangeNotifier
   /// immediate UI feedback, then the base64 chunk upload the backend turns
   /// into an AI scene description (`describe_image`). Shared by the BLE photo
   /// stream above and the chest-mounted camera below.
-  Future<void> _ingestCapturedPhoto(String base64Image) async {
+  ///
+  /// [kind] tags the source — `photo` still or `segment` recorded-clip
+  /// keyframe — so backend alignment and the UI can label each item honestly;
+  /// [capturedAt] is the capture instant used to align the item against the
+  /// transcript's sentence timeline.
+  Future<void> _ingestCapturedPhoto(String base64Image, {String kind = 'photo', DateTime? capturedAt}) async {
     final String tempId = 'temp_img_${DateTime.now().millisecondsSinceEpoch}';
 
     // Add placeholder to UI for immediate feedback
-    photos.add(ConversationPhoto(id: tempId, base64: base64Image, createdAt: DateTime.now()));
+    photos.add(ConversationPhoto(
+      id: tempId,
+      base64: base64Image,
+      createdAt: capturedAt ?? DateTime.now(),
+      contentType: kind == 'segment' ? 'image/jpeg;chest-segment' : 'image/jpeg',
+    ));
     photos = List.from(photos);
     _segmentsPhotosVersion++;
     notifyListeners();
@@ -2938,9 +2948,15 @@ class CaptureController extends ChangeNotifier
   Future<void> _startChestCameraIfEnabled() async {
     if (_preferences.batchModeEnabled) return;
     if (!_preferences.chestCameraEnabled || _chestCamera != null) return;
-    final service = ChestCameraService();
+    final service = ChestCameraService(
+      mode: _preferences.chestCameraVideoMode ? ChestCameraMode.video : ChestCameraMode.photo,
+    );
     final started = await service.start(
-      onPhoto: (jpeg) => _ingestCapturedPhoto(base64Encode(jpeg)),
+      onPhoto: (capture) => _ingestCapturedPhoto(
+        base64Encode(capture.jpegBytes),
+        kind: capture.kind,
+        capturedAt: capture.capturedAt,
+      ),
     );
     if (!started) return;
     _chestCamera = service;

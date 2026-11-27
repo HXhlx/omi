@@ -9253,6 +9253,13 @@ class AppLocalizationsId extends AppLocalizations {
       'Saat merekam, ambil satu foto secara senyap setiap 30 detik dengan kamera belakang untuk deskripsi adegan oleh AI';
 
   @override
+  String get chestCameraVideoTitle => 'Mode Video';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Alih-alih foto diam, merekam klip video 30 detik setiap kali; bingkai pertama dikirim sebagai keyframe dengan stempel waktu persis untuk perataan kalimat';
+
+  @override
   String get transcribeLaterTitle => 'Transkripsi Nanti';
 
   @override

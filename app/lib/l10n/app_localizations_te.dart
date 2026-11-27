@@ -9301,6 +9301,13 @@ class AppLocalizationsTe extends AppLocalizations {
       'రికార్డింగ్ సమయంలో ప్రతి 30 సెకన్లకు వెనుక కెమెరాతో నిశ్శబ్దంగా ఒక ఫోటో తీస్తుంది, AI దృశ్య వివరణ కోసం';
 
   @override
+  String get chestCameraVideoTitle => 'వీడియో మోడ్';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'స్థిర ఫోటోల బదులుగా ప్రతిసారీ 30 సెకన్ల వీడియో క్లిప్‌ను రికార్డ్ చేస్తుంది; వాక్యం అలైన్‌మెంట్ కోసం మొదటి ఫ్రేమ్ సవిశేష టైమ్‌స్టాంప్‌తో కీఫ్రేమ్‌గా పంపబడుతుంది';
+
+  @override
   String get transcribeLaterTitle => 'తర్వాత ట్రాన్‌స్క్రైబ్ చేయండి';
 
   @override

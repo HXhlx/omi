@@ -9245,6 +9245,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'While recording, silently take one photo every 30 seconds with the rear camera for AI scene descriptions';
 
   @override
+  String get chestCameraVideoTitle => 'Video Mode';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Record a 30-second clip each tick instead of stills; the first frame is sent as a keyframe with an exact timestamp for sentence alignment';
+
+  @override
   String get transcribeLaterTitle => 'Transcribe Later';
 
   @override

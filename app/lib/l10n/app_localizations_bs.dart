@@ -9273,6 +9273,13 @@ class AppLocalizationsBs extends AppLocalizations {
       'Tokom snimanja, svakih 30 sekundi tiho uslikaj jednu fotografiju zadnjom kamerom za AI opis scene';
 
   @override
+  String get chestCameraVideoTitle => 'Video režim';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Umjesto fotografija, snimi klip od 30 sekundi svaki put; prvi kadar ide kao ključni okvir s preciznom vremenskom oznakom za poravnanje rečenica';
+
+  @override
   String get transcribeLaterTitle => 'Transkripcija kasnije';
 
   @override

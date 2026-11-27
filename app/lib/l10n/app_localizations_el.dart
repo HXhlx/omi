@@ -9318,6 +9318,13 @@ class AppLocalizationsEl extends AppLocalizations {
       'Κατά την ηχογράφηση, λαμβάνει αθόρυβη φωτογραφία κάθε 30 δευτερόλεπτα με την πίσω κάμερα για περιγραφές σκηνής με AI';
 
   @override
+  String get chestCameraVideoTitle => 'Λειτουργία βίντεο';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Αντί για ακίνητες φωτογραφίες, καταγράφει ένα βίντεο 30 δευτερολέπτων κάθε φορά· το πρώτο καρέ αποστέλλεται ως keyframe με ακριβή χρονική σήμανση για ευθυγράμμιση προτάσεων';
+
+  @override
   String get transcribeLaterTitle => 'Μεταγραφή αργότερα';
 
   @override

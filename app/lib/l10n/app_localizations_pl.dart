@@ -9279,6 +9279,13 @@ class AppLocalizationsPl extends AppLocalizations {
       'Podczas nagrywania co 30 sekund po cichu robi jedno zdjęcie tylną kamerą do opisów scen przez AI';
 
   @override
+  String get chestCameraVideoTitle => 'Tryb wideo';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Zamiast zdjęć statycznych nagrywa co rundę 30-sekundowy klip; pierwsza klatka idzie jako klatka kluczowa z dokładnym znacznikiem czasu do wyrównania zdań';
+
+  @override
   String get transcribeLaterTitle => 'Transkrypcja później';
 
   @override

@@ -2975,6 +2975,8 @@
     "syncCustomSttWarningMessage": "Kasutate oma transkriptsiooniteenust. Nende salvestiste sünkroonimine transkribeerib need Omi serverites ja need arvestatakse teie paketi transkriptsioonilimiidi sisse.",
     "chestCameraTitle": "Rindkamera",
     "chestCameraDescription": "Salvestamise ajal võtab iga 30 sekundi järel vaikselt ühe pildi tagumise kaameraga tehisintellekti stseenikirjelduse jaoks",
+    "chestCameraVideoTitle": "Videorežiim",
+    "chestCameraVideoDescription": "Piltide asemel salvestatakse iga kord 30-sekundiline videoklipp; esimene kaader saadetakse võtmekaadrina täpse ajatempliga lausete joondamiseks",
     "transcribeLaterTitle": "Transkribeeri hiljem",
     "transcribeLaterDescription": "Salvesta kohe, transkribeeri siis, kui soovid. Seni jääb heli sinu telefoni.",
     "transcribeLaterNote": "Töötab telefoni mikrofoni ning Omi ja Limitless seadmetega. Heli jääb sinu telefoni seni, kuni otsustad selle üles laadida.",

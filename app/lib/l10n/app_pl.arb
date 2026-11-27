@@ -3010,6 +3010,8 @@
     "syncCustomSttWarningMessage": "Używasz własnego dostawcy transkrypcji. Synchronizacja tych nagrań transkrybuje je na serwerach Omi i są wliczane do limitu transkrypcji w Twoim planie.",
     "chestCameraTitle": "Kamera na piersi",
     "chestCameraDescription": "Podczas nagrywania co 30 sekund po cichu robi jedno zdjęcie tylną kamerą do opisów scen przez AI",
+    "chestCameraVideoTitle": "Tryb wideo",
+    "chestCameraVideoDescription": "Zamiast zdjęć statycznych nagrywa co rundę 30-sekundowy klip; pierwsza klatka idzie jako klatka kluczowa z dokładnym znacznikiem czasu do wyrównania zdań",
     "transcribeLaterTitle": "Transkrypcja później",
     "transcribeLaterDescription": "Nagrywaj teraz, transkrybuj, kiedy chcesz. Do tego czasu dźwięk zostaje w telefonie.",
     "transcribeLaterNote": "Działa z mikrofonem telefonu oraz urządzeniami Omi i Limitless. Dźwięk pozostaje w telefonie, dopóki nie zdecydujesz się go przesłać.",

@@ -10386,6 +10386,8 @@
     "syncCustomSttWarningMessage": "Користите сопственог пружаоца транскрипције. Синхронизација ових снимака их транскрибује на Omi серверима и рачунају се у лимит транскрипције вашег плана.",
     "chestCameraTitle": "Нагрудна камера",
     "chestCameraDescription": "Током снимања, на сваких 30 секунди тихо узима једну фотографију задњом камером за АИ опис сцене",
+    "chestCameraVideoTitle": "Видео режим",
+    "chestCameraVideoDescription": "Уместо статичних фотографија, сваки пут снима клип од 30 секунди; први кадар се шаље као кључни кадар са прецизним временским жигом за поравнање реченица",
     "transcribeLaterTitle": "Transkripcija kasnije",
     "transcribeLaterDescription": "Снимајте сада, транскрибујте када желите. До тада звук остаје на вашем телефону.",
     "transcribeLaterNote": "Radi sa mikrofonom telefona i sa Omi i Limitless uređajima. Zvuk ostaje na vašem telefonu dok ne odlučite da ga otpremite.",

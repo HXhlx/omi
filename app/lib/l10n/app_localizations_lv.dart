@@ -9277,6 +9277,13 @@ class AppLocalizationsLv extends AppLocalizations {
       'Ierakstīšanas laikā ik pēc 30 sekundēm klusi uzņem vienu foto ar aizmugurējo kameru AI ainas aprakstiem';
 
   @override
+  String get chestCameraVideoTitle => 'Video režīms';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Statisko attelu vietā katru reizi ieraksta 30 sekunžu video klipu; pirmais kadrs tiek nosūtīts kā atslēgas kadrs ar precīzu laika zīmogu teikumu līdzināšanai';
+
+  @override
   String get transcribeLaterTitle => 'Transkribēt vēlāk';
 
   @override

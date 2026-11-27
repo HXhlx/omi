@@ -48,4 +48,17 @@ void main() {
     await service.stop(); // idempotent on a never-started service
     expect(service.isRunning, isFalse);
   });
+
+  test('both modes run through the same start gates', () async {
+    for (final mode in ChestCameraMode.values) {
+      final service = ChestCameraService(
+        mode: mode,
+        ensurePermission: () async => false,
+        listCameras: () async => [],
+        keepScreenOn: (_) async => throw StateError('unreached'),
+      );
+      expect(await service.start(onPhoto: (_) {}), isFalse, reason: 'mode $mode permission gate');
+      expect(service.isRunning, isFalse, reason: 'mode $mode stays stopped');
+    }
+  });
 }

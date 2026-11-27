@@ -17187,6 +17187,18 @@ abstract class AppLocalizations {
   /// **'While recording, silently take one photo every 30 seconds with the rear camera for AI scene descriptions'**
   String get chestCameraDescription;
 
+  /// Chest-camera video toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Video Mode'**
+  String get chestCameraVideoTitle;
+
+  /// Chest-camera video subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Record a 30-second clip each tick instead of stills; the first frame is sent as a keyframe with an exact timestamp for sentence alignment'**
+  String get chestCameraVideoDescription;
+
   /// Title for the 'transcribe later' capture-mode toggle in device settings
   ///
   /// In en, this message translates to:

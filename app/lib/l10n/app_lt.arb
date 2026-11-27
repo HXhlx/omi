@@ -2975,6 +2975,8 @@
     "syncCustomSttWarningMessage": "Naudojate savo transkripcijos paslaugą. Sinchronizuojant šiuos įrašus jie transkribuojami Omi serveriuose ir įskaičiuojami į jūsų plano transkripcijos limitą.",
     "chestCameraTitle": "Krūtinės kamera",
     "chestCameraDescription": "Įrašinėjant kas 30 sekundžių tyliai padaro vieną nuotrauką galine kamera AI scenos aprašymams",
+    "chestCameraVideoTitle": "Vaizdo įrašo režimas",
+    "chestCameraVideoDescription": "Vietoj statinių vaizdų įrašo 30 sekundžių vaizdo įrašo klipą kiekvieną kartą; pirmas kadras siunčiamas kaip raktinis kadras su tikslia laiko žyme sakinio lygiavimui",
     "transcribeLaterTitle": "Transkribuoti vėliau",
     "transcribeLaterDescription": "Įrašykite dabar, transkribuokite, kai norėsite. Iki tol garsas lieka jūsų telefone.",
     "transcribeLaterNote": "Veikia su telefono mikrofonu bei Omi ir Limitless įrenginiais. Garsas lieka jūsų telefone, kol nuspręsite jį įkelti.",

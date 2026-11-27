@@ -9286,6 +9286,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Во время записи каждые 30 секунд незаметно делает один снимок задней камерой для описания сцены ИИ';
 
   @override
+  String get chestCameraVideoTitle => 'Режим видео';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Вместо статичных снимков записывает 30-секундный клип каждый раз; первый кадр отправляется как ключевой с точной меткой времени для выравнивания предложений';
+
+  @override
   String get transcribeLaterTitle => 'Расшифровать позже';
 
   @override

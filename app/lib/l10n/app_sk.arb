@@ -2975,6 +2975,8 @@
     "syncCustomSttWarningMessage": "Používate vlastného poskytovateľa prepisu. Synchronizácia týchto nahrávok ich prepíše na serveroch Omi a započítajú sa do limitu prepisu vášho plánu.",
     "chestCameraTitle": "Hrudná kamera",
     "chestCameraDescription": "Počas nahrávania každých 30 sekúnd potichu odfotí jeden záber zadnou kamerou na popis scény umelou inteligenciou",
+    "chestCameraVideoTitle": "Režim videa",
+    "chestCameraVideoDescription": "Namiesto statických záberov nahráva 30-sekundový klip každý raz; prvý záber ide ako kľúčový s presným časovým razítkom na zarovnanie viet",
     "transcribeLaterTitle": "Prepísať neskôr",
     "transcribeLaterDescription": "Nahrávajte teraz, prepisujte, kedy chcete. Dovtedy zostáva zvuk v telefóne.",
     "transcribeLaterNote": "Funguje s mikrofónom telefónu a so zariadeniami Omi a Limitless. Zvuk zostáva v telefóne, kým sa ho nerozhodnete odoslať.",

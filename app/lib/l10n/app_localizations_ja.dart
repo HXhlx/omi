@@ -9116,6 +9116,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get chestCameraDescription => '録音中、30秒ごとにリアカメラで静かに1枚撮影し、AIによるシーン描写に使用します';
 
   @override
+  String get chestCameraVideoTitle => 'ビデオモード';
+
+  @override
+  String get chestCameraVideoDescription => '静止画の代わりに毎回30秒の動画クリップを録画し、最初のフレームを正確なタイムスタンプ付きのキーフレームとして文の整列のために送信します';
+
+  @override
   String get transcribeLaterTitle => '後で文字起こし';
 
   @override

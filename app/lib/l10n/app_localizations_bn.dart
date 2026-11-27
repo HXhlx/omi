@@ -9258,6 +9258,13 @@ class AppLocalizationsBn extends AppLocalizations {
       'রেকর্ডিং চলাকালীন প্রতি ৩০ সেকেন্ডে পিছনের ক্যামেরায় নিঃশব্দে একটি ছবি তোলে AI দৃশ্য বর্ণনার জন্য';
 
   @override
+  String get chestCameraVideoTitle => 'ভিডিও মোড';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'ছবির বদলে প্রতি বার ৩০ সেকেন্ডের ভিডিও ক্লিপ রেকর্ড করে; প্রথম ফ্রেমটি কীফ্রেম হিসেবে নির্ভুল টাইমস্ট্যাম্প সহ বাক্য-সময় সামঞ্জস্যের জন্য যায়';
+
+  @override
   String get transcribeLaterTitle => 'পরে ট্রান্সক্রাইব করুন';
 
   @override

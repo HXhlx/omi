@@ -9262,6 +9262,13 @@ class AppLocalizationsMr extends AppLocalizations {
       'रेकॉर्डिंग दरम्यान प्रत्येक 30 सेकंदांनी मागील कॅमेऱ्याने शांतपणे एक फोटो घेते, AI दृश्य वर्णनासाठी';
 
   @override
+  String get chestCameraVideoTitle => 'व्हिडियो मोड';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'स्थिर फोटोंऐवजी प्रत्येक वेळी 30-सेकंदाचा व्हिडिओ क्लिप रेकॉर्ड करतो; पहिला फ्रेम वाक्य-संरेखनासाठी अचूक टाइमस्टॅम्पसह कीफ्रेम म्हणून पाठवला जातो';
+
+  @override
   String get transcribeLaterTitle => 'नंतर ट्रान्सक्राइब करणे';
 
   @override

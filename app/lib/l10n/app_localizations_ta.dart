@@ -9324,6 +9324,13 @@ class AppLocalizationsTa extends AppLocalizations {
       'பதிவு செய்யும் போது, ஒவ்வொரு 30 வினாடிகளிலும் பின்புற கேமராவால் அமைதியாக ஒரு புகைப்படம் எடுக்கிறது, AI காட்சி விளக்கத்திற்கு';
 
   @override
+  String get chestCameraVideoTitle => 'வீடியோ பயன்முறை';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'நிலையான புகைப்படங்களுக்கு பதிலாக ஒவ்வொரு முறையும் 30 வினாடி வீடியோ கிளிப்பைப் பதிவு செய்கிறது; முதல் பிரேம் வாக்கியச் சீரமைப்புக்காக துல்லியமான நேர முத்திரையுடன் கீபிரேமாக அனுப்பப்படுகிறது';
+
+  @override
   String get transcribeLaterTitle => 'பின்னர் எழுத்தாக்கு';
 
   @override

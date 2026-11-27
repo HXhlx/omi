@@ -9194,6 +9194,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'أثناء التسجيل، التقط صورة صامتة كل 30 ثانية بالكاميرا الخلفية لوصف المشهد بالذكاء الاصطناعي';
 
   @override
+  String get chestCameraVideoTitle => 'وضع فيديو الصدر';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'بدلاً من الصور الثابتة، سجّل مقطع فيديو مدته 30 ثانية في كل مرة؛ يُرسل الإطار الأول كإطار رئيسي مع طابع زمني دقيق لمحاذاة الجُمل';
+
+  @override
   String get transcribeLaterTitle => 'التفريغ النصي لاحقًا';
 
   @override

@@ -9296,6 +9296,13 @@ class AppLocalizationsMk extends AppLocalizations {
       'За време на снимањето, на секои 30 секунди тивки зема една фотографија со задната камера за AI опис на сцената';
 
   @override
+  String get chestCameraVideoTitle => 'Видео режим';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Наместо статични фотографии, секој пат снима клип од 30 секунди; првиот кадар се испраќа како клучен кадар со точно временско обележје за порамнување на речениците';
+
+  @override
   String get transcribeLaterTitle => 'Транскрибирај подоцна';
 
   @override

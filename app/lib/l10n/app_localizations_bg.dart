@@ -9286,6 +9286,13 @@ class AppLocalizationsBg extends AppLocalizations {
       'По време на запис — тихо снимане на снимка на всеки 30 секунди със задната камера за описание на сцената от ИИ';
 
   @override
+  String get chestCameraVideoTitle => 'Видео режим';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Вместо статични снимки — записва 30-секунден видеоклип всеки път; първият кадър се изпраща като ключов с точен времеви отпечатък за изравняване на изреченията';
+
+  @override
   String get transcribeLaterTitle => 'Транскрибиране по-късно';
 
   @override

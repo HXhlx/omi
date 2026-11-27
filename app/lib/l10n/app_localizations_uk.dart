@@ -9271,6 +9271,13 @@ class AppLocalizationsUk extends AppLocalizations {
       'Під час запису кожні 30 секунд непомітно робить один знімок задньою камерою для опису сцени ШІ';
 
   @override
+  String get chestCameraVideoTitle => 'Режим відео';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Замість нерухомих знімків щоразу записує 30-секундний кліп; перший кадр надсилається як ключовий із точною міткою часу для вирівнювання речень';
+
+  @override
   String get transcribeLaterTitle => 'Транскрибувати пізніше';
 
   @override

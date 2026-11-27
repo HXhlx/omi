@@ -9278,6 +9278,13 @@ class AppLocalizationsBe extends AppLocalizations {
       'Падчас запісу — адна ціхая фотаздымка кожныя 30 секунд задняй камерай для апісання сцэны ШІ';
 
   @override
+  String get chestCameraVideoTitle => 'Рэжым відэа';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Замля нерухомых здымкаў — па адным 30-секундным відэа; першы кадр ідзе як ключавы з дакладнай адзнакай часу для выраўноўвання сказаў';
+
+  @override
   String get transcribeLaterTitle => 'Транскрыпцыя пазней';
 
   @override

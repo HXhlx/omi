@@ -9241,6 +9241,13 @@ class AppLocalizationsDa extends AppLocalizations {
       'Tag et stille billede hvert 30. sekund med bagsidenkameraet under optagelse til AI-scenebeskrivelser';
 
   @override
+  String get chestCameraVideoTitle => 'Videotilstand';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'I stedet for stillbilleder optages en 30-sekunders videoklip hver gang; første billede sendes som keyframe med præcist tidsstempel til sætningsjustering';
+
+  @override
   String get transcribeLaterTitle => 'Transskriber senere';
 
   @override

@@ -9244,6 +9244,13 @@ class AppLocalizationsSk extends AppLocalizations {
       'Počas nahrávania každých 30 sekúnd potichu odfotí jeden záber zadnou kamerou na popis scény umelou inteligenciou';
 
   @override
+  String get chestCameraVideoTitle => 'Režim videa';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Namiesto statických záberov nahráva 30-sekundový klip každý raz; prvý záber ide ako kľúčový s presným časovým razítkom na zarovnanie viet';
+
+  @override
   String get transcribeLaterTitle => 'Prepísať neskôr';
 
   @override

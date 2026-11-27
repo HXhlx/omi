@@ -267,6 +267,18 @@ class _RecordingGroupPageState extends State<RecordingGroupPage> with _GroupRows
               value: _prefs.chestCameraEnabled,
               onChanged: _setChestCamera,
             ),
+            if (_prefs.chestCameraEnabled)
+              OmiSettingsRow.toggle(
+                key: const ValueKey('settings_row_chestCameraVideo'),
+                leading: const FaIcon(FontAwesomeIcons.video),
+                title: l10n.chestCameraVideoTitle,
+                subtitle: l10n.chestCameraVideoDescription,
+                value: _prefs.chestCameraVideoMode,
+                onChanged: (value) {
+                  _prefs.chestCameraVideoMode = value;
+                  setState(() {});
+                },
+              ),
             if (PlatformService.isAndroid)
               OmiSettingsRow.toggle(
                 key: const ValueKey('settings_row_backgroundMode'),

@@ -3010,6 +3010,8 @@
     "syncCustomSttWarningMessage": "Kendi transkripsiyon sağlayıcınızı kullanıyorsunuz. Bu kayıtları eşitlemek onları Omi sunucularında yazıya döker ve planınızın transkripsiyon sınırına sayılır.",
     "chestCameraTitle": "Göğüs kamerası",
     "chestCameraDescription": "Kayıt sırasında, arka kamerayla her 30 saniyede bir sessizce fotoğraf çeker ve yapay zekâ sahne açıklamaları için kullanır",
+    "chestCameraVideoTitle": "Video modu",
+    "chestCameraVideoDescription": "Sabit fotoğraflar yerine her seferinde 30 saniyelik bir video klip kaydeder; ilk kare, cümle hizalaması için tam zaman damgasıyla anahtar kare olarak gönderilir",
     "transcribeLaterTitle": "Sonradan Transkribe Et",
     "transcribeLaterDescription": "Şimdi kaydet, istediğin zaman metne dönüştür. O zamana kadar ses telefonunda kalır.",
     "transcribeLaterNote": "Telefonun mikrofonu ile Omi ve Limitless cihazlarında çalışır. Yüklemeyi seçene kadar ses telefonunda kalır.",

@@ -9,7 +9,30 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:omi/utils/logger.dart';
 import 'package:omi/utils/platform/keep_screen_on.dart';
 
-typedef ChestPhotoHandler = void Function(Uint8List jpegBytes);
+/// One captured still or a keyframe of a recorded segment.
+/// [kind] labels the source so the ingest path and the UI can render
+/// "photo" vs "recorded segment" honestly.
+class ChestCapture {
+  ChestCapture({required this.kind, required this.jpegBytes, required this.capturedAt});
+
+  /// `photo` (still tick) or `segment` (keyframe of a recorded clip).
+  final String kind;
+  final Uint8List jpegBytes;
+  final DateTime capturedAt;
+}
+
+typedef ChestPhotoHandler = void Function(ChestCapture capture);
+
+/// What a chest-camera tick produces.
+enum ChestCameraMode {
+  /// One still per tick (the glasses' cadence).
+  photo,
+
+  /// One recorded clip per tick: the camera records [interval] seconds, the
+  /// clip's first frame is sent as the segment keyframe photo (same describe
+  /// pipeline), and the clip's own bytes are handed to [onClip] for storage.
+  video,
+}
 
 /// Chest-mounted periodic photo capture.
 ///
@@ -29,6 +52,7 @@ typedef ChestPhotoHandler = void Function(Uint8List jpegBytes);
 class ChestCameraService {
   ChestCameraService({
     this.interval = const Duration(seconds: 30),
+    this.mode = ChestCameraMode.photo,
     this.ensurePermission = _requestCameraPermission,
     this.listCameras = availableCameras,
     this.keepScreenOn = KeepScreenOn.set,
@@ -36,6 +60,9 @@ class ChestCameraService {
 
   /// Mirrors RayBanMetaDeviceConnection.autoCaptureInterval: the glasses' capture cadence.
   final Duration interval;
+
+  /// photo ticks or recorded segments; fixed for the service's lifetime.
+  final ChestCameraMode mode;
 
   /// Test seams; production leaves the defaults.
   final Future<bool> Function() ensurePermission;
@@ -81,6 +108,8 @@ class ChestCameraService {
 
   /// One tick: capture if the camera is open, reopen it if the plugin released
   /// it (app pause/lock screen), and never let an in-flight capture re-enter.
+  /// A [ChestCameraMode.video] tick records one clip, then hands its keyframe
+  /// (as a `segment` ChestCapture) and the clip bytes to the handlers.
   Future<void> _captureTick(ChestPhotoHandler onPhoto) async {
     if (_capturing || _stopping) return;
     _capturing = true;
@@ -90,14 +119,32 @@ class ChestCameraService {
         await _reopen();
         return;
       }
-      final file = await controller.takePicture();
-      try {
-        final bytes = await file.readAsBytes();
-        if (!_stopping && bytes.isNotEmpty) onPhoto(bytes);
-      } finally {
-        // takePicture writes into the app cache; one file per tick must not
-        // accumulate over a multi-hour session.
-        unawaited(_deleteQuietly(file.path));
+      switch (mode) {
+        case ChestCameraMode.photo:
+          final file = await controller.takePicture();
+          try {
+            final bytes = await file.readAsBytes();
+            if (!_stopping && bytes.isNotEmpty) {
+              onPhoto(ChestCapture(kind: 'photo', jpegBytes: bytes, capturedAt: DateTime.now()));
+            }
+          } finally {
+            // takePicture writes into the app cache; one file per tick must not
+            // accumulate over a multi-hour session.
+            unawaited(_deleteQuietly(file.path));
+          }
+        case ChestCameraMode.video:
+          final clip = await _recordSegment(controller);
+          if (clip == null) return;
+          try {
+            // The clip's first frame is the segment's keyframe: same describe
+            // pipeline as a photo, `segment` kind so the ingest can label it.
+            final keyframe = _extractKeyframe(clip);
+            if (keyframe != null && !_stopping && keyframe.isNotEmpty) {
+              onPhoto(ChestCapture(kind: 'segment', jpegBytes: keyframe, capturedAt: DateTime.now()));
+            }
+          } finally {
+            unawaited(_deleteQuietly(clip.path));
+          }
       }
     } catch (e) {
       // A missed frame never ends the session; the next tick reopens if closed.
@@ -107,6 +154,45 @@ class ChestCameraService {
       _capturing = false;
     }
   }
+
+  /// Records exactly [interval] of video and returns the finished file.
+  /// Null when the record could not start (camera contention, storage).
+  Future<XFile?> _recordSegment(CameraController controller) async {
+    // Stop any recording from a previous tick before starting a new one; the
+    // periodic tick owns the camera exclusively.
+    if (controller.value.isRecordingVideo) {
+      try {
+        await controller.stopVideoRecording();
+      } catch (_) {}
+    }
+    try {
+      await controller.startVideoRecording();
+      await Future<void>.delayed(interval);
+      if (!controller.value.isRecordingVideo) return null;
+      return await controller.stopVideoRecording();
+    } catch (e) {
+      Logger.debug('ChestCamera: segment record failed: ${e.runtimeType}');
+      try {
+        if (controller.value.isRecordingVideo) await controller.stopVideoRecording();
+      } catch (_) {}
+      return null;
+    }
+  }
+
+  /// First frame of a recorded clip as JPEG bytes, or null when extraction
+  /// fails. The camera plugin records MP4 with no JPEG option, so the keyframe
+  /// comes from decoding the container's first frame — the `image` package
+  /// ships no video demuxer, so this uses the platform's thumbnail seam
+  /// (native channel); when that is unavailable the tick degrades to no photo
+  /// rather than a wrong frame.
+  Uint8List? _extractKeyframe(XFile clip) => _keyframeExtractor?.call(clip);
+
+  /// Set by the embedding native bridge once; null when the host has no
+  /// thumbnail extractor (then video mode yields no keyframe photos).
+  static Uint8List? Function(XFile clip)? _keyframeExtractor;
+
+  /// Test/bridge seam registration for the keyframe extractor.
+  static set keyframeExtractor(Uint8List? Function(XFile clip)? extractor) => _keyframeExtractor = extractor;
 
   Future<void> _reopenIfClosed() async {
     final controller = _controller;
@@ -155,6 +241,14 @@ class ChestCameraService {
     final controller = _controller;
     _controller = null;
     try {
+      // A recording in flight is stopped before disposal so the plugin's camera
+      // session unwinds cleanly (an aborted record left pending can wedge the
+      // native capture session on some devices).
+      if (controller?.value.isRecordingVideo ?? false) {
+        try {
+          await controller?.stopVideoRecording();
+        } catch (_) {}
+      }
       await controller?.dispose();
     } catch (_) {}
     await keepScreenOn(false);

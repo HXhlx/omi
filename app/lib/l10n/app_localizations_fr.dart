@@ -9336,6 +9336,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Pendant l\'enregistrement, prend discrètement une photo toutes les 30 secondes avec la caméra arrière pour des descriptions de scène par IA';
 
   @override
+  String get chestCameraVideoTitle => 'Mode vidéo';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Au lieu de photos fixes, enregistre une vidéo de 30 secondes à chaque tick ; la première image est envoyée comme image-clé avec un horodatage exact pour aligner les phrases';
+
+  @override
   String get transcribeLaterTitle => 'Transcrire plus tard';
 
   @override

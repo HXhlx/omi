@@ -9256,6 +9256,13 @@ class AppLocalizationsSv extends AppLocalizations {
       'Tar tyst ett foto var 30:e sekund med bakkameran under inspelning för AI-beskrivningar av scenen';
 
   @override
+  String get chestCameraVideoTitle => 'Videoläge';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Spelar in en 30-sekunders videoklipp varje varv istället för stillbilder; första bilden skickas som nyckelbild med exakt tidsstämpel för meningsjustering';
+
+  @override
   String get transcribeLaterTitle => 'Transkribera senare';
 
   @override

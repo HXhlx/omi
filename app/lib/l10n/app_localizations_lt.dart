@@ -9263,6 +9263,13 @@ class AppLocalizationsLt extends AppLocalizations {
       'Įrašinėjant kas 30 sekundžių tyliai padaro vieną nuotrauką galine kamera AI scenos aprašymams';
 
   @override
+  String get chestCameraVideoTitle => 'Vaizdo įrašo režimas';
+
+  @override
+  String get chestCameraVideoDescription =>
+      'Vietoj statinių vaizdų įrašo 30 sekundžių vaizdo įrašo klipą kiekvieną kartą; pirmas kadras siunčiamas kaip raktinis kadras su tikslia laiko žyme sakinio lygiavimui';
+
+  @override
   String get transcribeLaterTitle => 'Transkribuoti vėliau';
 
   @override

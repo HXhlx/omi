@@ -690,6 +690,14 @@ class SharedPreferencesUtil {
 
   set chestCameraEnabled(bool value) => saveBool('chestCameraEnabled', value);
 
+  // Chest-mount video mode: the chest camera records one clip per tick instead
+  // of a still; the clip's keyframe rides the photo pipeline (content type
+  // image/jpeg;chest-segment) so the backend can align it by capture time.
+  // Effective at the next capture start.
+  bool get chestCameraVideoMode => getBool('chestCameraVideoMode');
+
+  set chestCameraVideoMode(bool value) => saveBool('chestCameraVideoMode', value);
+
   // Phone-mic batch capture marker. false = explicit Transcribe Later (files
   // named audio_omibatchphone_...), true = automatic offline fallback (files
   // named audio_omibatchphoneauto_...). Read natively as flutter.phoneBatchAuto.
