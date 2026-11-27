@@ -270,8 +270,11 @@ class Api {
       if (!d.requiresModel) {
         return _json({'detail': 'channel requires no on-device model'}, status: 400);
       }
-      final model = body['model'] as String? ?? '';
-      if (model.isEmpty) return _json({'detail': 'model required'}, status: 400);
+      // Model is optional in the wire call: the catalog's static list is the
+      // default selection (whisper 'tiny', sensevoice 'int8').
+      final model = (body['model'] as String?)?.isNotEmpty == true
+          ? body['model'] as String
+          : (d.staticModels['asr']?.firstOrNull ?? '');
       final size = (body['sizeBytes'] as num?)?.toInt() ?? 0;
       _providers.keys.setModelState(id, model: model, sizeBytes: size);
       return _json({
