@@ -30,13 +30,14 @@ class LocalBackendServer {
   /// [dbPath] is the caller's to choose: a host app passes a `path_provider`
   /// location, the standalone server passes `FLUTTER_BACKEND_DB`.
   ///
-  /// [localStt] / [localTts] are the host's on-device inference surfaces: with
-  /// them the `local-stt` / `local-tts` provider cards run in this process and
-  /// never dial their HTTP worker ports. Null keeps the harness behaviour.
+  /// [localStt] maps provider card ids (`local-stt`, `local-whisper`,
+  /// `local-sensevoice`) to in-process STT surfaces; [localTts] is the
+  /// `local-tts` card's surface. Null/empty keeps the harness behaviour
+  /// (HTTP worker ports).
   static Future<LocalBackendServer> start({
     required String dbPath,
     int port = 0,
-    SttSurface? localStt,
+    Map<String, SttSurface>? localStt,
     TtsSurface? localTts,
   }) async {
     final file = File(dbPath);
@@ -49,7 +50,7 @@ class LocalBackendServer {
     return LocalBackendServer._(db, server);
   }
 
-  static Handler _handler(LocalDb db, {SttSurface? localStt, TtsSurface? localTts}) => const Pipeline()
+  static Handler _handler(LocalDb db, {Map<String, SttSurface>? localStt, TtsSurface? localTts}) => const Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(_cors())
       .addHandler(Api(db, providers: ProviderRouter(db, localStt: localStt, localTts: localTts)).handler);

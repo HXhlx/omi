@@ -259,6 +259,39 @@ class Api {
       _providers.keys.setKey(id, key);
       return _json({'status': 'ok', 'activated': _providers.keys.activated(id)});
     }
+    // On-device model channels: the app reports a completed download (or asks
+    // to drop the model) so the card activates only after the model exists.
+    if (path == 'v1/provider/model' && (method == 'PUT' || method == 'POST')) {
+      final body = await _body(req);
+      final id = body['id'] as String? ?? '';
+      if (id.isEmpty) return _json({'detail': 'id required'}, status: 400);
+      final d = descriptorOf(id);
+      if (d == null) return _json({'detail': 'unknown channel'}, status: 400);
+      if (!d.requiresModel) {
+        return _json({'detail': 'channel requires no on-device model'}, status: 400);
+      }
+      final model = body['model'] as String? ?? '';
+      if (model.isEmpty) return _json({'detail': 'model required'}, status: 400);
+      final size = (body['sizeBytes'] as num?)?.toInt() ?? 0;
+      _providers.keys.setModelState(id, model: model, sizeBytes: size);
+      return _json({
+        'status': 'ok',
+        'activated': _providers.keys.activated(id),
+        'model_state': _providers.keys.modelState(id),
+      });
+    }
+    if (path == 'v1/provider/model' && method == 'DELETE') {
+      final body = await _body(req);
+      final id = body['id'] as String? ?? '';
+      if (id.isEmpty) return _json({'detail': 'id required'}, status: 400);
+      final d = descriptorOf(id);
+      if (d == null) return _json({'detail': 'unknown channel'}, status: 400);
+      if (!d.requiresModel) {
+        return _json({'detail': 'channel requires no on-device model'}, status: 400);
+      }
+      _providers.keys.clearModelState(id);
+      return _json({'status': 'ok', 'activated': _providers.keys.activated(id)});
+    }
     if (path == 'v1/provider/discover' && method == 'POST') {
       final body = await _body(req);
       final id = body['id'] as String? ?? '';

@@ -10,6 +10,7 @@
 /// through to the next channel in the chain rather than sending a wrong body.
 library;
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'db.dart';
@@ -36,6 +37,7 @@ class ProviderKeyStore {
   final LocalDb _db;
 
   static String _k(String id) => 'provider_key:$id';
+  static String _m(String id) => 'provider_model:$id';
 
   String? key(String id) {
     final v = _db.getSetting(_k(id));
@@ -50,10 +52,40 @@ class ProviderKeyStore {
     _db.setSetting(_k(id), key.trim());
   }
 
-  /// A channel is activated when it needs no key (local/edge) or has one.
+  /// On-device model state for `requiresModel` channels. Absent row = not
+  /// downloaded = card inactive (nothing was ever fetched).
+  Map<String, Object?>? modelState(String id) {
+    final v = _db.getSetting(_m(id));
+    if (v == null) return null;
+    try {
+      final parsed = jsonDecode(v);
+      return parsed is Map<String, Object?> ? parsed : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Record the downloaded model for an on-device channel.
+  void setModelState(String id, {required String model, required int sizeBytes}) {
+    _db.setSetting(_m(id), jsonEncode({
+      'downloaded': true,
+      'model': model,
+      'sizeBytes': sizeBytes,
+    }));
+  }
+
+  void clearModelState(String id) {
+    _db.db.execute('DELETE FROM settings WHERE key = ?', [_m(id)]);
+  }
+
+  bool modelDownloaded(String id) => modelState(id)?['downloaded'] == true;
+
+  /// A channel is activated when it needs no key (local/edge) or has one,
+  /// AND, for on-device model channels, the user has downloaded the model.
   bool activated(String id) {
     final d = descriptorOf(id);
     if (d == null) return false;
+    if (d.requiresModel && !modelDownloaded(id)) return false;
     if (!d.requiresKey) return true;
     return key(id) != null;
   }
@@ -79,8 +111,13 @@ class ResolvedChannel {
 }
 
 class ProviderRouter {
-  ProviderRouter(this._db, {this.localStt, this.localTts})
+  /// [localStt] maps on-device card ids to in-process surfaces:
+  /// `local-stt` (whisper fallback), `local-whisper`, `local-sensevoice`.
+  /// An absent id (or an empty map, the standalone harness) keeps that card
+  /// on its HTTP worker port.
+  ProviderRouter(this._db, {Map<String, SttSurface>? localStt, this.localTts})
     : _keys = ProviderKeyStore(_db),
+      localStt = localStt ?? const {},
       _settings = ProviderSettings.decode(_db.getSetting(_settingsKey));
 
   static const String _settingsKey = 'provider_settings';
@@ -88,11 +125,12 @@ class ProviderRouter {
   final LocalDb _db;
   final ProviderKeyStore _keys;
 
-  /// In-process on-device inference for the `local-stt` / `local-tts` cards.
-  /// Null (the standalone harness) keeps those cards on their HTTP worker
-  /// ports; a host app passes real on-device surfaces and the cards never
-  /// open a socket.
-  final SttSurface? localStt;
+  /// Channel id -> in-process STT surface. STT needs per-card engines
+  /// (whisper vs sensevoice); TTS is one engine, so it stays a single surface.
+  final Map<String, SttSurface> localStt;
+
+  /// In-process on-device TTS for the `local-tts` card. Null (the standalone
+  /// harness) keeps the card on its HTTP worker port.
   final TtsSurface? localTts;
   ProviderSettings _settings;
 
@@ -246,17 +284,19 @@ class _RoutingStt implements SttSurface {
   _RoutingStt(this._router);
   final ProviderRouter _router;
 
-  /// The `local-stt` card serves in-process when the host injected an
-  /// on-device surface; otherwise it is the harness's HTTP worker.
-  bool _onDevice(ResolvedChannel c) => c.id == 'local-stt' && _router.localStt != null;
+  /// On-device cards serve in-process when the host injected a surface for
+  /// that channel id. `local-whisper` / `local-sensevoice` have no HTTP base —
+  /// without a surface the channel is simply unusable (skipped).
+  SttSurface? _surfaceFor(ResolvedChannel c) => _router.localStt[c.id];
 
   @override
   Future<SttResult> transcribePcm(Uint8List pcm16, {int sampleRate = 16000, int channels = 1, String? language}) async {
     Object? lastErr;
     for (final c in _router.resolve(ProviderCapability.asr)) {
       try {
-        if (_onDevice(c)) {
-          return await _router.localStt!.transcribePcm(pcm16, sampleRate: sampleRate, channels: channels, language: language);
+        final surface = _surfaceFor(c);
+        if (surface != null) {
+          return await surface.transcribePcm(pcm16, sampleRate: sampleRate, channels: channels, language: language);
         }
         final client = _sttClientFor(c);
         try {
@@ -276,8 +316,9 @@ class _RoutingStt implements SttSurface {
     Object? lastErr;
     for (final c in _router.resolve(ProviderCapability.asr)) {
       try {
-        if (_onDevice(c)) {
-          return await _router.localStt!.transcribeMultipart(body, contentType);
+        final surface = _surfaceFor(c);
+        if (surface != null) {
+          return await surface.transcribeMultipart(body, contentType);
         }
         final client = _sttClientFor(c);
         try {

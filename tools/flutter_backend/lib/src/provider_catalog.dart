@@ -25,6 +25,7 @@ class ProviderDescriptor {
     this.defaultVoice = '',
     this.discoverable = true,
     this.requiresKey = true,
+    this.requiresModel = false,
   });
 
   final String id;
@@ -51,6 +52,11 @@ class ProviderDescriptor {
   /// Local / key-free channels do not require a stored key.
   final bool requiresKey;
 
+  /// On-device model channels activate only after the app reports the model
+  /// downloaded via `PUT /v1/provider/model` — nothing is fetched unless the
+  /// user picks the card.
+  final bool requiresModel;
+
   Map<String, Object?> toJson() => {
     'id': id,
     'label': label,
@@ -61,6 +67,7 @@ class ProviderDescriptor {
     'defaultVoice': defaultVoice,
     'discoverable': discoverable,
     'requiresKey': requiresKey,
+    'requiresModel': requiresModel,
   };
 }
 
@@ -84,6 +91,33 @@ const List<ProviderDescriptor> kProviderCatalog = <ProviderDescriptor>[
     },
     discoverable: false,
     requiresKey: false,
+  ),
+  // On-device whisper: runs through the app's OnDeviceWhisperProvider
+  // (whisper.cpp). The model is NOT bundled — it activates only after the app
+  // reports it downloaded (`requiresModel`), so nothing is fetched unless the
+  // user picks the card.
+  ProviderDescriptor(
+    id: 'local-whisper',
+    label: '本地 ASR (Whisper)',
+    capabilities: {ProviderCapability.asr},
+    staticModels: {
+      'asr': ['tiny', 'base', 'small'],
+    },
+    discoverable: false,
+    requiresKey: false,
+    requiresModel: true,
+  ),
+  // On-device SenseVoice via sherpa-onnx. Same on-demand model rule.
+  ProviderDescriptor(
+    id: 'local-sensevoice',
+    label: '本地 ASR (SenseVoice)',
+    capabilities: {ProviderCapability.asr},
+    staticModels: {
+      'asr': ['int8'],
+    },
+    discoverable: false,
+    requiresKey: false,
+    requiresModel: true,
   ),
   ProviderDescriptor(
     id: 'local-llm',

@@ -16,10 +16,25 @@ void main() {
   group('catalog', () {
     test('local channels are key-free and first in the list', () {
       final ids = kProviderCatalog.map((d) => d.id).toList();
-      expect(ids.take(3), ['local-stt', 'local-llm', 'local-tts']);
-      for (final id in ids.take(3)) {
+      expect(ids.take(5), ['local-stt', 'local-whisper', 'local-sensevoice', 'local-llm', 'local-tts']);
+      for (final id in ids.take(5)) {
         expect(descriptorOf(id)!.requiresKey, isFalse);
       }
+    });
+
+    test('on-device model channels activate only after the model is reported', () async {
+      final db = LocalDb.inMemory();
+      await db.migrate();
+      addTearDown(db.close);
+      final keys = ProviderKeyStore(db);
+      expect(keys.activated('local-whisper'), isFalse, reason: 'no model row yet');
+      keys.setModelState('local-whisper', model: 'tiny', sizeBytes: 77691713);
+      expect(keys.activated('local-whisper'), isTrue);
+      expect(keys.modelState('local-whisper')!['model'], 'tiny');
+      keys.clearModelState('local-whisper');
+      expect(keys.activated('local-whisper'), isFalse);
+      // Plain local cards stay key-and-model free.
+      expect(keys.activated('local-stt'), isTrue);
     });
 
     test('every capability a card declares has a static model entry', () {
@@ -233,7 +248,7 @@ void main() {
       final calls = <List<Object?>>[];
       final router = ProviderRouter(
         db,
-        localStt: _FakeStt(calls),
+        localStt: {'local-stt': _FakeStt(calls)},
       );
       final result = await router.sttSurface().transcribePcm(
         Uint8List.fromList([1, 2, 3, 4]),
@@ -248,6 +263,30 @@ void main() {
       ]);
     });
 
+    test('per-card surfaces: sensevoice card gets its own engine', () async {
+      final calls = <List<Object?>>[];
+      final router = ProviderRouter(
+        db,
+        localStt: {'local-sensevoice': _FakeStt(calls)},
+      );
+      // Mark the model downloaded so the card activates, then route asr to it.
+      router.keys.setModelState('local-sensevoice', model: 'int8', sizeBytes: 239);
+      router.save(router.settings.copyWith(
+        routing: ProviderRouting(
+          asr: RouteChain(primary: 'local-sensevoice'),
+          tts: RouteChain(primary: 'local-tts'),
+          realtime: RouteChain(),
+          llm: RouteChain(primary: 'local-llm'),
+        ),
+      ));
+      final result = await router.sttSurface().transcribePcm(
+        Uint8List.fromList([5, 6]),
+        sampleRate: 16000,
+      );
+      expect(result.text, 'fake transcription');
+      expect(calls.single, [16000, 1, null]);
+    });
+
     test('local-tts card routes to the injected in-process surface, not HTTP', () async {
       final router = ProviderRouter(db, localTts: _FakeTts());
       final audio = await router.ttsSurface().synthesize(TtsRequest('你好'));
@@ -256,7 +295,7 @@ void main() {
 
     test('without injected surfaces the cards keep the HTTP chain', () {
       final router = ProviderRouter(db);
-      expect(router.localStt, isNull);
+      expect(router.localStt, isEmpty);
       expect(router.localTts, isNull);
       // Resolution itself is unchanged: the local cards still come first.
       expect(router.resolve(ProviderCapability.asr).first.id, 'local-stt');
